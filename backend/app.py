@@ -16,7 +16,7 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 # ---------------- Gemini Setup ----------------
-genai.configure(api_key="AIzaSyCXTlCSV16rHtlooozME0ScZDQi-2zwh90")
+genai.configure(api_key="your api key")  # Replace with your actual API key
 
 def get_working_model():
     for m in genai.list_models():
