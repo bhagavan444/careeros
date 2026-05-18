@@ -1,15 +1,14 @@
 import asyncio
-import google.generativeai as genai
+from google import genai
 from app.core.config import settings
 
 class AIOrchestrator:
     def __init__(self):
         # Configure Gemini
         if settings.GEMINI_API_KEY:
-            genai.configure(api_key=settings.GEMINI_API_KEY)
-            self.gemini_model = genai.GenerativeModel('gemini-1.5-flash')
+            self.client = genai.Client(api_key=settings.GEMINI_API_KEY)
         else:
-            self.gemini_model = None
+            self.client = None
             
         # In a real implementation, you would also initialize OpenAI and Claude clients here.
         
@@ -19,25 +18,15 @@ class AIOrchestrator:
         Chooses the best model based on prompt complexity.
         Streams the response back token by token.
         """
-        # 1. Fetch conversation history from Redis (Memory System)
-        # history = await memory.get_session(session_id)
-        
-        # 2. Intelligent Routing (Mocked logic)
-        # if is_complex_reasoning(prompt): 
-        #     return self._stream_claude_opus(prompt)
-        
-        # We default to Gemini Pro for fast streaming
-        if self.gemini_model:
+        # We default to Gemini Flash for fast streaming
+        if self.client:
             try:
-                # We need to run the blocking generation in a thread or use async client if available.
-                # The google-generativeai SDK has async support via generate_content_async
-                response = await self.gemini_model.generate_content_async(
-                    prompt, 
-                    stream=True
+                response = await self.client.aio.models.generate_content_stream(
+                    model='gemini-1.5-flash',
+                    contents=prompt
                 )
                 
                 async for chunk in response:
-                    # Small delay to simulate smooth streaming if needed, or just yield chunks
                     if chunk.text:
                         yield chunk.text
                         await asyncio.sleep(0.01) # Yield control back to event loop

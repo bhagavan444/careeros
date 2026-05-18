@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify, Response
 from flask_cors import CORS
-import google.generativeai as genai
+from google import genai
 import uuid
 from datetime import datetime
 import logging
@@ -25,8 +25,8 @@ gemini_api_key = os.getenv("GEMINI_API_KEY")
 if not gemini_api_key:
     raise RuntimeError("CRITICAL STARTUP ERROR: GEMINI_API_KEY environment variable is missing. Server cannot start.")
 
-genai.configure(api_key=gemini_api_key)
-model = genai.GenerativeModel('gemini-1.5-flash')
+client = genai.Client(api_key=gemini_api_key)
+model_name = 'gemini-1.5-flash'
 
 # ---------------- Storage ----------------
 chat_sessions = {}
@@ -71,16 +71,15 @@ def chat():
             f"User: {message}"
         )
 
-        response = model.generate_content(prompt)
+        response = client.models.generate_content(
+            model=model_name,
+            contents=prompt
+        )
 
         reply = "Please rephrase your question."
 
-        if response and response.candidates:
-            c = response.candidates[0]
-            if c.finish_reason == 1 and c.content.parts:
-                reply = c.content.parts[0].text
-            elif c.finish_reason == 4:
-                reply = "Please rephrase to avoid copyrighted text."
+        if response and response.text:
+            reply = response.text
 
         chat_sessions.setdefault(chat_id, []).append({
             "role": "user",
@@ -165,7 +164,7 @@ def upload_documents():
             with tempfile.NamedTemporaryFile(delete=False, suffix=ext) as tmp:
                 f.save(tmp.name)
                 # Upload to Gemini natively (handles OCR for Image PDFs, Docs, Images, etc.)
-                g_file = genai.upload_file(tmp.name, display_name=f.filename)
+                g_file = client.files.upload(file=tmp.name, config={'display_name': f.filename})
                 uploaded_gemini_files.append({"name": g_file.name, "display_name": f.filename})
             os.remove(tmp.name)
         except Exception as e:
@@ -199,7 +198,7 @@ def chat_stream(chat_id):
                 context_str += f"{role} attached files:\n"
                 for gf in msg["gemini_files"]:
                     try:
-                        g_file = genai.get_file(gf["name"])
+                        g_file = client.files.get(name=gf["name"])
                         prompt_parts.append(g_file)
                         context_str += f"- {gf['display_name']}\n"
                     except Exception as e:
@@ -221,7 +220,10 @@ def chat_stream(chat_id):
         def generate():
             try:
                 # Streaming response from Gemini with Native Multimodal parts
-                response = model.generate_content(prompt_parts, stream=True)
+                response = client.models.generate_content_stream(
+                    model=model_name,
+                    contents=prompt_parts
+                )
                 full_reply = ""
                 for chunk in response:
                     if chunk.text:
@@ -314,12 +316,15 @@ Return JSON strictly in this format:
 }}
 """
 
-        response = model.generate_content(prompt)
+        response = client.models.generate_content(
+            model=model_name,
+            contents=prompt
+        )
 
-        if not response or not response.candidates:
+        if not response or not response.text:
             return jsonify({"error": "AI did not return response"}), 500
 
-        raw_text = response.candidates[0].content.parts[0].text
+        raw_text = response.text
         parsed = safe_json_extract(raw_text)
 
         if not parsed:
