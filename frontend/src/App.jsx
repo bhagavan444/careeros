@@ -1,22 +1,22 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Navbar from "./components/Navbar";
-import CinematicBackground from "./components/CinematicBackground";
+import Navbar from "./components/Navbar.jsx";
+import CinematicBackground from "./components/CinematicBackground.jsx";
 
-// Pages
-import Home from "./pages/Home";
-import Predict from "./pages/Predict";
-import Chat from "./pages/Chat";
-import About from "./pages/About";
-import Contact from "./pages/Contact";
-import Login from "./pages/Login";
-import Plans from "./pages/Plans";
-import Quiz from "./pages/Quiz";
-import Admin from "./pages/Admin";
-import Dashboard from "./pages/Dashboard";
-import Settings from "./pages/Settings";
+// Pages (Notice the capital 'P' to match the actual folder name on your system/Git)
+import Home from "./Pages/Home.jsx";
+import Predict from "./Pages/Predict.jsx";
+import Chat from "./Pages/Chat.jsx";
+import About from "./Pages/About.jsx";
+import Contact from "./Pages/Contact.jsx";
+import Login from "./Pages/Login.jsx";
+import Plans from "./Pages/Plans.jsx";
+import Quiz from "./Pages/Quiz.jsx";
+import Admin from "./Pages/Admin.jsx";
+import Dashboard from "./Pages/Dashboard.jsx";
+import Settings from "./Pages/Settings.jsx";
 
-import { auth } from "./firebase"; // Import Firebase auth for logout
+import { auth } from "./firebase.js"; // Import Firebase auth for logout
 
 function App() {
   const handleLogout = () => {
