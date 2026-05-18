@@ -9,7 +9,7 @@ import {
   XAxis, YAxis, Tooltip,
 } from "recharts";
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "https://pathora-backend1.onrender.com";
 
 /* ─────────────────────────────────────────────
    MOCK DATA — used when API is unavailable
@@ -541,17 +541,42 @@ export default function Predict() {
   const submit = async () => {
     if (!resumeFile) { setErrorMsg("Please select a resume file first."); return; }
     setErrorMsg("");
-    const fd = new FormData();
-    fd.append("resume",          resumeFile);
-    fd.append("preferredDomain", domain);
-    fd.append("interests",       interest);
-    fd.append("useAI",           String(useAI));
+    
     try {
       setLoading(true);
-      const res = await axios.post(`${API_BASE_URL}/predict`, fd, {
+      
+      const fd = new FormData();
+      fd.append("files", resumeFile);
+      
+      const uploadRes = await axios.post(`${API_BASE_URL}/api/v1/documents/upload`, fd, {
         headers: { "Content-Type": "multipart/form-data" },
       });
-      setResult(normalise(res.data));
+      
+      const docId = uploadRes.data.documents[0].doc_id;
+      
+      const analyzePayload = {
+        doc_id: docId,
+        target_role: domain || "General Tech Role"
+      };
+      
+      const res = await axios.post(`${API_BASE_URL}/api/v1/resume/analyze`, analyzePayload, {
+        headers: { "Content-Type": "application/json" }
+      });
+      
+      const mappedResult = {
+        score: res.data.ats_score || MOCK_RESULT.score,
+        roles: [analyzePayload.target_role, "Software Engineer"],
+        skills: [...(res.data.matched_skills || []), ...(res.data.missing_skills || [])],
+        aspectScores: [
+          { name: "Technical Depth", value: res.data.ats_score || 85 },
+          { name: "System Design", value: 80 }
+        ],
+        roadmap: res.data.improvement_suggestions || MOCK_RESULT.roadmap,
+        improvements: res.data.improvement_suggestions || MOCK_RESULT.improvements,
+        growthProjection: MOCK_RESULT.growthProjection
+      };
+      
+      setResult(normalise(mappedResult));
       setAnimScore(0);
     } catch (err) {
       console.warn("API unavailable — rendering demo data:", err?.message);

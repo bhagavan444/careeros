@@ -6,7 +6,7 @@ import { Light as SyntaxHighlighter } from "react-syntax-highlighter";
 import { githubGist } from "react-syntax-highlighter/dist/esm/styles/hljs";
 
 // ─── CONSTANTS ────────────────────────────────────────────────────────────────
-const API_BASE = "http://localhost:5000/api";
+const API_BASE = import.meta.env.VITE_API_BASE_URL ? `${import.meta.env.VITE_API_BASE_URL}/api/v1` : "https://pathora-backend1.onrender.com/api/v1";
 const uid = () => crypto.randomUUID?.() || Math.random().toString(36).slice(2);
 const wait = (ms) => new Promise((r) => setTimeout(r, ms));
 
