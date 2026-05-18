@@ -48,4 +48,4 @@ class IntelligentRouter:
                 
         except Exception as e:
             logger.error(f"Primary model failed: {e}. Executing fallback strategy.")
-            yield f"I am currently experiencing issues: {str(e)}"
+            yield "I encountered an unexpected issue while processing your request. Please try again."

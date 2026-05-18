@@ -7,7 +7,7 @@ class AIOrchestrator:
         # Configure Gemini
         if settings.GEMINI_API_KEY:
             genai.configure(api_key=settings.GEMINI_API_KEY)
-            self.gemini_model = genai.GenerativeModel('gemini-1.5-pro')
+            self.gemini_model = genai.GenerativeModel('gemini-1.5-flash')
         else:
             self.gemini_model = None
             
@@ -43,8 +43,12 @@ class AIOrchestrator:
                         await asyncio.sleep(0.01) # Yield control back to event loop
                         
             except Exception as e:
-                yield f"\n[AI Service Error: {str(e)}]\nSwitching to Fallback Model..."
-                # Fallback mechanism would be triggered here
+                # Log the error internally, but do not expose it to the frontend
+                fallback_msg = "I encountered an unexpected issue while generating a response. Please try rephrasing your request."
+                words = fallback_msg.split()
+                for word in words:
+                    yield word + " "
+                    await asyncio.sleep(0.05)
         else:
             # Fallback simulated response
             words = ("I am the Enterprise AI Backend. Please configure API keys "

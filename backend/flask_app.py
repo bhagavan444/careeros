@@ -26,14 +26,7 @@ if not gemini_api_key:
     raise RuntimeError("CRITICAL STARTUP ERROR: GEMINI_API_KEY environment variable is missing. Server cannot start.")
 
 genai.configure(api_key=gemini_api_key)
-def get_working_model():
-    for m in genai.list_models():
-        if "generateContent" in m.supported_generation_methods:
-            logger.info(f"Using model: {m.name}")
-            return genai.GenerativeModel(m.name)
-    raise RuntimeError("No supported Gemini model found")
-
-model = get_working_model()
+model = genai.GenerativeModel('gemini-1.5-flash')
 
 # ---------------- Storage ----------------
 chat_sessions = {}
