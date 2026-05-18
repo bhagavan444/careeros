@@ -30,4 +30,11 @@ class Settings(BaseSettings):
 
     model_config = SettingsConfigDict(env_file=".env", case_sensitive=True, extra='allow')
 
-settings = Settings()
+import logging
+import sys
+
+try:
+    settings = Settings()
+except Exception as e:
+    logging.error(f"Startup Configuration Error: Failed to load settings. Ensure required environment variables (SECRET_KEY, GEMINI_API_KEY) are set. Details: {e}")
+    sys.exit(1)
