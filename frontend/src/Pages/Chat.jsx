@@ -11,19 +11,19 @@ const uid = () => crypto.randomUUID?.() || Math.random().toString(36).slice(2);
 const wait = (ms) => new Promise((r) => setTimeout(r, ms));
 
 const PLACEHOLDERS = [
-  "Ask anything...",
-  "Upload a file...",
-  "Debug your code...",
-  "Explain a concept...",
-  "Analyze my document...",
-  "Generate something...",
+  "Analyze my resume for ATS gaps...",
+  "Build a backend engineer roadmap...",
+  "Predict my placement readiness...",
+  "Compare my skills to industry benchmarks...",
+  "Optimize my profile for product companies...",
+  "Create a DSA preparation strategy...",
 ];
 
 const THINKING_STEPS = [
-  "Parsing request...",
-  "Accessing neural knowledge...",
-  "Reasoning through context...",
-  "Composing output...",
+  "Loading career intelligence context...",
+  "Analyzing skill & role alignment...",
+  "Cross-referencing industry benchmarks...",
+  "Composing personalized insight...",
 ];
 
 // ─── GLOBAL STYLES ────────────────────────────────────────────────────────────
@@ -53,7 +53,7 @@ const GLOBAL_CSS = `
     --ai-bubble: rgba(255,255,255,0.14);
     --ai-border: rgba(255,255,255,0.22);
     --sidebar-bg: rgba(255,255,255,0.45);
-    --sidebar-width: 320px;
+    --sidebar-width: 240px;
     --header-height: 56px;
     --font-body: 'Geist', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     --font-mono: 'Geist Mono', 'JetBrains Mono', monospace;
@@ -217,14 +217,11 @@ const GLOBAL_CSS = `
   .btn:disabled { opacity: 0.4; cursor: not-allowed; }
 
   .sidebar-item {
-    transition: background var(--transition), border-color var(--transition), box-shadow var(--transition), transform var(--transition);
-    border-left: 3px solid transparent;
+    transition: background 0.15s ease, box-shadow 0.15s ease;
     position: relative;
   }
   .sidebar-item:hover {
-    background: rgba(255,255,255,0.18) !important;
-    border-left-color: rgba(129,140,248,0.5) !important;
-    box-shadow: 0 2px 12px rgba(129,140,248,0.06);
+    background: rgba(0,0,0,0.04) !important;
   }
 
   .icon-btn {
@@ -243,16 +240,19 @@ const GLOBAL_CSS = `
   }
 
   .chip {
-    transition: background var(--transition), border-color var(--transition), color var(--transition), transform var(--transition), box-shadow var(--transition);
+    transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease, transform 0.25s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.2s ease;
     cursor: pointer;
     font-family: var(--font-body);
   }
   .chip:hover {
-    background: rgba(129,140,248,0.14) !important;
-    border-color: rgba(129,140,248,0.35) !important;
-    color: var(--accent-blue) !important;
-    transform: translateY(-1px);
-    box-shadow: 0 4px 16px rgba(129,140,248,0.12);
+    background: #fff !important;
+    border-color: rgba(124,58,237,0.25) !important;
+    color: #111 !important;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.06), 0 0 0 1px rgba(124,58,237,0.08);
+  }
+  .chip:active {
+    transform: translateY(0) scale(0.98);
   }
 
   .meta-btn {
@@ -610,6 +610,7 @@ export default function ChatUI() {
   const [reactions, setReactions] = useState({});
   const [isMobile, setIsMobile] = useState(false);
   const [firebaseUser, setFirebaseUser] = useState(null);
+  const [showLimitModal, setShowLimitModal] = useState(false);
   const stopRef = useRef(false);
   const abortControllerRef = useRef(null);
   const chatBodyRef = useRef(null);
@@ -668,6 +669,7 @@ export default function ChatUI() {
 
   useEffect(() => {
     if (messages.length > 2) setContextRemembered(true);
+    if (messages.length > 20) setShowLimitModal(true);
   }, [messages]);
 
   // Keyboard shortcuts
@@ -1001,12 +1003,12 @@ export default function ChatUI() {
   const LONG_THRESHOLD = 2000;
 
   const SUGGESTIONS = [
-    "Explain quantum entanglement",
-    "Write a REST API in Python",
-    "Analyze my PDF document",
-    "Summarize a research paper",
-    "Debug this code snippet",
-    "Generate a study plan",
+    "Analyze my ATS score",
+    "Predict placement readiness",
+    "Generate AI engineer roadmap",
+    "Compare my backend skills",
+    "Create DSA preparation plan",
+    "Optimize my resume",
   ];
 
   // ─── RENDER ────────────────────────────────────────────────────────────────
@@ -1022,6 +1024,52 @@ export default function ChatUI() {
       }}>
 
       <Toast toasts={toasts} dismiss={(id) => setToasts((p) => p.filter((t) => t.id !== id))} />
+
+      {/* Premium Limit Modal */}
+      <AnimatePresence>
+        {showLimitModal && (
+          <motion.div
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+            style={{
+              position: "fixed", inset: 0, zIndex: 10000,
+              background: "rgba(0,0,0,0.15)", backdropFilter: "blur(24px)", WebkitBackdropFilter: "blur(24px)",
+              display: "flex", alignItems: "center", justifyContent: "center",
+            }}>
+            <motion.div
+              initial={{ scale: 0.95, y: 20 }} animate={{ scale: 1, y: 0 }} exit={{ scale: 0.95, y: 20 }}
+              transition={{ type: "spring", stiffness: 300, damping: 25 }}
+              style={{
+                width: "360px", background: "rgba(255,255,255,0.85)", border: "1px solid rgba(255,255,255,0.6)",
+                borderRadius: "24px", padding: "32px 24px", textAlign: "center",
+                boxShadow: "0 24px 48px rgba(0,0,0,0.06), 0 0 0 1px rgba(0,0,0,0.02)",
+                backdropFilter: "blur(40px)", WebkitBackdropFilter: "blur(40px)"
+              }}>
+              <div style={{
+                width: "48px", height: "48px", borderRadius: "50%", background: "linear-gradient(135deg, #a78bfa, #818cf8)",
+                display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", margin: "0 auto 20px",
+                boxShadow: "0 8px 24px rgba(167,139,250,0.4)"
+              }}>✨</div>
+              <h3 style={{ fontSize: "20px", fontWeight: "600", marginBottom: "8px", color: "#111" }}>Daily Intelligence Limit Reached</h3>
+              <p style={{ fontSize: "14px", color: "var(--text-secondary)", marginBottom: "24px", lineHeight: 1.6 }}>
+                You've reached your daily quota for advanced AI insights. Upgrade to Pathora Pro for unlimited intelligence.
+              </p>
+              <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+                <button style={{
+                  padding: "12px", borderRadius: "12px", background: "linear-gradient(135deg, #818cf8, #a78bfa)",
+                  color: "#fff", border: "none", fontSize: "14px", fontWeight: "600", cursor: "pointer",
+                  boxShadow: "0 4px 16px rgba(129,140,248,0.3)"
+                }}>Upgrade Plan</button>
+                <button 
+                  onClick={() => setShowLimitModal(false)}
+                  style={{
+                  padding: "12px", borderRadius: "12px", background: "transparent", border: "none",
+                  color: "var(--text-secondary)", fontSize: "14px", fontWeight: "500", cursor: "pointer",
+                }}>Continue Tomorrow</button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Drag Overlay */}
       <AnimatePresence>
@@ -1048,6 +1096,85 @@ export default function ChatUI() {
         )}
       </AnimatePresence>
 
+      {/* ── WORKSPACE TOP BAR ── */}
+      <div style={{
+        display: "flex", alignItems: "center", justifyContent: "space-between",
+        height: "46px", padding: "0 16px", flexShrink: 0,
+        background: "rgba(255,255,255,0.82)", backdropFilter: "blur(24px) saturate(180%)", WebkitBackdropFilter: "blur(24px) saturate(180%)",
+        borderBottom: "1px solid rgba(0,0,0,0.06)", zIndex: 300,
+      }}>
+        {/* Left: Sidebar Toggle & Logo */}
+        <div style={{ display: "flex", alignItems: "center", gap: "12px", minWidth: "140px" }}>
+          <button 
+            onClick={() => setSidebarOpen(!sidebarOpen)}
+            style={{
+              background: "transparent", border: "none", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", color: "var(--text-muted)", padding: "6px", borderRadius: "6px", transition: "all 0.15s ease"
+            }}
+            onMouseEnter={e => { e.currentTarget.style.background = "rgba(0,0,0,0.04)"; e.currentTarget.style.color = "#111"; }}
+            onMouseLeave={e => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = "var(--text-muted)"; }}
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+              <line x1="4" y1="12" x2="20" y2="12" />
+              <line x1="4" y1="7" x2="14" y2="7" />
+              <line x1="4" y1="17" x2="18" y2="17" />
+            </svg>
+          </button>
+          <a href="/" style={{ display: "flex", alignItems: "center", gap: "7px", textDecoration: "none" }}>
+             <div style={{ width: 13, height: 13, background: "#111", borderRadius: "3px" }} />
+             <span style={{ fontSize: "13.5px", fontWeight: "600", color: "#111", letterSpacing: "-0.3px" }}>Pathora</span>
+          </a>
+        </div>
+        
+        {/* Center: Animated Tabs */}
+        <div style={{ display: "flex", alignItems: "center", gap: "4px", height: "100%" }}>
+          {[
+            { label: "Assistant", href: "/chat", active: true },
+            { label: "Predict", href: "/predict", active: false },
+            { label: "Assessments", href: "/quiz", active: false },
+            { label: "Roadmaps", href: "/plans", active: false },
+          ].map(tab => (
+            <a key={tab.label} href={tab.href} style={{
+              fontSize: "12.5px", fontWeight: tab.active ? "600" : "500",
+              color: tab.active ? "#111" : "var(--text-muted)",
+              textDecoration: "none", height: "100%", display: "flex", alignItems: "center",
+              padding: "0 12px", position: "relative", transition: "color 0.2s ease",
+            }}
+            onMouseEnter={e => { if (!tab.active) e.currentTarget.style.color = "var(--text-secondary)"; }}
+            onMouseLeave={e => { if (!tab.active) e.currentTarget.style.color = "var(--text-muted)"; }}
+            >
+              {tab.label}
+              {tab.active && (
+                <motion.div
+                  layoutId="workspace-tab-indicator"
+                  style={{
+                    position: "absolute", bottom: 0, left: "12px", right: "12px", height: "2px",
+                    background: "#7c3aed", borderRadius: "2px 2px 0 0",
+                  }}
+                  transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                />
+              )}
+            </a>
+          ))}
+        </div>
+        
+        {/* Right: Status & Profile */}
+        <div style={{ display: "flex", alignItems: "center", gap: "12px", minWidth: "140px", justifyContent: "flex-end" }}>
+           <div style={{ display: "flex", alignItems: "center", gap: "5px" }}>
+              <span style={{ width: "5px", height: "5px", borderRadius: "50%", background: "#10b981", boxShadow: "0 0 4px rgba(16,185,129,0.35)" }} />
+              <span style={{ fontSize: "11px", fontWeight: "500", color: "var(--text-muted)", letterSpacing: "0.2px" }}>Online</span>
+           </div>
+           <div style={{
+             width: "24px", height: "24px", borderRadius: "50%",
+             background: firebaseUser ? "linear-gradient(135deg, #818cf8, #a78bfa)" : "rgba(0,0,0,0.08)",
+             display: "flex", alignItems: "center", justifyContent: "center",
+             fontSize: "10px", fontWeight: "700", color: firebaseUser ? "#fff" : "#666",
+             transition: "all 0.2s ease",
+           }}>
+             {firebaseUser?.displayName?.[0]?.toUpperCase() || firebaseUser?.email?.[0]?.toUpperCase() || "U"}
+           </div>
+        </div>
+      </div>
+
       {/* ── LAYOUT ── */}
       <div style={{ display: "flex", flex: 1, overflow: "hidden" }}>
 
@@ -1057,274 +1184,84 @@ export default function ChatUI() {
             <motion.aside
               initial={false}
               animate={{ 
-                width: isMobile ? (sidebarOpen ? 320 : 0) : (sidebarOpen ? 320 : 88),
-                opacity: isMobile && !sidebarOpen ? 0 : 1
+                width: isMobile ? (sidebarOpen ? 240 : 0) : (sidebarOpen ? 240 : 0),
+                opacity: sidebarOpen ? 1 : 0
               }}
               transition={{ type: "spring", stiffness: 350, damping: 35, bounce: 0 }}
               style={{
                 display: "flex", flexDirection: "column", height: "100%", flexShrink: 0,
-                background: "rgba(255,255,255,0.03)",
-                backdropFilter: "blur(30px) saturate(120%)", WebkitBackdropFilter: "blur(30px) saturate(120%)",
-                borderRight: "1px solid rgba(255,255,255,0.06)",
-                boxShadow: "10px 0 40px -10px rgba(0,0,0,0.3), inset -1px 0 0 rgba(255,255,255,0.05)",
+                background: "rgba(249,250,251,0.92)",
+                backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)",
+                borderRight: "1px solid rgba(0,0,0,0.06)",
                 overflow: "hidden", position: isMobile ? "absolute" : "relative",
                 zIndex: 200, left: 0, top: 0,
                 borderRadius: isMobile ? "0 20px 20px 0" : "0",
               }}>
             
-              {/* Section 1: Sidebar Header — matches navbar glass language */}
-              <div style={{
-                display: "flex", alignItems: "center", padding: "14px 16px",
-                gap: "10px", minWidth: "320px", flexShrink: 0,
-                borderBottom: "1px solid rgba(255,255,255,0.15)",
-                position: "relative", overflow: "hidden",
-              }}>
-                {/* Ambient glass sweep — occasional light reflection */}
-                <div style={{
-                  position: "absolute", inset: 0, pointerEvents: "none",
-                  background: "linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.08) 50%, transparent 60%)",
-                  backgroundSize: "300% 100%",
-                  animation: "light-sweep 8s ease-in-out infinite",
-                  opacity: 0.6,
-                }} />
-
-                {/* Toggle — navbar-sized glass pill */}
-                <div style={{
-                  width: "34px", height: "34px", borderRadius: "10px",
-                  background: "rgba(255,255,255,0.03)",
-                  border: "1px solid rgba(255,255,255,0.12)",
-                  display: "flex", alignItems: "center", justifyContent: "center",
-                  flexShrink: 0, cursor: "pointer",
-                  transition: "all 0.25s cubic-bezier(0.4, 0, 0.2, 1)",
-                  backdropFilter: "blur(20px) saturate(120%)",
-                  boxShadow: "0 2px 8px rgba(0,0,0,0.04), inset 0 1px 0 rgba(255,255,255,0.06)",
-                }}
-                onMouseEnter={e => {
-                  e.currentTarget.style.background = "rgba(255,255,255,0.08)";
-                  e.currentTarget.style.borderColor = "rgba(255,255,255,0.2)";
-                  e.currentTarget.style.boxShadow = "0 4px 16px rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,0.08)";
-                }}
-                onMouseLeave={e => {
-                  e.currentTarget.style.background = "rgba(255,255,255,0.03)";
-                  e.currentTarget.style.borderColor = "rgba(255,255,255,0.12)";
-                  e.currentTarget.style.boxShadow = "0 2px 8px rgba(0,0,0,0.04), inset 0 1px 0 rgba(255,255,255,0.06)";
-                }}
-                onClick={() => setSidebarOpen(!sidebarOpen)}>
-                  <motion.div animate={{ rotate: sidebarOpen ? 0 : 180 }} transition={{ type: "spring", stiffness: 300, damping: 25 }}>
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" strokeWidth="2" strokeLinecap="round">
-                      <line x1="4" y1="12" x2="20" y2="12" />
-                      <line x1="4" y1="7" x2="16" y2="7" />
-                      <line x1="4" y1="17" x2="20" y2="17" />
-                    </svg>
-                  </motion.div>
-                </div>
-
-                {/* Brand + Status — single cohesive row */}
-                <motion.div
-                  initial={false}
-                  animate={{ opacity: sidebarOpen ? 1 : 0, x: sidebarOpen ? 0 : -6 }}
-                  transition={{ duration: 0.2, ease: "easeOut" }}
-                  style={{ display: "flex", alignItems: "center", gap: "8px", whiteSpace: "nowrap", flex: 1, minWidth: 0 }}
-                >
-                  {/* Neural orb */}
-                  <div style={{
-                    width: "8px", height: "8px", borderRadius: "50%", flexShrink: 0,
-                    background: "radial-gradient(circle, #a78bfa 20%, #818cf8 100%)",
-                    boxShadow: "0 0 6px rgba(167,139,250,0.5), 0 0 14px rgba(129,140,248,0.15)",
-                    animation: "orb-pulse 4s infinite ease-in-out",
-                  }} />
-
-                  {/* Brand text */}
-                  <span style={{
-                    fontSize: "13px", fontWeight: "600", letterSpacing: "-0.2px",
-                    color: "var(--text-primary)", lineHeight: 1,
-                  }}>Pathora</span>
-
-                  {/* Separator dot */}
-                  <span style={{ width: "3px", height: "3px", borderRadius: "50%", background: "var(--text-muted)", opacity: 0.4, flexShrink: 0 }} />
-
-                  {/* Status */}
-                  <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
-                    <span style={{
-                      width: "5px", height: "5px", borderRadius: "50%",
-                      background: "#34d399",
-                      boxShadow: "0 0 4px rgba(52,211,153,0.5)",
-                      animation: "subtle-breath 2.5s infinite",
-                    }} />
-                    <span style={{
-                      fontSize: "9px", color: "var(--text-muted)", fontWeight: "600",
-                      textTransform: "uppercase", letterSpacing: "0.6px", lineHeight: 1,
-                    }}>Active</span>
-                  </div>
-                </motion.div>
-              </div>
-            
               {/* Scrollable Area */}
-              <div style={{ flex: 1, overflowY: "auto", overflowX: "hidden", display: "flex", flexDirection: "column", minWidth: "320px", paddingBottom: "20px" }}>
+              <div style={{ flex: 1, overflowY: "auto", overflowX: "hidden", display: "flex", flexDirection: "column", minWidth: "240px", paddingBottom: "12px", paddingTop: "8px" }}>
                 
-                {/* Section 2: Smart New Chat */}
-                <div style={{ padding: "12px 16px 14px" }}>
+                {/* New Chat */}
+                <div style={{ padding: "8px 10px 6px" }}>
                   <button 
                     onClick={handleNewChat}
                     style={{
-                      width: sidebarOpen ? "100%" : "44px",
-                      height: "42px", borderRadius: "100px",
-                      background: "rgba(255,255,255,0.05)",
-                      border: "1px solid rgba(255,255,255,0.08)",
-                      backdropFilter: "blur(20px) saturate(120%)",
-                      display: "flex", alignItems: "center", justifyContent: sidebarOpen ? "flex-start" : "center",
-                      padding: sidebarOpen ? "0 14px" : "0", gap: "10px",
-                      cursor: "pointer", color: "var(--text-primary)",
-                      boxShadow: "0 2px 8px rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,0.05)",
-                      transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
-                      overflow: "hidden", position: "relative"
+                      width: "100%", height: "34px", borderRadius: "8px",
+                      background: "rgba(0,0,0,0.04)", border: "1px solid rgba(0,0,0,0.06)",
+                      display: "flex", alignItems: "center", padding: "0 10px", gap: "8px",
+                      cursor: "pointer", color: "var(--text-secondary)",
+                      transition: "all 0.15s ease", overflow: "hidden",
+                      fontFamily: "var(--font-body)", fontSize: "12.5px", fontWeight: "500",
                     }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.background = "rgba(255,255,255,0.1)";
-                      e.currentTarget.style.borderColor = "rgba(255,255,255,0.15)";
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.background = "rgba(255,255,255,0.05)";
-                      e.currentTarget.style.borderColor = "rgba(255,255,255,0.08)";
-                    }}
+                    onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(0,0,0,0.07)"; e.currentTarget.style.color = "#111"; }}
+                    onMouseLeave={(e) => { e.currentTarget.style.background = "rgba(0,0,0,0.04)"; e.currentTarget.style.color = "var(--text-secondary)"; }}
                   >
-                    <div style={{
-                      width: "26px", height: "26px", borderRadius: "8px",
-                      background: "linear-gradient(135deg, #818cf8, #a78bfa)",
-                      display: "flex", alignItems: "center", justifyContent: "center",
-                      color: "#fff", flexShrink: 0,
-                      boxShadow: "0 2px 8px rgba(129,140,248,0.3)"
-                    }}>
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                        <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
-                      </svg>
-                    </div>
-                    <motion.div animate={{ opacity: sidebarOpen ? 1 : 0 }} transition={{ duration: 0.2 }} style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", whiteSpace: "nowrap" }}>
-                      <span style={{ fontSize: "13px", fontWeight: "500" }}>New Chat</span>
-                    </motion.div>
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                      <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+                    </svg>
+                    New Chat
                   </button>
                 </div>
             
-                {/* Section 3: Smart Search */}
-                <motion.div animate={{ opacity: sidebarOpen ? 1 : 0, height: sidebarOpen ? "auto" : 0 }} style={{ padding: "0 16px 14px", overflow: "hidden" }}>
+                {/* Search */}
+                <div style={{ padding: "0 10px 8px" }}>
                   <div style={{
-                    display: "flex", alignItems: "center", gap: "10px",
-                    padding: "8px 12px", background: "rgba(255,255,255,0.04)",
-                    border: "1px solid rgba(255,255,255,0.08)", borderRadius: "100px",
-                    transition: "all 0.25s cubic-bezier(0.4,0,0.2,1)",
+                    display: "flex", alignItems: "center", gap: "7px",
+                    padding: "6px 10px", background: "rgba(0,0,0,0.03)",
+                    border: "1px solid rgba(0,0,0,0.05)", borderRadius: "8px",
+                    transition: "all 0.2s ease",
                   }}
-                  onFocus={e => { e.currentTarget.style.borderColor = "rgba(129,140,248,0.4)"; e.currentTarget.style.boxShadow = "0 0 0 2px rgba(129,140,248,0.1)"; }}
-                  onBlur={e => { e.currentTarget.style.borderColor = "rgba(255,255,255,0.08)"; e.currentTarget.style.boxShadow = "none"; }}
+                  onFocus={e => { e.currentTarget.style.borderColor = "rgba(124,58,237,0.3)"; e.currentTarget.style.boxShadow = "0 0 0 2px rgba(124,58,237,0.06)"; }}
+                  onBlur={e => { e.currentTarget.style.borderColor = "rgba(0,0,0,0.05)"; e.currentTarget.style.boxShadow = "none"; }}
                   >
-                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" strokeWidth="2">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" strokeWidth="2">
                       <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
                     </svg>
                     <input 
                       type="text" 
-                      placeholder="Search conversations, files, insights…"
+                      placeholder="Search chats…"
                       value={searchQuery}
                       onChange={e => setSearchQuery(e.target.value)}
                       style={{
                         flex: 1, background: "none", border: "none", outline: "none",
-                        color: "var(--text-primary)", fontSize: "12.5px", fontFamily: "var(--font-body)",
+                        color: "var(--text-primary)", fontSize: "12px", fontFamily: "var(--font-body)",
                         minWidth: 0
                       }}
                     />
                   </div>
-                </motion.div>
+                </div>
+
             
-                {/* Section 6: Quick Actions */}
-                <motion.div animate={{ opacity: sidebarOpen ? 1 : 0, height: sidebarOpen ? "auto" : 0 }} style={{ padding: "0 16px 14px", overflow: "hidden" }}>
-                  <div style={{ fontSize: "10px", fontWeight: "700", color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "1.2px", marginBottom: "10px", paddingLeft: "4px" }}>
-                    Quick Actions
+                {/* Chat History */}
+                <div style={{ flex: 1, padding: "0 6px", paddingBottom: "8px" }}>
+                  <div style={{ fontSize: "10px", fontWeight: "600", color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.8px", marginBottom: "6px", paddingLeft: "6px" }}>
+                    Recent
                   </div>
-                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "6px" }}>
-                    {[
-                      { icon: "📄", label: "Analyze PDF" },
-                      { icon: "🎯", label: "Career Match" },
-                      { icon: "🗺", label: "Roadmap" },
-                      { icon: "🎤", label: "Interview" }
-                    ].map((act, i) => (
-                      <button key={i} style={{
-                        display: "flex", alignItems: "center", gap: "7px",
-                        padding: "9px 10px", borderRadius: "10px",
-                        background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.06)",
-                        color: "var(--text-secondary)", fontSize: "11.5px", fontWeight: "500",
-                        cursor: "pointer", transition: "all 0.25s cubic-bezier(0.4,0,0.2,1)", whiteSpace: "nowrap",
-                      }}
-                      onMouseEnter={e => { e.currentTarget.style.background = "rgba(255,255,255,0.1)"; e.currentTarget.style.borderColor = "rgba(255,255,255,0.15)"; }}
-                      onMouseLeave={e => { e.currentTarget.style.background = "rgba(255,255,255,0.04)"; e.currentTarget.style.borderColor = "rgba(255,255,255,0.06)"; }}>
-                        <span style={{ fontSize: "13px" }}>{act.icon}</span>
-                        {act.label}
-                      </button>
-                    ))}
-                  </div>
-                </motion.div>
-            
-                {/* Section 5: Real-Time AI Status Panel */}
-                <motion.div animate={{ opacity: sidebarOpen ? 1 : 0, height: sidebarOpen ? "auto" : 0 }} style={{ padding: "0 16px 14px", overflow: "hidden" }}>
-                  <div style={{
-                    padding: "12px", borderRadius: "12px",
-                    background: "rgba(255,255,255,0.04)",
-                    border: "1px solid rgba(255,255,255,0.06)",
-                  }}>
-                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "10px" }}>
-                      <span style={{ fontSize: "10px", fontWeight: "700", color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.8px" }}>System Status</span>
-                      <div style={{ display: "flex", gap: "2px", alignItems: "flex-end" }}>
-                        {[1,2,3,4,5].map(i => (
-                          <motion.div key={i} animate={{ height: [3, Math.random()*10 + 4, 3] }} transition={{ repeat: Infinity, duration: 1.8, delay: i*0.15, ease: "easeInOut" }}
-                            style={{ width: "2.5px", background: "var(--accent-blue)", borderRadius: "1px", opacity: 0.7 }} />
-                        ))}
-                      </div>
-                    </div>
-                    <div style={{ display: "flex", flexDirection: "column", gap: "7px" }}>
-                      <div style={{ display: "flex", justifyContent: "space-between", fontSize: "11.5px", color: "var(--text-secondary)" }}>
-                        <span>Response Speed</span>
-                        <motion.span animate={{ opacity: [1, 0.6, 1] }} transition={{ repeat: Infinity, duration: 3 }} style={{ color: "#34d399", fontWeight: "600", fontFamily: "var(--font-mono)", fontSize: "11px" }}>~240ms</motion.span>
-                      </div>
-                      <div style={{ display: "flex", justifyContent: "space-between", fontSize: "11.5px", color: "var(--text-secondary)" }}>
-                        <span>Context Window</span>
-                        <span style={{ color: "var(--text-primary)", fontWeight: "600", fontFamily: "var(--font-mono)", fontSize: "11px" }}>128K</span>
-                      </div>
-                      <div style={{ display: "flex", justifyContent: "space-between", fontSize: "11.5px", color: "var(--text-secondary)" }}>
-                        <span>Neural Engine</span>
-                        <span style={{ color: "var(--accent-blue)", fontWeight: "600", fontSize: "11px" }}>● Active</span>
-                      </div>
-                    </div>
-                  </div>
-                </motion.div>
-            
-                {/* Section 4: Chat History */}
-                <div style={{ flex: 1, padding: "0 10px", paddingBottom: "20px" }}>
-                  <motion.div animate={{ opacity: sidebarOpen ? 1 : 0, paddingLeft: sidebarOpen ? "8px" : 0, height: sidebarOpen ? "auto" : 0 }} style={{ fontSize: "11px", fontWeight: "600", color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "1px", marginBottom: "12px", overflow: "hidden" }}>
-                    Recent Chats
-                  </motion.div>
-                  
-                  {/* Icon-only mode chat bubbles when collapsed */}
-                  {!sidebarOpen && (
-                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.1 }} style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "12px" }}>
-                      {filtered.slice(0, 6).map(s => (
-                        <div key={s._id} title={s.title || "Chat"} onClick={() => selectChat(s._id)} style={{
-                          width: "44px", height: "44px", borderRadius: "12px",
-                          background: s._id === chatId ? "rgba(129,140,248,0.15)" : "rgba(255,255,255,0.05)",
-                          border: `1px solid ${s._id === chatId ? "rgba(129,140,248,0.4)" : "rgba(255,255,255,0.1)"}`,
-                          display: "flex", alignItems: "center", justifyContent: "center",
-                          cursor: "pointer", transition: "all 0.2s"
-                        }}
-                        onMouseEnter={e => { if (s._id !== chatId) e.currentTarget.style.background = "rgba(255,255,255,0.08)"; }}
-                        onMouseLeave={e => { if (s._id !== chatId) e.currentTarget.style.background = "rgba(255,255,255,0.04)"; }}>
-                          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={s._id === chatId ? "var(--accent-blue)" : "var(--text-muted)"} strokeWidth="2">
-                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-                          </svg>
-                        </div>
-                      ))}
-                    </motion.div>
-                  )}
-            
-                  {sidebarOpen && Object.entries(groupedChats).map(([groupName, groupChats]) => (
+
+                  {Object.entries(groupedChats).map(([groupName, groupChats]) => (
                     groupChats.length > 0 && (
-                      <div key={groupName} style={{ marginBottom: "16px" }}>
-                        <div style={{ fontSize: "10px", fontWeight: "600", color: "var(--text-muted)", paddingLeft: "12px", marginBottom: "6px" }}>
+                      <div key={groupName} style={{ marginBottom: "8px" }}>
+                        <div style={{ fontSize: "10px", fontWeight: "600", color: "var(--text-muted)", paddingLeft: "6px", marginBottom: "2px", letterSpacing: "0.3px" }}>
                           {groupName}
                         </div>
                         {groupChats.map((s) => (
@@ -1333,12 +1270,11 @@ export default function ChatUI() {
                             className="sidebar-item"
                             onClick={() => selectChat(s._id)}
                             style={{
-                              padding: "10px 12px", borderRadius: "12px", cursor: "pointer",
-                              marginBottom: "6px", display: "flex", alignItems: "center", gap: "12px",
-                              border: `1px solid ${s._id === chatId ? "rgba(129,140,248,0.25)" : "transparent"}`,
-                              background: s._id === chatId ? "rgba(129,140,248,0.08)" : "transparent",
+                              padding: "7px 8px", borderRadius: "6px", cursor: "pointer",
+                              marginBottom: "1px", display: "flex", alignItems: "center",
+                              background: s._id === chatId ? "rgba(0,0,0,0.06)" : "transparent",
                               position: "relative",
-                              transition: "all 0.2s ease"
+                              transition: "background 0.12s ease",
                             }}
                             onMouseEnter={(e) => {
                               const btn = e.currentTarget.querySelector('.del-btn');
@@ -1348,42 +1284,25 @@ export default function ChatUI() {
                               const btn = e.currentTarget.querySelector('.del-btn');
                               if(btn) btn.style.opacity = "0";
                             }}>
-                            <div style={{
-                              width: "36px", height: "36px", borderRadius: "10px", flexShrink: 0,
-                              background: s._id === chatId ? "linear-gradient(135deg, rgba(129,140,248,0.15), rgba(167,139,250,0.15))" : "rgba(255,255,255,0.04)",
-                              border: "1px solid rgba(255,255,255,0.06)",
-                              display: "flex", alignItems: "center", justifyContent: "center",
-                              color: s._id === chatId ? "var(--accent-blue)" : "var(--text-muted)",
-                            }}>
-                              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-                              </svg>
-                            </div>
                             <div style={{ flex: 1, minWidth: 0 }}>
                               <div style={{
-                                fontSize: "14px", fontWeight: "500",
-                                color: s._id === chatId ? "var(--text-primary)" : "var(--text-secondary)",
+                                fontSize: "12.5px", fontWeight: s._id === chatId ? "600" : "400",
+                                color: s._id === chatId ? "#111" : "var(--text-secondary)",
                                 overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
-                              }}>{s.title || "Untitled"}</div>
-                              {s.lastMessage && (
-                                <div style={{
-                                  fontSize: "12px", color: "var(--text-muted)", marginTop: "2px",
-                                  overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
-                                }}>{s.lastMessage.slice(0, 36)}{s.lastMessage.length > 36 ? "…" : ""}</div>
-                              )}
+                              }}>{s.title || "New conversation"}</div>
                             </div>
                             <button
                               className="del-btn"
                               onClick={(e) => { e.stopPropagation(); delSession(s._id); }}
                               style={{
-                                opacity: 0, width: "26px", height: "26px", borderRadius: "6px",
-                                border: "none", background: "rgba(239,68,68,0.1)", color: "#ef4444",
+                                opacity: 0, width: "20px", height: "20px", borderRadius: "4px",
+                                border: "none", background: "transparent", color: "var(--text-muted)",
                                 cursor: "pointer", flexShrink: 0,
                                 display: "flex", alignItems: "center", justifyContent: "center",
-                                transition: "opacity 0.2s", position: "absolute", right: "12px"
+                                transition: "opacity 0.15s",
                               }}
                             >
-                              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
                             </button>
                           </div>
                         ))}
@@ -1391,73 +1310,31 @@ export default function ChatUI() {
                     )
                   ))}
 
-                  {/* Section 7: AI Memory & Files (Simplified Accordion) */}
-                  <motion.div animate={{ opacity: sidebarOpen ? 1 : 0, height: sidebarOpen ? "auto" : 0 }} style={{ marginTop: "16px", overflow: "hidden" }}>
-                     <div style={{ fontSize: "11px", fontWeight: "600", color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "1px", marginBottom: "8px", paddingLeft: "8px" }}>
-                       AI Memory & Files
-                     </div>
-                     <div style={{
-                       padding: "10px 12px", borderRadius: "12px", cursor: "pointer",
-                       display: "flex", alignItems: "center", gap: "12px",
-                       background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.05)"
-                     }}>
-                       <span style={{ fontSize: "16px" }}>📁</span>
-                       <span style={{ fontSize: "13px", color: "var(--text-secondary)", flex: 1 }}>Uploaded Files</span>
-                       <span style={{ fontSize: "10px", color: "var(--text-muted)" }}>0</span>
-                     </div>
-                  </motion.div>
                 </div>
               </div>
             
-              {/* Section 8: Floating Footer Panel — Firebase User */}
-              <div style={{ padding: "12px 16px", borderTop: "1px solid rgba(255,255,255,0.06)", background: "rgba(255,255,255,0.02)", minWidth: "320px", display: "flex", alignItems: "center", gap: "10px", flexShrink: 0 }}>
-                {firebaseUser?.photoURL ? (
-                  <img src={firebaseUser.photoURL} alt="" style={{
-                    width: "40px", height: "40px", borderRadius: "50%", objectFit: "cover",
-                    border: "2px solid rgba(255,255,255,0.4)", flexShrink: 0,
-                    boxShadow: "0 4px 16px rgba(129,140,248,0.25), 0 0 0 3px rgba(129,140,248,0.08)"
-                  }} />
-                ) : (
-                  <div style={{
-                    width: "40px", height: "40px", borderRadius: "50%",
-                    background: firebaseUser ? "linear-gradient(135deg, #38bdf8, #818cf8)" : "rgba(255,255,255,0.3)",
-                    border: "2px solid rgba(255,255,255,0.4)",
-                    display: "flex", alignItems: "center", justifyContent: "center",
-                    color: firebaseUser ? "#fff" : "var(--text-muted)", fontWeight: "bold", fontSize: "14px", flexShrink: 0,
-                    boxShadow: "0 4px 16px rgba(129,140,248,0.25), 0 0 0 3px rgba(129,140,248,0.08)"
-                  }}>
-                    {firebaseUser?.displayName?.[0]?.toUpperCase() || firebaseUser?.email?.[0]?.toUpperCase() || "?"}
+              {/* Sidebar Footer */}
+              <div style={{ padding: "8px 10px", borderTop: "1px solid rgba(0,0,0,0.06)", minWidth: "240px", display: "flex", alignItems: "center", gap: "8px", flexShrink: 0 }}>
+                <div style={{
+                  width: "28px", height: "28px", borderRadius: "50%",
+                  background: firebaseUser ? "linear-gradient(135deg, #818cf8, #a78bfa)" : "rgba(0,0,0,0.08)",
+                  display: "flex", alignItems: "center", justifyContent: "center",
+                  color: firebaseUser ? "#fff" : "var(--text-muted)", fontWeight: "600", fontSize: "11px", flexShrink: 0,
+                }}>
+                  {firebaseUser?.displayName?.[0]?.toUpperCase() || firebaseUser?.email?.[0]?.toUpperCase() || "?"}
+                </div>
+                <div style={{ flex: 1, overflow: "hidden", whiteSpace: "nowrap" }}>
+                  <div style={{ fontSize: "12px", fontWeight: "500", color: "#111", overflow: "hidden", textOverflow: "ellipsis" }}>
+                    {firebaseUser?.displayName || firebaseUser?.email?.split("@")[0] || "Guest"}
                   </div>
-                )}
-                <motion.div animate={{ opacity: sidebarOpen ? 1 : 0 }} transition={{ duration: 0.2 }} style={{ flex: 1, overflow: "hidden", whiteSpace: "nowrap" }}>
-                  <div style={{ fontSize: "13px", fontWeight: "600", color: "var(--text-primary)", overflow: "hidden", textOverflow: "ellipsis" }}>
-                    {firebaseUser?.displayName || firebaseUser?.email?.split("@")[0] || "Guest User"}
-                  </div>
-                  {firebaseUser ? (
-                    <div style={{ fontSize: "10px", color: "var(--accent-blue)", fontWeight: "700", marginTop: "1px", letterSpacing: "0.5px", animation: "status-flicker 3s infinite", overflow: "hidden", textOverflow: "ellipsis" }}>
-                      {firebaseUser.email}
-                    </div>
-                  ) : (
-                    <div style={{ fontSize: "10px", color: "var(--text-muted)", fontWeight: "600", marginTop: "1px", letterSpacing: "0.3px" }}>Sign in for full access</div>
-                  )}
-                </motion.div>
-                <motion.button animate={{ opacity: sidebarOpen ? 1 : 0 }} style={{
-                  width: "32px", height: "32px", borderRadius: "8px", background: "rgba(255,255,255,0.04)",
-                  border: "1px solid rgba(255,255,255,0.08)", display: "flex", alignItems: "center", justifyContent: "center",
-                  color: "var(--text-muted)", cursor: "pointer", flexShrink: 0, transition: "all 0.2s"
-                }}
-                onMouseEnter={e => { e.currentTarget.style.color = "var(--text-primary)"; e.currentTarget.style.transform = "scale(1.05)"; }}
-                onMouseLeave={e => { e.currentTarget.style.color = "var(--text-muted)"; e.currentTarget.style.transform = "scale(1)"; }}
-                >
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-                </motion.button>
+                </div>
               </div>
             </motion.aside>
           )}
         </AnimatePresence>
 
         {/* ── MAIN ── */}
-        <main style={{ display: "flex", flexDirection: "column", flex: 1, overflow: "hidden", background: "transparent" }}>
+        <main style={{ display: "flex", flexDirection: "column", flex: 1, overflow: "hidden", background: "radial-gradient(ellipse at top right, rgba(255,255,255,1), rgba(248,248,252,1))" }}>
 
           {/* Error banner */}
           <AnimatePresence>
@@ -1506,12 +1383,12 @@ export default function ChatUI() {
                     <h2 style={{
                       fontSize: "24px", fontWeight: "700", margin: "0 0 8px",
                       color: "var(--text-primary)", letterSpacing: "-0.5px",
-                    }}>How can I help you today?</h2>
+                    }}>Pathora Intelligence Engine</h2>
                     <p style={{
                       fontSize: "14px", color: "var(--text-secondary)",
-                      margin: 0, maxWidth: "340px", lineHeight: "1.7",
+                      margin: "0 auto", maxWidth: "360px", lineHeight: "1.7",
                     }}>
-                      Powered by Gemini 1.5 — ask questions, upload files, debug code, or analyze documents.
+                      Your AI career architect. Ask questions, upload your resume, or build a custom technical roadmap.
                     </p>
                   </div>
 
@@ -1525,13 +1402,16 @@ export default function ChatUI() {
                         className="chip btn"
                         onClick={() => setInput(q)}
                         style={{
-                          padding: "8px 16px", borderRadius: "var(--r-full)",
-                          border: "1px solid rgba(255,255,255,0.35)", background: "rgba(255,255,255,0.4)",
-                          backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)",
-                          color: "var(--text-secondary)", fontSize: "13px",
-                          animation: `fade-in 0.4s ease ${i * 0.06}s both`,
-                          boxShadow: "inset 0 1px 0 rgba(255,255,255,0.2)",
-                        }}>
+                          padding: "6px 12px", borderRadius: "6px",
+                          border: "1px solid rgba(0,0,0,0.06)", background: "rgba(255,255,255,0.6)",
+                          color: "var(--text-secondary)", fontSize: "12px", fontWeight: "500",
+                          animation: `fade-in 0.3s ease ${i * 0.05}s both`,
+                          transition: "all 0.2s",
+                          cursor: "pointer"
+                        }}
+                        onMouseEnter={e => { e.currentTarget.style.background = "#fff"; e.currentTarget.style.borderColor = "rgba(0,0,0,0.12)"; e.currentTarget.style.color = "#111"; }}
+                        onMouseLeave={e => { e.currentTarget.style.background = "rgba(255,255,255,0.6)"; e.currentTarget.style.borderColor = "rgba(0,0,0,0.06)"; e.currentTarget.style.color = "var(--text-secondary)"; }}
+                      >
                         {q}
                       </button>
                     ))}
@@ -1846,23 +1726,9 @@ export default function ChatUI() {
               {/* Footer hint */}
               <div style={{
                 display: "flex", alignItems: "center", justifyContent: "center",
-                gap: "16px", marginTop: "8px",
+                marginTop: "8px", fontSize: "11px", color: "var(--text-muted)", fontWeight: "500"
               }}>
-                {[
-                  { icon: "⚡", text: "Gemini 1.5 Pro" },
-                  { icon: "⇧↵", text: "Shift+Enter for newline" },
-                  { icon: "↺", text: "Context-aware" },
-                ].map((item) => (
-                  <div
-                    key={item.text}
-                    style={{
-                      display: "flex", alignItems: "center", gap: "4px",
-                      fontSize: "10px", color: "var(--text-muted)", letterSpacing: "0.2px",
-                    }}>
-                    <span style={{ opacity: 0.6 }}>{item.icon}</span>
-                    {item.text}
-                  </div>
-                ))}
+                Pathora Intelligence Core Active
               </div>
             </div>
           </div>

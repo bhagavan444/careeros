@@ -2,8 +2,9 @@ import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Home.css";
 import { DOMAINS, ROADMAP_STEPS, CAREER_FEATURES, SUCCESS_STORIES, INDUSTRIES, COMPARISON } from "./HomeData";
-import { useReveal, AnimatedCounter, CinematicUniverseCore, TechMarquee } from "./HomeComponents";
+import { RevealSection, RevealDiv, AnimatedCounter, CinematicUniverseCore, TechMarquee } from "./HomeComponents";
 import Footer from '../components/Footer';
+import { motion } from "framer-motion";
 
 export default function Home() {
   const navigate = useNavigate();
@@ -14,8 +15,6 @@ export default function Home() {
   const [resume, setResume] = useState(null);
   const [careerScore, setCareerScore] = useState(0);
   const [showLoginPrompt, setShowLoginPrompt] = useState(false);
-  const r1=useReveal(),r2=useReveal(),r3=useReveal(),r4=useReveal(),r5=useReveal(),r6=useReveal(),r7=useReveal(),r8=useReveal();
-
   useEffect(() => {
     let s = 0; if (resume) s += 35;
     s += Math.min(selectedSkills.length * 10, 35);
@@ -32,47 +31,60 @@ export default function Home() {
 
       {/* ═══ HERO ═══ */}
       <section className="hero-sec">
-        <div style={{ position:"absolute",top:"8%",left:"-10%",width:"50vw",height:"50vw",borderRadius:"50%",background:"radial-gradient(circle,rgba(129,140,248,.08) 0%,transparent 65%)",filter:"blur(70px)",pointerEvents:"none",animation:"float 12s ease-in-out infinite" }} />
+        <motion.div 
+          initial={{ opacity: 0 }} 
+          animate={{ opacity: 1 }} 
+          transition={{ duration: 2 }}
+          style={{ position:"absolute",top:"8%",left:"-10%",width:"50vw",height:"50vw",borderRadius:"50%",background:"radial-gradient(circle,rgba(129,140,248,.08) 0%,transparent 65%)",filter:"blur(70px)",pointerEvents:"none" }} 
+        />
         <div className="hero-grid">
-          <div style={{ animation:"fadeUp .8s cubic-bezier(.4,0,.2,1) both" }}>
+          <motion.div 
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          >
             <div className="hero-badge">
-              <span className="hero-badge-tag">THE ASCENSION PROTOCOL</span>
-              <span style={{ fontSize:12,color:"rgba(0,0,0,0.6)",fontWeight:600 }}>Next-Gen Career Singularity</span>
+              <span className="hero-badge-tag">AI-POWERED</span>
+              <span style={{ fontSize:12,color:"rgba(0,0,0,0.6)",fontWeight:600 }}>Career Intelligence Platform</span>
             </div>
             <h1 className="hero-h1">
-              Your Engineering Legacy Begins <em>Right Here.</em>
+              Accelerate Your Engineering Career With <em>Precision.</em>
             </h1>
             <p className="hero-sub">
-              Transcend the competition. Pathora decodes the industry matrix and maps your absolute potential, generating a flawless trajectory to secure your dream first role. Built exclusively for elite freshers.
+              Pathora analyzes your profile to deliver personalized engineering roadmaps, precise skill analysis, and industry-aligned recommendations for your next role. Built exclusively for modern engineers.
             </p>
             <div className="hero-ctas">
               <button className="btn-glass-primary" onClick={handleGetStarted}>Analyze My Career Path</button>
-              <button className="btn-glass-outline" onClick={() => navigate("/quiz")}>Take Career Assessment</button>
+              <button className="btn-glass-outline" onClick={() => navigate("/quiz")}>Explore Assessments</button>
             </div>
             <div className="trust-row">
-              {["ATS-aligned analysis","Industry standards","Role-based mapping"].map(t => (
+              {["Resume & ATS Analysis","Technical Growth Tracking","Personalized Roadmaps"].map(t => (
                 <div key={t} className="trust-item">
                   <div className="trust-check">✓</div>
                   <span style={{ fontSize:13,color:"var(--tm)",fontWeight:500 }}>{t}</span>
                 </div>
               ))}
             </div>
-          </div>
-          <div style={{ animation:"slideLeft .8s cubic-bezier(.4,0,.2,1) .15s both" }}>
+          </motion.div>
+          <motion.div 
+            initial={{ opacity: 0, x: 40 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
+          >
             <CinematicUniverseCore />
-          </div>
+          </motion.div>
         </div>
       </section>
 
       {/* ═══ TECH MARQUEE ═══ */}
-      <div ref={r1} className="lg-reveal marquee-bar"><TechMarquee /></div>
+      <RevealDiv className="marquee-bar"><TechMarquee /></RevealDiv>
 
       {/* ═══ METRICS ═══ */}
-      <section ref={r2} className="lg-reveal sec">
+      <RevealSection className="sec">
         <div className="sec-inner" style={{ textAlign:"center" }}>
           <div className="sec-head">
-            <div className="sec-tag" style={{ color:"var(--accent)" }}>Proven Ascendancy</div>
-            <h2 className="sec-title">The Career Nexus<span style={{ color:"var(--ts)" }}> Forging Elite Engineers</span></h2>
+            <div className="sec-tag" style={{ color:"var(--accent)" }}>Proven Performance</div>
+            <h2 className="sec-title">The Intelligence Engine<span style={{ color:"var(--ts)" }}> For Modern Engineers</span></h2>
           </div>
           <div className="metrics-grid">
             <AnimatedCounter end={1200} label="Career Predictions" suffix="+" />
@@ -80,29 +92,29 @@ export default function Home() {
             <AnimatedCounter end={300} label="Interactive Quizzes" suffix="+" />
           </div>
         </div>
-      </section>
+      </RevealSection>
 
       {/* ═══ CAREER READINESS ═══ */}
-      <section ref={r3} className="lg-reveal sec" style={{ borderTop:"1px solid rgba(255,255,255,.06)" }}>
+      <RevealSection className="sec" style={{ borderTop:"1px solid rgba(0,0,0,.06)" }}>
         <div className="readiness-wrap">
           <div className="sec-head">
             <div className="sec-tag" style={{ color:"var(--accent2)" }}>Your Trajectory</div>
-            <h2 className="sec-title">The Readiness Matrix</h2>
-            <p className="sec-desc">Real-time cinematic assessment of your technical arsenal, Predict engine trajectory, and industry synchrony.</p>
+            <h2 className="sec-title">Career Readiness Dashboard</h2>
+            <p className="sec-desc">Real-time assessment of your technical skills, personalized growth trajectory, and industry alignment.</p>
           </div>
           <div className="readiness-bar"><div className="readiness-fill" style={{ width:`${careerScore}%` }} /></div>
           <div className="readiness-score">{careerScore}%</div>
           <p style={{ textAlign:"center",fontSize:14,color:"var(--tm)" }}>Aligned with industry expectations for fresher-level roles</p>
         </div>
-      </section>
+      </RevealSection>
 
       {/* ═══ SKILL GAP SIMULATOR ═══ */}
-      <section ref={r4} className="lg-reveal sec">
+      <RevealSection className="sec">
         <div className="sec-inner">
           <div className="sec-head">
             <div className="sec-tag" style={{ color:"var(--accent3)" }}>Interactive Assessment</div>
-            <h2 className="sec-title">Dynamic Skill Quizzes</h2>
-            <p className="sec-desc">Enter the assessment simulation. Select your target engineering domain to test your baseline and reveal the critical tech stacks missing from your arsenal.</p>
+            <h2 className="sec-title">Skill Gap Analysis</h2>
+            <p className="sec-desc">Select your target engineering domain to test your baseline knowledge and identify the critical technical skills missing from your portfolio.</p>
           </div>
           <div className="sim-box">
             <div style={{ marginBottom:32 }}>
@@ -173,15 +185,15 @@ export default function Home() {
             )}
           </div>
         </div>
-      </section>
+      </RevealSection>
 
       {/* ═══ PREDICT ENGINE ═══ */}
-      <section ref={r5} className="lg-reveal sec" style={{ borderTop:"1px solid rgba(255,255,255,.06)" }}>
+      <RevealSection className="sec" style={{ borderTop:"1px solid rgba(0,0,0,.06)" }}>
         <div style={{ maxWidth:1100,margin:"0 auto" }}>
           <div className="sec-head">
-            <div className="sec-tag" style={{ color:"var(--success)" }}>Machine Learning Core</div>
-            <h2 className="sec-title">Predict Engine Initialization</h2>
-            <p className="sec-desc" style={{ marginBottom: 40, marginTop: -10 }}>Initialize the ML Predict sequence by providing your academic and skill dataset.</p>
+            <div className="sec-tag" style={{ color:"var(--success)" }}>AI Engine Core</div>
+            <h2 className="sec-title">Predictive Career Analysis</h2>
+            <p className="sec-desc" style={{ marginBottom: 40, marginTop: -10 }}>Upload your resume or academic profile to generate a personalized career trajectory.</p>
           </div>
           <div className="resume-drop" onClick={() => fileRef.current?.click()}>
             <div style={{ width:60,height:60,borderRadius:"50%",background:"rgba(129,140,248,.1)",border:"1px solid rgba(129,140,248,.2)",display:"flex",alignItems:"center",justifyContent:"center",margin:"0 auto 20px",fontSize:28 }}>🧠</div>
@@ -200,61 +212,82 @@ export default function Home() {
             </div>
           )}
         </div>
-      </section>
+      </RevealSection>
 
       {/* ═══ CAREER ROADMAP ═══ */}
-      <section ref={r6} className="lg-reveal sec">
+      <RevealSection className="sec">
         <div className="sec-inner">
           <div className="sec-head">
-            <div className="sec-tag" style={{ color:"var(--warning)" }}>The Awakening</div>
-            <h2 className="sec-title">The Fresher's Ascension Roadmap</h2>
+            <div className="sec-tag" style={{ color:"var(--warning)" }}>Career Journey</div>
+            <h2 className="sec-title">The Emerging Engineer's Roadmap</h2>
           </div>
           <div className="roadmap-wrap">
             <div className="roadmap-line" />
             <div className="roadmap-flex">
               {ROADMAP_STEPS.map((s, i) => (
-                <div key={s.step} className="roadmap-step" style={{ animation:`fadeUp .6s cubic-bezier(.4,0,.2,1) ${i*.1}s both` }}>
+                <motion.div 
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6, delay: i * 0.1 }}
+                  key={s.step} 
+                  className="roadmap-step"
+                >
                   <div className="roadmap-dot">{i+1}</div>
                   <div style={{ fontSize:14,fontWeight:600,color:"var(--tp)",textAlign:"center",maxWidth:120 }}>{s.step}</div>
                   <div style={{ fontSize:11,color:"var(--tm)",textAlign:"center",maxWidth:130,marginTop:6 }}>{s.desc}</div>
-                </div>
+                </motion.div>
               ))}
             </div>
           </div>
         </div>
-      </section>
+      </RevealSection>
 
       {/* ═══ CAREER FEATURES ═══ */}
-      <section className="sec" style={{ borderTop:"1px solid rgba(255,255,255,.06)" }}>
+      <RevealSection className="sec" style={{ borderTop:"1px solid rgba(0,0,0,.06)" }}>
         <div className="sec-inner">
           <div className="sec-head">
-            <div className="sec-tag" style={{ color:"var(--accent)" }}>The Core Architecture</div>
-            <h2 className="sec-title">The Ultimate Fresher<br/>Intelligence Platform</h2>
-            <p className="sec-desc">From the genesis of career discovery to your ultimate tech placement, we provide cinematic end-to-end guidance powered by our central AI core.</p>
+            <div className="sec-tag" style={{ color:"var(--accent)" }}>The Core Platform</div>
+            <h2 className="sec-title">The Complete Career<br/>Intelligence Platform</h2>
+            <p className="sec-desc">From initial career discovery to your final technical placement, we provide comprehensive end-to-end guidance powered by our advanced AI core.</p>
           </div>
           <div className="features-grid">
             {CAREER_FEATURES.map((f, i) => (
-              <div key={f.title} className="g feature-card" style={{ animation:`scaleIn .6s cubic-bezier(.4,0,.2,1) ${i*.08}s both` }}>
+              <motion.div 
+                initial={{ opacity: 0, scale: 0.92 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: i * 0.08 }}
+                key={f.title} 
+                className="g feature-card"
+              >
                 <div className="feature-icon" style={{ background:`${f.color}15`,border:`1px solid ${f.color}25` }}>{f.icon}</div>
                 <h3 style={{ fontSize:20,fontWeight:700,color:"var(--tp)",marginBottom:12 }}>{f.title}</h3>
                 <p style={{ fontSize:14,color:"var(--ts)",lineHeight:1.7 }}>{f.desc}</p>
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>
-      </section>
+      </RevealSection>
 
       {/* ═══ SUCCESS STORIES ═══ */}
-      <section className="sec" style={{ overflow:"hidden" }}>
+      <RevealSection className="sec" style={{ overflow:"hidden" }}>
         <div style={{ position:"absolute",top:"10%",right:"-5%",width:"40vw",height:"40vw",borderRadius:"50%",background:"radial-gradient(circle,rgba(103,232,249,.05) 0%,transparent 70%)",filter:"blur(60px)",pointerEvents:"none" }} />
         <div className="sec-inner">
           <div className="sec-head">
-            <div className="sec-tag" style={{ color:"var(--success)" }}>The Hall of Heroes</div>
-            <h2 className="sec-title">Chronicles of Success</h2>
+            <div className="sec-tag" style={{ color:"var(--success)" }}>Success Stories</div>
+            <h2 className="sec-title">Proven Industry Placements</h2>
           </div>
           <div className="stories-grid">
             {SUCCESS_STORIES.map((s, i) => (
-              <div key={s.name} className="g story-card" style={{ animation:`slideUp .6s cubic-bezier(.4,0,.2,1) ${i*.1}s both` }}>
+              <motion.div 
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: i * 0.1 }}
+                key={s.name} 
+                className="g story-card"
+              >
                 <div style={{ display:"flex",alignItems:"center",gap:16,marginBottom:20 }}>
                   <div className="story-avatar">{s.initials}</div>
                   <div>
@@ -266,40 +299,47 @@ export default function Home() {
                   {[...Array(s.rating)].map((_,i) => <span key={i} style={{ color:"var(--warning)",fontSize:16 }}>⭐</span>)}
                 </div>
                 <p style={{ fontSize:14,color:"var(--ts)",lineHeight:1.7,fontStyle:"italic" }}>"{s.story}"</p>
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>
-      </section>
+      </RevealSection>
 
       {/* ═══ INDUSTRIES ═══ */}
-      <section className="sec" style={{ borderTop:"1px solid rgba(255,255,255,.06)" }}>
+      <RevealSection className="sec" style={{ borderTop:"1px solid rgba(0,0,0,.06)" }}>
         <div className="sec-inner">
           <div className="sec-head">
-            <div className="sec-tag" style={{ color:"var(--accent3)" }}>The Multiverse</div>
-            <h2 className="sec-title">Trending Sector Universes</h2>
+            <div className="sec-tag" style={{ color:"var(--accent3)" }}>Industry Domains</div>
+            <h2 className="sec-title">Trending Technology Sectors</h2>
           </div>
           <div className="industries-grid">
             {INDUSTRIES.map((ind, i) => (
-              <div key={ind.name} className="g industry-card" style={{ animation:`rotateIn .5s cubic-bezier(.4,0,.2,1) ${i*.06}s both` }}>
+              <motion.div 
+                initial={{ opacity: 0, rotate: -8, scale: 0.9 }}
+                whileInView={{ opacity: 1, rotate: 0, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: i * 0.06 }}
+                key={ind.name} 
+                className="g industry-card"
+              >
                 <div style={{ display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:16 }}>
                   <i className={ind.icon} style={{ fontSize:32,opacity:.8 }} />
                   <div style={{ padding:"4px 10px",borderRadius:8,background:"rgba(52,211,153,.1)",border:"1px solid rgba(52,211,153,.2)",fontSize:11,fontWeight:700,color:"var(--success)" }}>{ind.growth}</div>
                 </div>
                 <h4 style={{ fontSize:18,fontWeight:700,color:"var(--tp)",marginBottom:8 }}>{ind.name}</h4>
                 <p style={{ fontSize:13,color:"var(--tm)" }}>{ind.jobs} open positions</p>
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>
-      </section>
+      </RevealSection>
 
       {/* ═══ COMPARISON TABLE ═══ */}
-      <section className="sec">
+      <RevealSection className="sec">
         <div style={{ maxWidth:1000,margin:"0 auto" }}>
           <div className="sec-head">
-            <div className="sec-tag" style={{ color:"var(--accent2)" }}>The Paradigm Shift</div>
-            <h2 className="sec-title">Pathora vs<br/>The Legacy Matrix</h2>
+            <div className="sec-tag" style={{ color:"var(--accent2)" }}>The Evolution</div>
+            <h2 className="sec-title">Pathora vs<br/>Traditional Platforms</h2>
           </div>
           <div className="compare-table">
             <div className="compare-header">
@@ -316,27 +356,27 @@ export default function Home() {
             ))}
           </div>
         </div>
-      </section>
+      </RevealSection>
 
       {/* ═══ CTA ═══ */}
-      <section ref={r7} className="lg-reveal cta-sec">
+      <RevealSection className="cta-sec">
         <div className="cta-bg" />
         <div className="cta-glow" />
-        <div style={{ position:"absolute",inset:0,backgroundImage:"linear-gradient(rgba(255,255,255,.015) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.015) 1px,transparent 1px)",backgroundSize:"60px 60px" }} />
+        <div style={{ position:"absolute",inset:0,backgroundImage:"linear-gradient(rgba(0,0,0,.015) 1px,transparent 1px),linear-gradient(90deg,rgba(0,0,0,.015) 1px,transparent 1px)",backgroundSize:"60px 60px" }} />
         <div className="cta-inner">
           <div style={{ fontSize:12,fontFamily:"var(--mono)",fontWeight:700,letterSpacing:".16em",color:"var(--tm)",marginBottom:20,textTransform:"uppercase",display:"flex",alignItems:"center",justifyContent:"center",gap:12 }}>
-            <div style={{ width:24,height:1,background:"rgba(255,255,255,.2)" }} /> Ready to Start <div style={{ width:24,height:1,background:"rgba(255,255,255,.2)" }} />
+            <div style={{ width:24,height:1,background:"rgba(0,0,0,.2)" }} /> Ready to Start <div style={{ width:24,height:1,background:"rgba(0,0,0,.2)" }} />
           </div>
           <h2 style={{ fontFamily:"var(--display)",fontSize:"clamp(36px,5vw,64px)",fontWeight:400,fontStyle:"italic",color:"var(--tp)",marginBottom:20,lineHeight:1.12 }}>
-            Initiate Your Engineering<br/>
-            <span style={{ background:"linear-gradient(120deg,#a78bfa,#c4b5fd,#a78bfa)",backgroundSize:"200% auto",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",backgroundClip:"text",animation:"gradShift 4s ease infinite" }}>Evolution</span> Today
+            Accelerate Your Engineering<br/>
+            <span style={{ background:"linear-gradient(120deg,#818cf8,#a78bfa,#818cf8)",backgroundSize:"200% auto",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",backgroundClip:"text",animation:"gradShift 4s ease infinite" }}>Career</span> Today
           </h2>
           <p style={{ fontSize:17,color:"var(--ts)",maxWidth:560,margin:"0 auto 40px",lineHeight:1.7 }}>
-            Join the elite network of aspiring engineers using the central intelligence system to dominate the tech industry.
+            Join the network of aspiring engineers using our intelligence platform to excel in the tech industry.
           </p>
-          <button className="cta-btn" onClick={handleGetStarted}>Launch The Career Protocol</button>
+          <button className="cta-btn" onClick={handleGetStarted}>Launch Your Career Path</button>
         </div>
-      </section>
+      </RevealSection>
 
       {/* ═══ FOOTER ═══ */}
       <Footer />

@@ -1,40 +1,57 @@
 import React, { useEffect, useRef, useState } from "react";
 import { TECH_STACK, FOOTER_COLS } from "./HomeData";
+import { motion, AnimatePresence } from "framer-motion";
 
 /* ── Glass Style Helpers ── */
 const glass = (extra = {}) => ({
-  background: "rgba(10,10,25,0.65)",
+  background: "rgba(255,255,255,0.65)",
   backdropFilter: "blur(24px)",
   WebkitBackdropFilter: "blur(24px)",
-  border: "1px solid rgba(255,255,255,0.1)",
+  border: "1px solid rgba(255,255,255,0.8)",
+  boxShadow: "0 4px 20px rgba(0,0,0,0.03)",
   borderRadius: 20,
   ...extra,
 });
 
 const glassStrong = (extra = {}) => ({
-  background: "rgba(15, 15, 20, 0.25)",
+  background: "rgba(255,255,255,0.4)",
   backdropFilter: "blur(30px)",
   WebkitBackdropFilter: "blur(30px)",
-  border: "1px solid rgba(255, 255, 255, 0.05)",
-  boxShadow: "0 20px 60px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1)",
+  border: "1px solid rgba(255, 255, 255, 0.8)",
+  boxShadow: "0 20px 60px rgba(0, 0, 0, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.6)",
   borderRadius: 24,
   ...extra,
 });
 
 /* ── Scroll Reveal Hook ── */
-export function useReveal() {
-  const ref = useRef(null);
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const obs = new IntersectionObserver(
-      ([e]) => { if (e.isIntersecting) { el.classList.add("visible"); obs.disconnect(); } },
-      { threshold: 0.1 }
-    );
-    obs.observe(el);
-    return () => obs.disconnect();
-  }, []);
-  return ref;
+export function RevealSection({ children, className, style, delay = 0 }) {
+  return (
+    <motion.section
+      initial={{ opacity: 0, y: 40 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-40px" }}
+      transition={{ duration: 0.7, delay, ease: [0.16, 1, 0.3, 1] }}
+      className={className}
+      style={style}
+    >
+      {children}
+    </motion.section>
+  );
+}
+
+export function RevealDiv({ children, className, style, delay = 0 }) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 40 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-40px" }}
+      transition={{ duration: 0.7, delay, ease: [0.16, 1, 0.3, 1] }}
+      className={className}
+      style={style}
+    >
+      {children}
+    </motion.div>
+  );
 }
 
 /* ── Animated Counter ── */
@@ -77,182 +94,116 @@ export function AnimatedCounter({ end, label, suffix = "" }) {
 
 /* ── Cinematic Universe Core (replaces LiveOrbAnimation) ── */
 export function CinematicUniverseCore() {
-  const canvasRef = useRef(null);
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d");
-    let animId;
-    
-    const resize = () => {
-      canvas.width = canvas.offsetWidth * 2;
-      canvas.height = canvas.offsetHeight * 2;
-      ctx.scale(2, 2);
-    };
-    resize();
-    window.addEventListener("resize", resize);
-
-    const W = () => canvas.offsetWidth;
-    const H = () => canvas.offsetHeight;
-
-    // 3D points
-    let points = [];
-    const numPoints = 90;
-    for (let i = 0; i < numPoints; i++) {
-      const theta = Math.random() * Math.PI * 2;
-      const phi = Math.acos((Math.random() * 2) - 1);
-      const r = 80 + Math.random() * 60;
-      points.push({
-        x0: r * Math.sin(phi) * Math.cos(theta),
-        y0: r * Math.sin(phi) * Math.sin(theta),
-        z0: r * Math.cos(phi),
-        radius: Math.random() * 2 + 0.5,
-        connections: []
-      });
-    }
-
-    // Pre-calculate connections
-    for (let i = 0; i < numPoints; i++) {
-      for (let j = i + 1; j < numPoints; j++) {
-        const dx = points[i].x0 - points[j].x0;
-        const dy = points[i].y0 - points[j].y0;
-        const dz = points[i].z0 - points[j].z0;
-        if (Math.sqrt(dx*dx + dy*dy + dz*dz) < 60) {
-          points[i].connections.push(j);
-        }
-      }
-    }
-
-    let time = 0;
-    const draw = () => {
-      ctx.clearRect(0, 0, W(), H());
-      const cx = W() / 2, cy = H() / 2;
-      time += 0.0015;
-
-      // Draw glowing central core
-      const coreGrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, 50);
-      coreGrad.addColorStop(0, "rgba(167, 139, 250, 0.15)");
-      coreGrad.addColorStop(1, "transparent");
-      ctx.fillStyle = coreGrad;
-      ctx.beginPath(); ctx.arc(cx, cy, 100, 0, Math.PI * 2); ctx.fill();
-
-      // Rotate points
-      const rotPoints = points.map(p => {
-        // Rotate Y
-        const x1 = p.x0 * Math.cos(time) - p.z0 * Math.sin(time);
-        const z1 = p.z0 * Math.cos(time) + p.x0 * Math.sin(time);
-        // Rotate X
-        const y2 = p.y0 * Math.cos(time*0.5) - z1 * Math.sin(time*0.5);
-        const z2 = z1 * Math.cos(time*0.5) + p.y0 * Math.sin(time*0.5);
-        
-        // Perspective
-        const scale = 300 / (300 + z2);
-        return {
-          ...p,
-          x: cx + x1 * scale,
-          y: cy + y2 * scale,
-          z: z2,
-          scale
-        };
-      });
-
-      // Sort by Z to draw back to front
-      const sortedIndices = rotPoints.map((_, i) => i).sort((a, b) => rotPoints[b].z - rotPoints[a].z);
-
-      ctx.lineWidth = 0.5;
-      // Draw connections
-      for (let i of sortedIndices) {
-        const p1 = rotPoints[i];
-        if (p1.z > 200) continue; 
-        
-        for (let j of points[i].connections) {
-          const p2 = rotPoints[j];
-          if (p2.z > 200) continue;
-          
-          const avgZ = (p1.z + p2.z) / 2;
-          const alpha = Math.max(0.01, 0.15 - (avgZ + 200) / 800);
-          if (alpha <= 0.01) continue; // Performance optimization
-          
-          ctx.beginPath();
-          ctx.moveTo(p1.x, p1.y);
-          ctx.lineTo(p2.x, p2.y);
-          ctx.strokeStyle = `rgba(0, 0, 0, ${alpha})`;
-          ctx.stroke();
-        }
-      }
-
-      // Draw nodes
-      for (let i of sortedIndices) {
-        const p = rotPoints[i];
-        if (p.z > 200) continue;
-        const alpha = Math.max(0.05, 0.8 - (p.z + 200) / 600);
-        
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.radius * p.scale, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(0, 0, 0, ${alpha})`;
-        ctx.fill();
-        
-        // Draw tiny text for some nodes
-        if (i % 7 === 0) {
-          ctx.font = `${Math.max(4, 9 * p.scale)}px "JetBrains Mono"`;
-          ctx.fillStyle = `rgba(0, 0, 0, ${alpha * 0.8})`;
-          ctx.fillText(["AI", "DATA", "SYS", "CORE", "NET"][i % 5], p.x + 5, p.y + 3);
-        }
-      }
-
-      // Orbital rings
-      ctx.strokeStyle = "rgba(0,0,0,0.03)";
-      ctx.lineWidth = 1;
-      [110, 150, 190].forEach((r, idx) => {
-        ctx.beginPath();
-        ctx.ellipse(cx, cy, r * (1 + Math.sin(time*2 + idx)*0.03), r * 0.25 * (1 + Math.cos(time*2 + idx)*0.03), time * 0.1 * (idx%2==0?1:-1), 0, Math.PI * 2);
-        ctx.stroke();
-      });
-
-      animId = requestAnimationFrame(draw);
-    };
-    draw();
-
-    return () => {
-      cancelAnimationFrame(animId);
-      window.removeEventListener("resize", resize);
-    };
-  }, []);
-
   return (
-    <div style={{ position: "relative", width: "100%", maxWidth: 440, marginLeft: "auto", height: "100%", minHeight: 380, display: "flex", alignItems: "center", justifyContent: "center", willChange: "transform" }}>
-      {/* Decorative background blurs */}
-      <div style={{ position: "absolute", width: 280, height: 280, background: "radial-gradient(circle, rgba(167,139,250,0.08) 0%, transparent 70%)", animation: "pulse 6s infinite" }} />
-      <div style={{ position: "absolute", width: 200, height: 200, background: "radial-gradient(circle, rgba(103,232,249,0.08) 0%, transparent 70%)", animation: "pulse 6s infinite 3s" }} />
+    <div style={{ position: "relative", width: "100%", maxWidth: 520, marginLeft: "auto", height: "100%", minHeight: 460, display: "flex", alignItems: "center", justifyContent: "center" }}>
+      {/* Background blurs */}
+      <motion.div 
+        animate={{ scale: [1, 1.05, 1], rotate: [0, 90, 0] }}
+        transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+        style={{ position: "absolute", width: 400, height: 400, background: "radial-gradient(circle, rgba(167,139,250,0.12) 0%, transparent 60%)", filter: "blur(40px)", borderRadius: "50%" }} 
+      />
       
-      {/* Glass container */}
+      {/* Dashboard container */}
       <div style={{
         position: "absolute", inset: 0,
-        background: "rgba(255,255,255,0.2)", backdropFilter: "blur(12px)", WebkitBackdropFilter: "blur(12px)",
-        border: "1px solid rgba(255,255,255,0.4)", borderRadius: 32,
-        boxShadow: "0 20px 40px rgba(0,0,0,0.05), inset 0 0 0 1px rgba(255,255,255,0.6)",
-        overflow: "hidden",
-        willChange: "transform"
+        background: "rgba(255,255,255,0.6)", backdropFilter: "blur(32px)", WebkitBackdropFilter: "blur(32px)",
+        border: "1px solid rgba(255,255,255,0.8)", borderRadius: 24,
+        boxShadow: "0 20px 40px rgba(0,0,0,0.04), inset 0 0 0 1px rgba(255,255,255,0.5)",
+        overflow: "hidden", display: "flex", flexDirection: "column", padding: 24
       }}>
         {/* Top Header */}
-        <div style={{ position: "absolute", top: 24, left: 28, right: 28, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-          <div style={{ fontSize: 10, fontFamily: "var(--mono)", fontWeight: 700, letterSpacing: ".2em", color: "rgba(0,0,0,0.4)", textTransform: "uppercase" }}>
-            The Career Universe Matrix
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+            <motion.div 
+              animate={{ opacity: [1, 0.4, 1] }} 
+              transition={{ duration: 2, repeat: Infinity }} 
+              style={{ width: 8, height: 8, borderRadius: "50%", background: "#10b981", boxShadow: "0 0 12px rgba(16,185,129,0.5)" }} 
+            />
+            <span style={{ fontSize: 11, fontFamily: "var(--mono)", fontWeight: 600, color: "var(--tm)", letterSpacing: ".1em" }}>REAL-TIME ANALYSIS</span>
           </div>
-          <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
-            <div style={{ width: 6, height: 6, borderRadius: "50%", background: "#10b981", boxShadow: "0 0 10px rgba(16,185,129,0.8)", animation: "pulse 2s infinite" }} />
-            <span style={{ fontSize: 10, fontFamily: "var(--mono)", fontWeight: 700, color: "rgba(0,0,0,0.6)" }}>LIVE SYNC</span>
+          <div style={{ fontSize: 11, fontFamily: "var(--mono)", fontWeight: 600, color: "var(--accent)" }}>
+            ENGINE_V2.4
           </div>
         </div>
-        
-        <canvas ref={canvasRef} style={{ width: "100%", height: "100%", display: "block" }} />
-        
-        {/* Floating tech badges */}
-        <div style={{ position: "absolute", bottom: 28, left: 28, padding: "10px 16px", background: "rgba(255,255,255,0.6)", backdropFilter: "blur(8px)", borderRadius: 100, border: "1px solid rgba(255,255,255,0.8)", boxShadow: "0 4px 12px rgba(0,0,0,0.05)", fontSize: 11, fontFamily: "var(--mono)", fontWeight: 700, color: "#000" }}>
-          1.2M+ ACTIVE NODES
-        </div>
-        <div style={{ position: "absolute", bottom: 28, right: 28, padding: "10px 16px", background: "rgba(255,255,255,0.6)", backdropFilter: "blur(8px)", borderRadius: 100, border: "1px solid rgba(255,255,255,0.8)", boxShadow: "0 4px 12px rgba(0,0,0,0.05)", fontSize: 11, fontFamily: "var(--mono)", fontWeight: 700, color: "#000" }}>
-          PREDICTIVE ENGINE
+
+        {/* Grid layout for dashboard */}
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, flex: 1 }}>
+          
+          {/* Main metric card */}
+          <div style={{ gridColumn: "1 / -1", background: "rgba(255,255,255,0.5)", border: "1px solid rgba(0,0,0,0.04)", borderRadius: 16, padding: 20, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+            <div>
+              <div style={{ fontSize: 12, color: "var(--tm)", marginBottom: 4, fontWeight: 500 }}>Career Prediction Confidence</div>
+              <div style={{ fontSize: 32, fontFamily: "var(--display)", fontWeight: 700, color: "var(--tp)" }}>94.8%</div>
+            </div>
+            <div style={{ width: 80, height: 40, position: "relative" }}>
+              {/* Mini sparkline graph */}
+              <svg viewBox="0 0 100 40" style={{ width: "100%", height: "100%", overflow: "visible" }}>
+                <motion.path 
+                  d="M0 30 Q20 20, 40 25 T80 15 T100 5" 
+                  fill="none" stroke="var(--accent)" strokeWidth="3" strokeLinecap="round"
+                  initial={{ pathLength: 0 }}
+                  animate={{ pathLength: 1 }}
+                  transition={{ duration: 1.5, ease: "easeInOut", repeat: Infinity, repeatType: "reverse", repeatDelay: 2 }}
+                />
+                <motion.circle cx="100" cy="5" r="4" fill="var(--accent)" 
+                  initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.5 }}
+                />
+              </svg>
+            </div>
+          </div>
+
+          {/* Skill cluster visualization */}
+          <div style={{ background: "rgba(255,255,255,0.5)", border: "1px solid rgba(0,0,0,0.04)", borderRadius: 16, padding: 16, display: "flex", flexDirection: "column", gap: 12 }}>
+            <div style={{ fontSize: 11, color: "var(--tm)", fontWeight: 600, textTransform: "uppercase", letterSpacing: ".05em" }}>Skill Clusters</div>
+            <div style={{ position: "relative", flex: 1, display: "flex", alignItems: "center", justifyContent: "center" }}>
+              <motion.div animate={{ rotate: 360 }} transition={{ duration: 20, repeat: Infinity, ease: "linear" }} style={{ width: 80, height: 80, border: "1px dashed rgba(129,140,248,0.4)", borderRadius: "50%", position: "absolute" }} />
+              <motion.div animate={{ rotate: -360 }} transition={{ duration: 25, repeat: Infinity, ease: "linear" }} style={{ width: 60, height: 60, border: "1px dashed rgba(167,139,250,0.4)", borderRadius: "50%", position: "absolute" }} />
+              <div style={{ width: 40, height: 40, background: "linear-gradient(135deg, var(--accent), var(--accent2))", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontSize: 14 }}>
+                <i className="devicon-react-original" />
+              </div>
+            </div>
+          </div>
+
+          {/* ATS Insights */}
+          <div style={{ background: "rgba(255,255,255,0.5)", border: "1px solid rgba(0,0,0,0.04)", borderRadius: 16, padding: 16, display: "flex", flexDirection: "column", gap: 10 }}>
+            <div style={{ fontSize: 11, color: "var(--tm)", fontWeight: 600, textTransform: "uppercase", letterSpacing: ".05em" }}>ATS Match</div>
+            {[
+              { label: "Frontend", val: 92 },
+              { label: "Backend", val: 68 },
+              { label: "DevOps", val: 45 }
+            ].map(item => (
+              <div key={item.label} style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+                <div style={{ display: "flex", justifyContent: "space-between", fontSize: 11, color: "var(--ts)", fontWeight: 500 }}>
+                  <span>{item.label}</span><span>{item.val}%</span>
+                </div>
+                <div style={{ height: 4, background: "rgba(0,0,0,0.05)", borderRadius: 2, overflow: "hidden" }}>
+                  <motion.div 
+                    initial={{ width: 0 }}
+                    animate={{ width: `${item.val}%` }}
+                    transition={{ duration: 1, delay: 0.5, ease: "easeOut" }}
+                    style={{ height: "100%", background: "var(--accent)" }} 
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Processing Log */}
+          <div style={{ gridColumn: "1 / -1", background: "rgba(0,0,0,0.02)", borderRadius: 12, padding: 12, fontFamily: "var(--mono)", fontSize: 10, color: "var(--tm)", height: 60, overflow: "hidden", position: "relative", border: "1px solid rgba(0,0,0,0.03)" }}>
+            <motion.div
+              animate={{ y: [0, -20, -40, -60] }}
+              transition={{ duration: 6, repeat: Infinity, ease: "linear" }}
+              style={{ display: "flex", flexDirection: "column", gap: 8 }}
+            >
+              <div>> analyzing github repositories... [OK]</div>
+              <div>> extracting semantic keywords... [OK]</div>
+              <div>> mapping to industry standard... [OK]</div>
+              <div>> generating roadmap trajectory... [OK]</div>
+              <div>> calculating predictive score... [OK]</div>
+              <div>> finalizing analysis... [OK]</div>
+            </motion.div>
+            <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: 30, background: "linear-gradient(transparent, rgba(255,255,255,0.9))" }} />
+          </div>
         </div>
       </div>
     </div>
@@ -267,7 +218,7 @@ export function TechMarquee() {
       {[{ left: 0 }, { right: 0 }].map((side, i) => (
         <div key={i} style={{
           position: "absolute", top: 0, bottom: 0, width: 100, zIndex: 2,
-          background: `linear-gradient(${i === 0 ? "90deg" : "270deg"}, rgba(10,10,20,0.9) 0%, transparent 100%)`,
+          background: `linear-gradient(${i === 0 ? "90deg" : "270deg"}, rgba(255,255,255,0.9) 0%, transparent 100%)`,
           pointerEvents: "none", ...side
         }} />
       ))}
@@ -275,7 +226,7 @@ export function TechMarquee() {
         {doubled.map(({ icon, label }, i) => (
           <div key={i} style={{
             display: "flex", alignItems: "center", gap: 10, padding: "0 32px",
-            borderRight: "1px solid rgba(255,255,255,0.06)",
+            borderRight: "1px solid rgba(0,0,0,0.06)",
           }}>
             <i className={icon} style={{ fontSize: 22, opacity: 0.7 }} />
             <span style={{ fontSize: 12, color: "var(--tm)", fontFamily: "var(--mono)", fontWeight: 600, whiteSpace: "nowrap" }}>{label}</span>
@@ -289,21 +240,21 @@ export function TechMarquee() {
 /* ── Liquid Glass Footer ── */
 export const LiquidGlassFooter = React.forwardRef(function LiquidGlassFooter({ navigate }, ref) {
   return (
-    <footer ref={ref} className="lg-reveal" style={{
+      <RevealSection style={{
       position: "relative", overflow: "hidden",
-      borderTop: "1px solid rgba(255,255,255,0.06)",
+      borderTop: "1px solid rgba(0,0,0,0.06)",
     }}>
-      {/* Dark glass bg */}
+      {/* Light glass bg */}
       <div style={{
         position: "absolute", inset: 0,
-        background: "rgba(8,8,20,0.88)",
+        background: "rgba(255,255,255,0.85)",
         backdropFilter: "blur(60px)", WebkitBackdropFilter: "blur(60px)",
         pointerEvents: "none",
       }} />
       {/* Grid pattern */}
       <div style={{
         position: "absolute", inset: 0,
-        backgroundImage: "linear-gradient(rgba(255,255,255,0.02) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.02) 1px,transparent 1px)",
+        backgroundImage: "linear-gradient(rgba(0,0,0,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(0,0,0,0.025) 1px,transparent 1px)",
         backgroundSize: "50px 50px", pointerEvents: "none"
       }} />
       {/* Glow */}
@@ -319,7 +270,7 @@ export const LiquidGlassFooter = React.forwardRef(function LiquidGlassFooter({ n
         <div className="lg-footer-top" style={{
           display: "flex", justifyContent: "space-between", alignItems: "flex-start",
           flexWrap: "wrap", gap: 50, paddingBottom: 60,
-          borderBottom: "1px solid rgba(255,255,255,0.06)",
+          borderBottom: "1px solid rgba(0,0,0,0.06)",
         }}>
           <div style={{ maxWidth: 380 }}>
             <div style={{
@@ -369,7 +320,7 @@ export const LiquidGlassFooter = React.forwardRef(function LiquidGlassFooter({ n
 
         {/* Stats */}
         <div className="lg-footer-stats" style={{
-          display: "flex", gap: 0, borderBottom: "1px solid rgba(255,255,255,0.06)", flexWrap: "wrap",
+          display: "flex", gap: 0, borderBottom: "1px solid rgba(0,0,0,0.06)", flexWrap: "wrap",
         }}>
           {[
             { lbl: "Career Paths", val: "1200+" },
@@ -379,8 +330,8 @@ export const LiquidGlassFooter = React.forwardRef(function LiquidGlassFooter({ n
           ].map(({ lbl, val }, i) => (
             <div key={lbl} style={{
               flex: "1 1 180px", padding: "36px 24px",
-              borderRight: i < 3 ? "1px solid rgba(255,255,255,0.04)" : "none",
-              borderTop: "1px solid rgba(255,255,255,0.04)",
+              borderRight: i < 3 ? "1px solid rgba(0,0,0,0.04)" : "none",
+              borderTop: "1px solid rgba(0,0,0,0.04)",
             }}>
               <div style={{
                 fontFamily: "var(--display)", fontSize: 40, fontWeight: 400, fontStyle: "italic",
@@ -394,7 +345,7 @@ export const LiquidGlassFooter = React.forwardRef(function LiquidGlassFooter({ n
         {/* Links */}
         <div className="lg-footer-links" style={{
           display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(160px,1fr))",
-          gap: 40, padding: "60px 0", borderBottom: "1px solid rgba(255,255,255,0.06)",
+          gap: 40, padding: "60px 0", borderBottom: "1px solid rgba(0,0,0,0.06)",
         }}>
           {Object.entries(FOOTER_COLS).map(([section, links]) => (
             <div key={section}>
@@ -442,6 +393,6 @@ export const LiquidGlassFooter = React.forwardRef(function LiquidGlassFooter({ n
           </div>
         </div>
       </div>
-    </footer>
+    </RevealSection>
   );
 });

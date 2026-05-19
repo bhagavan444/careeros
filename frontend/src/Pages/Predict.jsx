@@ -55,7 +55,43 @@ const MOCK_RESULT = {
     { year: "Y3",  salary: 165000 },
     { year: "Y5",  salary: 215000 },
   ],
+  careerTrajectory: [
+    "Frontend Developer",
+    "Full Stack Engineer",
+    "Product Engineer",
+    "Technical Lead"
+  ],
+  projectAnalysis: {
+    strengths: ["Strong frontend engineering signals", "Good deployment maturity"],
+    weaknesses: ["Missing distributed systems exposure", "Limited testing visibility"],
+    complexity: 78,
+    scalability: 65
+  },
+  recruiterPerspective: {
+    standouts: ["Modern tech stack usage", "Clear career progression"],
+    concerns: ["Lack of quantified metrics in recent roles", "Light on backend architecture"],
+    confidence: 82
+  },
+  competitiveness: {
+    percentile: 88,
+    interviewProbability: 75,
+    comparison: "Strong Fresher"
+  },
+  readiness: [
+    { name: "DSA", value: 70 },
+    { name: "System Design", value: 65 },
+    { name: "Communication", value: 90 },
+    { name: "Backend", value: 75 },
+    { name: "Frontend", value: 95 }
+  ],
+  simulations: [
+    { action: "Current Profile", score: 84 },
+    { action: "Add Quantified Achievements", score: 89 },
+    { action: "Add Cloud Certifications", score: 92 },
+    { action: "Add System Design Projects", score: 95 }
+  ]
 };
+
 
 /* ─────────────────────────────────────────────
    STYLE INJECTION
@@ -536,6 +572,12 @@ export default function Predict() {
     roadmap:          safeArr(data?.roadmap).length          ? data.roadmap          : MOCK_RESULT.roadmap,
     improvements:     safeArr(data?.improvements).length     ? data.improvements     : MOCK_RESULT.improvements,
     growthProjection: safeArr(data?.growthProjection).length ? data.growthProjection : MOCK_RESULT.growthProjection,
+    careerTrajectory: safeArr(data?.careerTrajectory).length ? data.careerTrajectory : MOCK_RESULT.careerTrajectory,
+    projectAnalysis:  data?.projectAnalysis || MOCK_RESULT.projectAnalysis,
+    recruiterPerspective: data?.recruiterPerspective || MOCK_RESULT.recruiterPerspective,
+    competitiveness:  data?.competitiveness || MOCK_RESULT.competitiveness,
+    readiness:        safeArr(data?.readiness).length ? data.readiness : MOCK_RESULT.readiness,
+    simulations:      safeArr(data?.simulations).length ? data.simulations : MOCK_RESULT.simulations,
   });
 
   const submit = async () => {
@@ -620,42 +662,6 @@ export default function Predict() {
       <AmbientBg scoreColor={sc} />
       <div style={{ position: "fixed", inset: 0, background: "linear-gradient(180deg, rgba(255,255,255,0.4) 0%, rgba(250,250,248,0.7) 100%)", pointerEvents: "none", zIndex: 0 }} />
 
-      {/* ── STICKY NAV RAIL ── */}
-      <div style={{
-        position:"sticky", top:0, zIndex:200,
-        background:"rgba(255,255,255,0.6)",
-        backdropFilter:"blur(24px)", WebkitBackdropFilter:"blur(24px)",
-        borderBottom:"1px solid rgba(255,255,255,0.6)",
-        height:56, display:"flex", alignItems:"center",
-        padding:"0 32px", justifyContent:"space-between", gap:16,
-      }}>
-        <div style={{ display:"flex", alignItems:"center", gap:10 }}>
-          <div style={{
-            width:6, height:6, borderRadius:"50%",
-            background:"#7c3aed", boxShadow:"0 0 10px rgba(124,58,237,0.7)",
-            animation:"dotPulse 2.2s ease-in-out infinite",
-          }} />
-          <span style={{ fontFamily:"'DM Mono',monospace", fontSize:12, color:"#9ca3af", letterSpacing:"0.08em" }}>PATHORA</span>
-          <span style={{ color:"#d1d5db", fontSize:12 }}>/</span>
-          <span style={{ fontFamily:"'DM Mono',monospace", fontSize:12, color:"#4b5563", letterSpacing:"0.08em" }}>INTELLIGENCE</span>
-        </div>
-        <div style={{ display:"flex", alignItems:"center", gap:12 }}>
-          {result && (
-            <span style={{
-              fontFamily:"'DM Mono',monospace", fontSize:11,
-              color:sc, background:`${sc}15`, border:`1px solid ${sc}30`,
-              padding:"4px 14px", borderRadius:20, letterSpacing:"0.06em",
-            }}>
-              ATS {score}/100 · {getReadyLabel(score)}
-            </span>
-          )}
-          {result && (
-            <button className="btn-primary" onClick={downloadPDF} style={{ padding:"8px 16px", fontSize:12 }}>
-              ↓ Export Profile
-            </button>
-          )}
-        </div>
-      </div>
 
       {!result ? (
         <>
@@ -1070,45 +1076,173 @@ export default function Predict() {
             </div>
           </div>
 
-          {/* ── NEW FEATURE SECTIONS ── */}
+          {/* ── ENTERPRISE INTELLIGENCE SECTIONS ── */}
           
-          {/* AI Career Prediction Engine */}
-          <div className="reveal-up" style={{ marginTop: 80, animationDelay: "0.6s" }}>
-             <h2 style={{ fontFamily: "'Instrument Serif', serif", fontSize: 40, textAlign: "center", marginBottom: 40, color: "#0f0f0f" }}>AI Prediction Engine</h2>
-             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 24 }}>
-                {[
-                   { title: "Leadership Track", desc: "Predicted 85% success rate for Tech Lead roles within 24 months based on current trajectory.", icon: "⬡" },
-                   { title: "Compensation Delta", desc: "Your skill stack warrants a 18-22% premium over market average in your preferred domain.", icon: "⬢" },
-                   { title: "Remote Viability", desc: "Profile ranks in top 10% for global remote tech roles with current async-friendly skills.", icon: "⬡" }
-                ].map((feat, i) => (
-                   <div key={i} className="glass-panel" style={{ padding: 32, transition: "transform 0.3s" }}>
-                      <div style={{ fontSize: 28, color: "#7c3aed", marginBottom: 16 }}>{feat.icon}</div>
-                      <h4 style={{ fontSize: 18, fontWeight: 600, marginBottom: 12, color: "#111" }}>{feat.title}</h4>
-                      <p style={{ fontSize: 14, color: "#4b5563", lineHeight: 1.6 }}>{feat.desc}</p>
-                   </div>
+          <div style={{ display:"grid", gridTemplateColumns: isMed ? "1fr" : "1fr 1fr", gap:24, marginTop: 40 }}>
+            {/* RECRUITER PERSPECTIVE */}
+            <div className="glass-panel reveal-up" style={{ padding:"32px", animationDelay:"0.4s" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
+                <p className="eyebrow">Recruiter Perspective Panel</p>
+                <div style={{ background: "rgba(5,150,105,0.1)", color: "#059669", padding: "4px 12px", borderRadius: 12, fontSize: 11, fontWeight: 600, border: "1px solid rgba(5,150,105,0.2)" }}>Confidence: {result.recruiterPerspective?.confidence}%</div>
+              </div>
+              <h3 style={{ fontFamily:"'Instrument Serif',serif", fontStyle:"italic", fontSize:28, fontWeight:400, color:"#0f0f0f", marginBottom:20 }}>How Recruiters See You</h3>
+              
+              <div style={{ marginBottom: 16 }}>
+                <p style={{ fontSize: 13, fontWeight: 600, color: "#111", marginBottom: 8 }}>Standout Qualities</p>
+                {safeArr(result.recruiterPerspective?.standouts).map((s, i) => (
+                  <div key={i} style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 8 }}>
+                    <div style={{ width: 6, height: 6, borderRadius: "50%", background: "#059669", flexShrink: 0 }} />
+                    <span style={{ fontSize: 14, color: "#4b5563" }}>{s}</span>
+                  </div>
                 ))}
-             </div>
+              </div>
+              <div>
+                <p style={{ fontSize: 13, fontWeight: 600, color: "#111", marginBottom: 8 }}>Primary Concerns</p>
+                {safeArr(result.recruiterPerspective?.concerns).map((c, i) => (
+                  <div key={i} style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 8 }}>
+                    <div style={{ width: 6, height: 6, borderRadius: "50%", background: "#dc2626", flexShrink: 0 }} />
+                    <span style={{ fontSize: 14, color: "#4b5563" }}>{c}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* PROJECT STRENGTH ANALYSIS */}
+            <div className="glass-panel reveal-up" style={{ padding:"32px", animationDelay:"0.5s" }}>
+              <p className="eyebrow" style={{ marginBottom: 20 }}>Technical Depth</p>
+              <h3 style={{ fontFamily:"'Instrument Serif',serif", fontStyle:"italic", fontSize:28, fontWeight:400, color:"#0f0f0f", marginBottom:20 }}>Project Strength Analysis</h3>
+              
+              <div style={{ display: "flex", gap: 20, marginBottom: 20 }}>
+                <div style={{ flex: 1, padding: "16px", background: "rgba(255,255,255,0.5)", borderRadius: 12, border: "1px solid rgba(0,0,0,0.05)" }}>
+                  <div style={{ fontSize: 12, color: "#6b7280", marginBottom: 4 }}>Complexity Signal</div>
+                  <div style={{ fontSize: 24, fontWeight: 600, color: "#7c3aed" }}>{result.projectAnalysis?.complexity}/100</div>
+                </div>
+                <div style={{ flex: 1, padding: "16px", background: "rgba(255,255,255,0.5)", borderRadius: 12, border: "1px solid rgba(0,0,0,0.05)" }}>
+                  <div style={{ fontSize: 12, color: "#6b7280", marginBottom: 4 }}>Scalability Focus</div>
+                  <div style={{ fontSize: 24, fontWeight: 600, color: "#4f46e5" }}>{result.projectAnalysis?.scalability}/100</div>
+                </div>
+              </div>
+              
+              <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                {safeArr(result.projectAnalysis?.strengths).map((s, i) => (
+                  <div key={i} style={{ fontSize: 14, color: "#4b5563", display: "flex", gap: 10 }}>
+                    <span style={{ color: "#059669", fontWeight: 700 }}>+</span> {s}
+                  </div>
+                ))}
+                {safeArr(result.projectAnalysis?.weaknesses).map((w, i) => (
+                  <div key={i} style={{ fontSize: 14, color: "#4b5563", display: "flex", gap: 10 }}>
+                    <span style={{ color: "#dc2626", fontWeight: 700 }}>-</span> {w}
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
 
-          {/* Industry Intelligence */}
-          <div className="reveal-up" style={{ marginTop: 80, animationDelay: "0.7s" }}>
-             <h2 style={{ fontFamily: "'Instrument Serif', serif", fontSize: 40, textAlign: "center", marginBottom: 40, color: "#0f0f0f" }}>Industry Intelligence</h2>
+          <div style={{ display:"grid", gridTemplateColumns: isMed ? "1fr" : "1fr 1fr", gap:24, marginTop: 24 }}>
+            {/* RESUME IMPACT SIMULATION */}
+            <div className="glass-panel reveal-up" style={{ padding:"32px", animationDelay:"0.6s" }}>
+              <p className="eyebrow" style={{ marginBottom: 20 }}>Score Dynamics</p>
+              <h3 style={{ fontFamily:"'Instrument Serif',serif", fontStyle:"italic", fontSize:28, fontWeight:400, color:"#0f0f0f", marginBottom:20 }}>Impact Simulation</h3>
+              <p style={{ fontSize: 14, color: "#6b7280", marginBottom: 20 }}>Projected ATS score improvements based on specific resume updates.</p>
+              
+              <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+                {safeArr(result.simulations).map((sim, i) => (
+                  <div key={i} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "12px", background: i === 0 ? "rgba(124,58,237,0.05)" : "transparent", border: i === 0 ? "1px solid rgba(124,58,237,0.2)" : "1px solid rgba(0,0,0,0.05)", borderRadius: 12 }}>
+                    <span style={{ fontSize: 14, fontWeight: i === 0 ? 600 : 500, color: i === 0 ? "#7c3aed" : "#374151" }}>{sim.action}</span>
+                    <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                      <div style={{ width: 80, height: 4, background: "rgba(0,0,0,0.05)", borderRadius: 4 }}>
+                        <div style={{ width: `${sim.score}%`, height: "100%", background: i === 0 ? "#7c3aed" : "#059669", borderRadius: 4 }} />
+                      </div>
+                      <span style={{ fontFamily: "'DM Mono', monospace", fontSize: 13, fontWeight: 600, color: i === 0 ? "#7c3aed" : "#059669" }}>{sim.score}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* INTERVIEW READINESS MATRIX */}
+            <div className="glass-panel reveal-up" style={{ padding:"32px", animationDelay:"0.7s" }}>
+              <p className="eyebrow" style={{ marginBottom: 20 }}>Interview Preparation</p>
+              <h3 style={{ fontFamily:"'Instrument Serif',serif", fontStyle:"italic", fontSize:28, fontWeight:400, color:"#0f0f0f", marginBottom:20 }}>Readiness Matrix</h3>
+              
+              <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+                {safeArr(result.readiness).map((r, i) => (
+                  <div key={i}>
+                    <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 6 }}>
+                      <span style={{ fontSize: 13, fontWeight: 500, color: "#374151" }}>{r.name}</span>
+                      <span style={{ fontSize: 12, fontFamily: "'DM Mono', monospace", color: "#6b7280" }}>{r.value}%</span>
+                    </div>
+                    <div style={{ height: 6, background: "rgba(0,0,0,0.05)", borderRadius: 3, overflow: "hidden" }}>
+                      <div style={{ width: `${r.value}%`, height: "100%", background: r.value >= 80 ? "#059669" : r.value >= 60 ? "#d97706" : "#dc2626", borderRadius: 3 }} />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <div style={{ display:"grid", gridTemplateColumns: isMed ? "1fr" : "1fr 1fr", gap:24, marginTop: 24 }}>
+            {/* CAREER TRAJECTORY ENGINE */}
+            <div className="glass-panel reveal-up" style={{ padding:"32px", animationDelay:"0.8s" }}>
+              <p className="eyebrow" style={{ marginBottom: 20 }}>Long-Term Evolution</p>
+              <h3 style={{ fontFamily:"'Instrument Serif',serif", fontStyle:"italic", fontSize:28, fontWeight:400, color:"#0f0f0f", marginBottom:20 }}>Career Trajectory</h3>
+              
+              <div style={{ display: "flex", flexDirection: "column", position: "relative", paddingLeft: 12 }}>
+                <div style={{ position: "absolute", left: 16, top: 12, bottom: 20, width: 2, background: "rgba(124,58,237,0.2)" }} />
+                {safeArr(result.careerTrajectory).map((role, i, arr) => (
+                  <div key={i} style={{ display: "flex", alignItems: "center", gap: 20, marginBottom: i === arr.length - 1 ? 0 : 24 }}>
+                    <div style={{ width: 10, height: 10, borderRadius: "50%", background: i === 0 ? "#7c3aed" : "#fff", border: "2px solid #7c3aed", zIndex: 1, marginLeft: -1 }} />
+                    <div style={{ padding: "12px 16px", background: "rgba(255,255,255,0.6)", border: "1px solid rgba(0,0,0,0.05)", borderRadius: 8, flex: 1 }}>
+                      <div style={{ fontSize: 11, color: "#6b7280", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 4 }}>{i === 0 ? "Current Target" : `Step 0${i + 1}`}</div>
+                      <div style={{ fontSize: 15, fontWeight: 600, color: "#111" }}>{role}</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* PROFILE COMPETITIVENESS */}
+            <div className="glass-panel reveal-up" style={{ padding:"32px", animationDelay:"0.9s" }}>
+              <p className="eyebrow" style={{ marginBottom: 20 }}>Market Positioning</p>
+              <h3 style={{ fontFamily:"'Instrument Serif',serif", fontStyle:"italic", fontSize:28, fontWeight:400, color:"#0f0f0f", marginBottom:20 }}>Profile Competitiveness</h3>
+              
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "center", padding: "30px 0", borderBottom: "1px solid rgba(0,0,0,0.05)", marginBottom: 20 }}>
+                <div style={{ textAlign: "center" }}>
+                  <div style={{ fontSize: 64, fontFamily: "'DM Mono', monospace", fontWeight: 300, color: "#7c3aed", lineHeight: 1 }}>{result.competitiveness?.percentile}</div>
+                  <div style={{ fontSize: 14, color: "#6b7280", marginTop: 8 }}>Top Percentile Globally</div>
+                </div>
+              </div>
+              
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
+                <span style={{ fontSize: 14, color: "#4b5563" }}>Estimated Interview Probability</span>
+                <span style={{ fontSize: 15, fontWeight: 600, color: "#059669" }}>{result.competitiveness?.interviewProbability}%</span>
+              </div>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <span style={{ fontSize: 14, color: "#4b5563" }}>Peer Comparison</span>
+                <span style={{ fontSize: 13, fontWeight: 600, color: "#4f46e5", background: "rgba(79,70,229,0.1)", padding: "4px 10px", borderRadius: 6 }}>{result.competitiveness?.comparison}</span>
+              </div>
+            </div>
+          </div>
+
+          {/* HIRING MARKET INSIGHTS */}
+          <div className="reveal-up" style={{ marginTop: 60, animationDelay: "1.0s" }}>
+             <h2 style={{ fontFamily: "'Instrument Serif', serif", fontSize: 36, textAlign: "center", marginBottom: 30, color: "#0f0f0f" }}>Hiring Market Insights</h2>
              <div className="glass-panel" style={{ padding: "40px 20px" }}>
                 <div style={{ display: "flex", flexWrap: "wrap", gap: 40, justifyContent: "space-around" }}>
                    <div style={{ textAlign: "center" }}>
                       <div style={{ fontSize: 36, fontFamily: "'DM Mono', monospace", fontWeight: 400, color: "#4f46e5", marginBottom: 8 }}>#1</div>
-                      <div style={{ fontSize: 15, fontWeight: 600, color: "#111" }}>Cloud Native</div>
+                      <div style={{ fontSize: 15, fontWeight: 600, color: "#111" }}>Cloud Native & AI</div>
                       <div style={{ fontSize: 13, color: "#6b7280", marginTop: 4 }}>Highest Demand Area</div>
                    </div>
                    <div style={{ textAlign: "center" }}>
                       <div style={{ fontSize: 36, fontFamily: "'DM Mono', monospace", fontWeight: 400, color: "#7c3aed", marginBottom: 8 }}>+45%</div>
-                      <div style={{ fontSize: 15, fontWeight: 600, color: "#111" }}>AI Ops Growth</div>
+                      <div style={{ fontSize: 15, fontWeight: 600, color: "#111" }}>MLOps Growth</div>
                       <div style={{ fontSize: 13, color: "#6b7280", marginTop: 4 }}>YoY Hiring Increase</div>
                    </div>
                    <div style={{ textAlign: "center" }}>
-                      <div style={{ fontSize: 36, fontFamily: "'DM Mono', monospace", fontWeight: 400, color: "#059669", marginBottom: 8 }}>92%</div>
-                      <div style={{ fontSize: 15, fontWeight: 600, color: "#111" }}>Filter Rate</div>
-                      <div style={{ fontSize: 13, color: "#6b7280", marginTop: 4 }}>Average ATS Rejection</div>
+                      <div style={{ fontSize: 36, fontFamily: "'DM Mono', monospace", fontWeight: 400, color: "#059669", marginBottom: 8 }}>$135k</div>
+                      <div style={{ fontSize: 15, fontWeight: 600, color: "#111" }}>Avg Starting Salary</div>
+                      <div style={{ fontSize: 13, color: "#6b7280", marginTop: 4 }}>For Enterprise Roles</div>
                    </div>
                 </div>
              </div>
