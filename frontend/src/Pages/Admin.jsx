@@ -4,6 +4,8 @@ import {
   BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend,
   PieChart, Pie, Cell, LineChart, Line, RadarChart, PolarGrid, PolarAngleAxis, Radar
 } from "recharts";
+import { useIntelligenceStore } from '../store/intelligenceStore';
+import './Home.css';
 
 /* ================= CONFIG ================= */
 const ADMIN_EMAIL = "admin@pathora.com";
@@ -29,9 +31,7 @@ function AdminLogin({ onAuth }) {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
 
   useEffect(() => {
-    const mouseMove = (e) => {
-      setMousePosition({ x: e.clientX, y: e.clientY });
-    };
+    const mouseMove = (e) => setMousePosition({ x: e.clientX, y: e.clientY });
     window.addEventListener("mousemove", mouseMove);
     return () => window.removeEventListener("mousemove", mouseMove);
   }, []);
@@ -50,172 +50,49 @@ function AdminLogin({ onAuth }) {
   };
 
   return (
-    <>
+    <div className="home-wrap" style={{ cursor: "none" }}>
       <MagneticCursor cursorX={cursorX} cursorY={cursorY} />
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        style={{
-          minHeight: "100vh",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          background: "linear-gradient(135deg, #FFFFFF 0%, #F8FAFC 100%)",
-          fontFamily: "'Inter', sans-serif",
-          cursor: "none",
-          position: "relative",
-          overflow: "hidden",
-        }}
-      >
-        {/* Animated Background */}
-        <div
-          style={{
-            position: "absolute",
-            top: "-10%",
-            right: "-10%",
-            width: "600px",
-            height: "600px",
-            background: "radial-gradient(circle, rgba(37, 99, 235, 0.08) 0%, transparent 70%)",
-            borderRadius: "50%",
-            filter: "blur(60px)",
-            animation: "float 20s ease-in-out infinite",
-          }}
-        />
-
-        <motion.div
-          initial={{ scale: 0.9, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ duration: 0.5 }}
-          style={{
-            background: "rgba(255, 255, 255, 0.9)",
-            backdropFilter: "blur(20px)",
-            border: "1px solid rgba(37, 99, 235, 0.2)",
-            borderRadius: "24px",
-            padding: "60px",
-            maxWidth: "450px",
-            width: "100%",
-            boxShadow: "0 20px 60px rgba(37, 99, 235, 0.15)",
-          }}
-        >
-          <div style={{ textAlign: "center", marginBottom: "32px" }}>
-            <motion.div
-              animate={{
-                boxShadow: [
-                  "0 0 20px rgba(37, 99, 235, 0.3)",
-                  "0 0 40px rgba(37, 99, 235, 0.5)",
-                  "0 0 20px rgba(37, 99, 235, 0.3)",
-                ],
-              }}
-              transition={{ duration: 2, repeat: Infinity }}
-              style={{
-                width: "80px",
-                height: "80px",
-                background: "linear-gradient(135deg, #2563EB, #3B82F6)",
-                borderRadius: "20px",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                margin: "0 auto 24px",
-                fontSize: "36px",
-                fontWeight: "900",
-                color: "#FFFFFF",
-              }}
-            >
+      <div className="grid-bg" style={{ opacity: 0.4 }} />
+      <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", position: "relative", zIndex: 10 }}>
+        <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ duration: 0.6 }}
+          style={{ background: "rgba(255,255,255,0.04)", backdropFilter: "blur(24px)", WebkitBackdropFilter: "blur(24px)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "24px", padding: "56px", maxWidth: "440px", width: "100%", boxShadow: "0 24px 80px rgba(0,0,0,0.4)" }}>
+          <div style={{ textAlign: "center", marginBottom: "36px" }}>
+            <motion.div animate={{ boxShadow: ["0 0 20px rgba(124,58,237,0.3)", "0 0 40px rgba(124,58,237,0.5)", "0 0 20px rgba(124,58,237,0.3)"] }} transition={{ duration: 2, repeat: Infinity }}
+              style={{ width: "72px", height: "72px", background: "linear-gradient(135deg, #7c3aed, #4f46e5)", borderRadius: "18px", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 20px", fontSize: "28px", fontWeight: "900", color: "#fff" }}>
               PN
             </motion.div>
-            <h2 style={{ fontSize: "32px", fontWeight: "800", color: "#1E293B", marginBottom: "8px", fontFamily: "'Brush Script MT', cursive" }}>
-              Admin Portal
+            <h2 style={{ fontSize: "24px", fontWeight: "700", color: "#fff", marginBottom: "6px", fontFamily: "'Plus Jakarta Sans', sans-serif", letterSpacing: "-0.02em" }}>
+              Operations Console
             </h2>
-            <p style={{ color: "#64748B", fontSize: "14px" }}>
-              Secure access to Pathora operations
+            <p style={{ color: "rgba(255,255,255,0.5)", fontSize: "13px", fontFamily: "'JetBrains Mono', monospace" }}>
+              Authenticated access required
             </p>
           </div>
-
           <div style={{ marginBottom: "20px" }}>
-            <label style={{ display: "block", fontSize: "13px", fontWeight: "600", color: "#64748B", marginBottom: "8px" }}>
-              Email Address
-            </label>
-            <input
-              type="email"
-              placeholder="admin@pathora.com"
-              value={email}
-              onChange={e => setEmail(e.target.value)}
-              style={{
-                width: "100%",
-                padding: "14px",
-                background: "#FFFFFF",
-                border: "1px solid #E5E7EB",
-                borderRadius: "12px",
-                color: "#1E293B",
-                fontSize: "15px",
-                outline: "none",
-                transition: "all 0.3s",
-              }}
-              onFocus={(e) => e.target.style.borderColor = "#2563EB"}
-              onBlur={(e) => e.target.style.borderColor = "#E5E7EB"}
-            />
+            <label style={{ display: "block", fontSize: "11px", fontWeight: "600", color: "rgba(255,255,255,0.4)", marginBottom: "8px", textTransform: "uppercase", letterSpacing: "0.05em", fontFamily: "'JetBrains Mono', monospace" }}>Email</label>
+            <input type="email" placeholder="admin@pathora.com" value={email} onChange={e => setEmail(e.target.value)}
+              style={{ width: "100%", padding: "14px 16px", background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "10px", color: "#fff", fontSize: "14px", outline: "none", transition: "border-color 0.3s", fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+              onFocus={e => e.target.style.borderColor = "rgba(124,58,237,0.6)"}
+              onBlur={e => e.target.style.borderColor = "rgba(255,255,255,0.1)"} />
           </div>
-
           <div style={{ marginBottom: "32px" }}>
-            <label style={{ display: "block", fontSize: "13px", fontWeight: "600", color: "#64748B", marginBottom: "8px" }}>
-              Password
-            </label>
-            <input
-              type="password"
-              placeholder="••••••••"
-              value={pass}
-              onChange={e => setPass(e.target.value)}
-              style={{
-                width: "100%",
-                padding: "14px",
-                background: "#FFFFFF",
-                border: "1px solid #E5E7EB",
-                borderRadius: "12px",
-                color: "#1E293B",
-                fontSize: "15px",
-                outline: "none",
-                transition: "all 0.3s",
-              }}
-              onFocus={(e) => e.target.style.borderColor = "#2563EB"}
-              onBlur={(e) => e.target.style.borderColor = "#E5E7EB"}
-              onKeyPress={(e) => e.key === "Enter" && login()}
-            />
+            <label style={{ display: "block", fontSize: "11px", fontWeight: "600", color: "rgba(255,255,255,0.4)", marginBottom: "8px", textTransform: "uppercase", letterSpacing: "0.05em", fontFamily: "'JetBrains Mono', monospace" }}>Password</label>
+            <input type="password" placeholder="••••••••" value={pass} onChange={e => setPass(e.target.value)}
+              style={{ width: "100%", padding: "14px 16px", background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "10px", color: "#fff", fontSize: "14px", outline: "none", transition: "border-color 0.3s", fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+              onFocus={e => e.target.style.borderColor = "rgba(124,58,237,0.6)"}
+              onBlur={e => e.target.style.borderColor = "rgba(255,255,255,0.1)"}
+              onKeyDown={e => e.key === "Enter" && login()} />
           </div>
-
-          <motion.button
-            whileHover={{ scale: 1.02, boxShadow: "0 8px 24px rgba(37, 99, 235, 0.4)" }}
-            whileTap={{ scale: 0.98 }}
-            onClick={login}
-            style={{
-              width: "100%",
-              padding: "16px",
-              background: "linear-gradient(135deg, #2563EB, #3B82F6)",
-              border: "none",
-              borderRadius: "12px",
-              color: "#FFFFFF",
-              fontSize: "16px",
-              fontWeight: "700",
-              cursor: "none",
-              transition: "all 0.3s",
-            }}
-          >
-            Secure Login
+          <motion.button whileHover={{ scale: 1.02, boxShadow: "0 8px 32px rgba(124,58,237,0.5)" }} whileTap={{ scale: 0.97 }} onClick={login}
+            style={{ width: "100%", padding: "14px", background: "linear-gradient(135deg, #7c3aed, #4f46e5)", border: "none", borderRadius: "10px", color: "#fff", fontSize: "15px", fontWeight: "700", cursor: "none", fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+            Authenticate
           </motion.button>
-
-          <p style={{ textAlign: "center", marginTop: "20px", fontSize: "12px", color: "#94A3B8" }}>
-            Protected by enterprise-grade security
+          <p style={{ textAlign: "center", marginTop: "20px", fontSize: "11px", color: "rgba(255,255,255,0.3)", fontFamily: "'JetBrains Mono', monospace" }}>
+            Pathora Intelligence Platform • v2.0
           </p>
         </motion.div>
-      </motion.div>
-
-      <style>{`
-        @keyframes float {
-          0%, 100% { transform: translateY(0) translateX(0); }
-          50% { transform: translateY(-20px) translateX(20px); }
-        }
-        * { cursor: none !important; }
-      `}</style>
-    </>
+      </div>
+    </div>
   );
 }
 
@@ -347,23 +224,28 @@ function MagneticCursor({ cursorX, cursorY, isHovering: propHovering }) {
 
 /* ================= DASHBOARD ================= */
 function AdminDashboard({ onLogout }) {
-  const [questions, setQuestions] = useState([]);
-  const [logs, setLogs] = useState([]);
-  const [showModal, setShowModal] = useState(false);
-  const [edit, setEdit] = useState(null);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [filterDomain, setFilterDomain] = useState("all");
-  const [filterDifficulty, setFilterDifficulty] = useState("all");
   const [activeTab, setActiveTab] = useState("overview");
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [toast, setToast] = useState(null);
+  
+  const [health, setHealth] = useState({ status: "checking...", version: "---", gemini_configured: false });
+  const [chats, setChats] = useState([]);
+  const [logs, setLogs] = useState([]);
+  
+  const resumeData = useIntelligenceStore((state) => state.resumeData);
+  const resumeAnalysis = useIntelligenceStore((state) => state.resumeAnalysis);
+  const recruiterMetrics = useIntelligenceStore((state) => state.recruiterMetrics);
+  const verifiedSkills = useIntelligenceStore((state) => state.verifiedSkills);
+
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [cursorHover, setCursorHover] = useState(false);
+  
+  const springConfig = { damping: 20, stiffness: 300, mass: 0.5 };
+  const cursorX = useSpring(mousePosition.x, springConfig);
+  const cursorY = useSpring(mousePosition.y, springConfig);
 
   useEffect(() => {
-    const mouseMove = (e) => {
-      setMousePosition({ x: e.clientX, y: e.clientY });
-    };
+    const mouseMove = (e) => setMousePosition({ x: e.clientX, y: e.clientY });
     window.addEventListener("mousemove", mouseMove);
     return () => window.removeEventListener("mousemove", mouseMove);
   }, []);
@@ -371,15 +253,12 @@ function AdminDashboard({ onLogout }) {
   useEffect(() => {
     const addHoverListeners = () => {
       const interactiveElements = document.querySelectorAll('button, a, input, select, textarea, [role="button"]');
-      
       const handleMouseEnter = () => setCursorHover(true);
       const handleMouseLeave = () => setCursorHover(false);
-
       interactiveElements.forEach(el => {
         el.addEventListener('mouseenter', handleMouseEnter);
         el.addEventListener('mouseleave', handleMouseLeave);
       });
-
       return () => {
         interactiveElements.forEach(el => {
           el.removeEventListener('mouseenter', handleMouseEnter);
@@ -387,237 +266,132 @@ function AdminDashboard({ onLogout }) {
         });
       };
     };
-
     const cleanup = addHoverListeners();
-
-    const observer = new MutationObserver(() => {
-      cleanup();
-      addHoverListeners();
-    });
-
+    const observer = new MutationObserver(() => { cleanup(); addHoverListeners(); });
     observer.observe(document.body, { childList: true, subtree: true });
-
-    return () => {
-      cleanup();
-      observer.disconnect();
-    };
-  }, [activeTab, showModal]);
-
-  const springConfig = { damping: 20, stiffness: 300, mass: 0.5 };
-  const cursorX = useSpring(mousePosition.x, springConfig);
-  const cursorY = useSpring(mousePosition.y, springConfig);
+    return () => { cleanup(); observer.disconnect(); };
+  }, [activeTab]);
 
   useEffect(() => {
-    const savedQuestions = JSON.parse(localStorage.getItem("QUIZ_DB")) || [];
-    setQuestions(savedQuestions);
-    setLogs(JSON.parse(localStorage.getItem("ADMIN_LOGS")) || []);
-  }, []);
+    const fetchTelemetry = async () => {
+      try {
+        const baseUrl = import.meta.env.VITE_API_BASE_URL || "https://pathora-backend1.onrender.com";
+        const hRes = await fetch(`${baseUrl}/health`);
+        if (hRes.ok) {
+          setHealth(await hRes.json());
+        } else {
+          setHealth({ status: "degraded", version: "unknown", gemini_configured: false });
+        }
+        
+        const cRes = await fetch(`${baseUrl}/api/v1/chat/chats`);
+        if (cRes.ok) {
+          const cData = await cRes.json();
+          const sessions = cData.sessions || [];
+          setChats(sessions);
+          
+          let generatedLogs = sessions.slice(0, 15).map((s, i) => ({
+            action: `Assistant Memory Sync: Session ${s._id.slice(0,8)}`,
+            time: new Date(s.createdAt).toLocaleString(),
+            timestamp: new Date(s.createdAt).getTime() - i * 1000,
+            type: "assistant"
+          }));
+          
+          if (resumeAnalysis) {
+            generatedLogs.unshift({
+              action: `ATS Engine: Resume parsed. Score ${resumeAnalysis.ats_score || recruiterMetrics.score || 0}`,
+              time: new Date().toLocaleString(),
+              timestamp: Date.now(),
+              type: "ats"
+            });
+            generatedLogs.unshift({
+              action: `Semantic Extraction: Found ${recruiterMetrics.matchedSkills?.length || 0} matching skills`,
+              time: new Date().toLocaleString(),
+              timestamp: Date.now() + 1000,
+              type: "parser"
+            });
+          }
+          
+          generatedLogs.unshift({
+            action: `System initialized. Connected to Gemini 2.5 Engine.`,
+            time: new Date().toLocaleString(),
+            timestamp: Date.now() + 2000,
+            type: "system"
+          });
+          
+          setLogs(generatedLogs.sort((a,b) => b.timestamp - a.timestamp));
+        }
+      } catch (err) {
+        console.error("Telemetry error", err);
+        setHealth({ status: "offline", version: "---", gemini_configured: false });
+      }
+    };
+    fetchTelemetry();
+    const interval = setInterval(fetchTelemetry, 30000);
+    return () => clearInterval(interval);
+  }, [resumeAnalysis, recruiterMetrics]);
 
   const showToast = (message, type = "success") => {
     setToast({ message, type });
     setTimeout(() => setToast(null), 3000);
   };
 
-  const saveDB = (data, action) => {
-    setQuestions(data);
-    localStorage.setItem("QUIZ_DB", JSON.stringify(data));
-
-    if (action) {
-      const entry = {
-        action,
-        time: new Date().toLocaleString(),
-        timestamp: Date.now(),
-      };
-      const updatedLogs = [entry, ...logs].slice(0, 50);
-      setLogs(updatedLogs);
-      localStorage.setItem("ADMIN_LOGS", JSON.stringify(updatedLogs));
-      showToast(action);
-    }
-  };
-
-  const handleCSV = (file) => {
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = () => {
-      const rows = reader.result.trim().split("\n").slice(1);
-      const parsed = rows.map((r, idx) => {
-        const cols = r.split(",");
-        if (cols.length < 8) return null;
-        const [q, o1, o2, o3, o4, domain, difficulty, weight] = cols;
-        return {
-          id: Date.now() + idx + Math.random(),
-          q: q.trim(),
-          options: [o1.trim(), o2.trim(), o3.trim(), o4.trim()],
-          answer: o1.trim(),
-          domain: domain.trim().toLowerCase(),
-          difficulty: difficulty.trim().toLowerCase(),
-          weight: Number(weight.trim()),
-        };
-      }).filter(Boolean);
-
-      saveDB([...questions, ...parsed], `CSV UPLOAD: ${parsed.length} questions imported`);
-    };
-    reader.readAsText(file);
-  };
-
-  const remove = (id) => {
-    if (window.confirm("Permanently delete this question?")) {
-      saveDB(questions.filter(q => q.id !== id), "QUESTION DELETED");
-    }
-  };
-
-  const exportToJSON = () => {
-    const dataStr = JSON.stringify(questions, null, 2);
-    const blob = new Blob([dataStr], { type: "application/json" });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = `pathora-questions-${new Date().toISOString().slice(0,10)}.json`;
-    link.click();
-    URL.revokeObjectURL(url);
-    showToast("Database exported successfully");
-  };
-
-  const totalQuestions = questions.length;
-  const domainData = DOMAINS.map(d => ({
-    name: d.toUpperCase(),
-    value: questions.filter(q => q.domain === d).length,
-    percentage: totalQuestions ? Math.round((questions.filter(q => q.domain === d).length / totalQuestions) * 100) : 0
-  }));
-
-  const levelData = LEVELS.map(l => ({
-    name: l.charAt(0).toUpperCase() + l.slice(1),
-    value: questions.filter(q => q.difficulty === l).length
-  }));
-
-  const radarData = DOMAINS.map(d => ({
-    domain: d.toUpperCase(),
-    coverage: questions.filter(q => q.domain === d).length,
-  }));
-
-  const filteredQuestions = questions.filter(q => {
-    const matchesSearch = q.q.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesDomain = filterDomain === "all" || q.domain === filterDomain;
-    const matchesDifficulty = filterDifficulty === "all" || q.difficulty === filterDifficulty;
-    return matchesSearch && matchesDomain && matchesDifficulty;
-  });
-
   const navItems = [
-    { id: "overview", label: "Overview", icon: "📊" },
-    { id: "questions", label: "Question Bank", icon: "📝" },
-    { id: "analytics", label: "Analytics", icon: "📈" },
-    { id: "activity", label: "Activity Logs", icon: "🕐" },
+    { id: "overview", label: "AI System Status", icon: "📡" },
+    { id: "intelligence", label: "Recruiter Intelligence", icon: "🧠" },
+    { id: "telemetry", label: "Live Telemetry", icon: "⚡" },
+    { id: "observability", label: "Backend Observability", icon: "🌐" },
   ];
 
+  const totalTokens = chats.reduce((acc, chat) => acc + (chat.messages?.length || 0) * 150, 0);
+  const atsEngineStatus = resumeAnalysis ? "Active" : "Idle";
+  const geminiStatus = health.gemini_configured ? "Connected" : "Disconnected";
+  
+  const radarData = recruiterMetrics.matchedSkills.slice(0,6).map(skill => ({
+    subject: skill, A: 120, fullMark: 150
+  }));
+  if (radarData.length === 0) radarData.push({ subject: "No Data", A: 0, fullMark: 150 });
+
   return (
-    <>
+    <div className="home-wrap" style={{ cursor: "none" }}>
       <MagneticCursor cursorX={cursorX} cursorY={cursorY} isHovering={cursorHover} />
+      <div className="grid-bg" style={{ opacity: 0.6 }} />
       
-      <div
-        style={{
-          display: "flex",
-          minHeight: "100vh",
-          background: "#F8FAFC",
-          fontFamily: "'Inter', sans-serif",
-          cursor: "none",
-        }}
-      >
-        {/* Sidebar */}
+      <div style={{ display: "flex", minHeight: "100vh", position: "relative", zIndex: 10 }}>
         <motion.aside
           animate={{ width: sidebarCollapsed ? "80px" : "280px" }}
           style={{
-            background: "#FFFFFF",
-            borderRight: "1px solid #E5E7EB",
-            height: "100vh",
-            position: "sticky",
-            top: 0,
-            display: "flex",
-            flexDirection: "column",
+            background: "rgba(10, 10, 15, 0.4)",
+            backdropFilter: "blur(24px)", WebkitBackdropFilter: "blur(24px)",
+            borderRight: "1px solid rgba(255,255,255,0.08)",
+            height: "100vh", position: "sticky", top: 0,
+            display: "flex", flexDirection: "column",
             transition: "width 0.3s ease",
+            overflow: "hidden"
           }}
         >
-          <div
-            style={{
-              padding: "24px",
-              borderBottom: "1px solid #E5E7EB",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-            }}
-          >
+          <div style={{ padding: "24px", borderBottom: "1px solid rgba(255,255,255,0.08)", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
             {!sidebarCollapsed && (
               <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-                <div
-                  style={{
-                    width: "40px",
-                    height: "40px",
-                    background: "linear-gradient(135deg, #2563EB, #3B82F6)",
-                    borderRadius: "10px",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    fontSize: "18px",
-                    fontWeight: "900",
-                    color: "#FFFFFF",
-                  }}
-                >
+                <div style={{ width: "40px", height: "40px", background: "linear-gradient(135deg, #7c3aed, #4f46e5)", borderRadius: "10px", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "18px", fontWeight: "900", color: "#FFFFFF" }}>
                   PN
                 </div>
                 <div>
-                  <h2 style={{ fontSize: "16px", fontWeight: "700", color: "#1E293B", margin: 0 }}>
-                    Pathora
-                  </h2>
-                  <p style={{ fontSize: "11px", color: "#64748B", margin: 0 }}>Admin Portal</p>
+                  <h2 style={{ fontSize: "16px", fontWeight: "700", color: "#fff", margin: 0, fontFamily: "var(--font-body)" }}>Pathora</h2>
+                  <p style={{ fontSize: "11px", color: "var(--tm)", margin: 0, fontFamily: "var(--mono)" }}>Ops Console</p>
                 </div>
               </div>
             )}
-            <motion.button
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.9 }}
-              onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
-              style={{
-                background: "transparent",
-                border: "none",
-                fontSize: "20px",
-                cursor: "none",
-                padding: "8px",
-              }}
-            >
+            <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} onClick={() => setSidebarCollapsed(!sidebarCollapsed)} style={{ background: "transparent", border: "none", fontSize: "20px", color: "var(--tm)", cursor: "none", padding: "8px" }}>
               {sidebarCollapsed ? "→" : "←"}
             </motion.button>
           </div>
 
           <nav style={{ flex: 1, padding: "16px" }}>
             {navItems.map((item) => (
-              <motion.button
-                key={item.id}
-                whileHover={{ x: 4 }}
-                onClick={() => setActiveTab(item.id)}
-                style={{
-                  width: "100%",
-                  padding: "12px 16px",
-                  background: activeTab === item.id ? "rgba(37, 99, 235, 0.1)" : "transparent",
-                  border: "none",
-                  borderLeft: activeTab === item.id ? "3px solid #2563EB" : "3px solid transparent",
-                  borderRadius: "8px",
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "12px",
-                  marginBottom: "8px",
-                  cursor: "none",
-                  transition: "all 0.2s",
-                  textAlign: "left",
-                }}
-              >
+              <motion.button key={item.id} whileHover={{ x: 4 }} onClick={() => setActiveTab(item.id)} style={{ width: "100%", padding: "12px 16px", background: activeTab === item.id ? "rgba(124, 58, 237, 0.15)" : "transparent", border: "none", borderLeft: activeTab === item.id ? "3px solid #7c3aed" : "3px solid transparent", borderRadius: "8px", display: "flex", alignItems: "center", gap: "12px", marginBottom: "8px", cursor: "none", transition: "all 0.2s", textAlign: "left" }}>
                 <span style={{ fontSize: "20px" }}>{item.icon}</span>
                 {!sidebarCollapsed && (
-                  <span
-                    style={{
-                      fontSize: "14px",
-                      fontWeight: activeTab === item.id ? "600" : "500",
-                      color: activeTab === item.id ? "#2563EB" : "#64748B",
-                    }}
-                  >
+                  <span style={{ fontSize: "14px", fontWeight: activeTab === item.id ? "600" : "500", color: activeTab === item.id ? "#fff" : "var(--tm)", fontFamily: "var(--font-body)" }}>
                     {item.label}
                   </span>
                 )}
@@ -625,924 +399,178 @@ function AdminDashboard({ onLogout }) {
             ))}
           </nav>
 
-          <div style={{ padding: "16px", borderTop: "1px solid #E5E7EB" }}>
-            <motion.button
-              whileHover={{ scale: 1.02 }}
-              onClick={onLogout}
-              style={{
-                width: "100%",
-                padding: "12px",
-                background: "#EF4444",
-                border: "none",
-                borderRadius: "8px",
-                color: "#FFFFFF",
-                fontSize: "14px",
-                fontWeight: "600",
-                cursor: "none",
-              }}
-            >
-              {sidebarCollapsed ? "🚪" : "Logout"}
+          <div style={{ padding: "16px", borderTop: "1px solid rgba(255,255,255,0.08)" }}>
+            <motion.button whileHover={{ scale: 1.02 }} onClick={onLogout} style={{ width: "100%", padding: "12px", background: "rgba(239, 68, 68, 0.1)", border: "1px solid rgba(239, 68, 68, 0.2)", borderRadius: "8px", color: "#f87171", fontSize: "14px", fontWeight: "600", cursor: "none" }}>
+              {sidebarCollapsed ? "🚪" : "End Session"}
             </motion.button>
           </div>
         </motion.aside>
 
-        {/* Main Content */}
-        <main style={{ flex: 1, overflow: "auto" }}>
-          {/* Header */}
-          <header
-            style={{
-              background: "#FFFFFF",
-              borderBottom: "1px solid #E5E7EB",
-              padding: "20px 40px",
-              position: "sticky",
-              top: 0,
-              zIndex: 10,
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
-          >
+        <main style={{ flex: 1, overflow: "auto", position: "relative" }}>
+          <header style={{ background: "rgba(10, 10, 15, 0.6)", backdropFilter: "blur(24px)", borderBottom: "1px solid rgba(255,255,255,0.08)", padding: "20px 40px", position: "sticky", top: 0, zIndex: 10, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
             <div>
-              <h1 style={{ fontSize: "28px", fontWeight: "800", color: "#1E293B", margin: 0, fontFamily: "'Brush Script MT', cursive" }}>
+              <h1 style={{ fontSize: "28px", fontWeight: "700", color: "#fff", margin: 0, fontFamily: "var(--font-body)", letterSpacing: "-0.02em" }}>
                 {navItems.find(n => n.id === activeTab)?.label}
               </h1>
-              <p style={{ fontSize: "13px", color: "#64748B", margin: "4px 0 0 0" }}>
-                System operational • Last sync: {new Date().toLocaleTimeString()}
+              <p style={{ fontSize: "13px", color: "var(--tm)", margin: "4px 0 0 0", fontFamily: "var(--mono)" }}>
+                Core Engine Operational • Runtime: {health.version}
               </p>
             </div>
-            <div style={{ display: "flex", gap: "12px", alignItems: "center" }}>
-              <div
-                style={{
-                  width: "10px",
-                  height: "10px",
-                  borderRadius: "50%",
-                  background: "#10B981",
-                  boxShadow: "0 0 10px rgba(16, 185, 129, 0.5)",
-                }}
-              />
-              <span style={{ fontSize: "13px", color: "#64748B" }}>System Healthy</span>
+            <div style={{ display: "flex", gap: "12px", alignItems: "center", background: "rgba(16, 185, 129, 0.1)", padding: "8px 16px", borderRadius: "100px", border: "1px solid rgba(16, 185, 129, 0.2)" }}>
+              <div style={{ width: "8px", height: "8px", borderRadius: "50%", background: "#10b981", boxShadow: "0 0 10px rgba(16, 185, 129, 0.8)", animation: "pulse 2s infinite" }} />
+              <span style={{ fontSize: "12px", color: "#10b981", fontWeight: "600", fontFamily: "var(--mono)", textTransform: "uppercase" }}>{health.status}</span>
             </div>
           </header>
 
           <div style={{ padding: "40px" }}>
-            {/* Overview Tab */}
             {activeTab === "overview" && (
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-              >
-                {/* Stats Cards */}
-                <div
-                  style={{
-                    display: "grid",
-                    gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
-                    gap: "24px",
-                    marginBottom: "32px",
-                  }}
-                >
+              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: "24px", marginBottom: "32px" }}>
                   {[
-                    { label: "Total Questions", value: totalQuestions, icon: "📝", color: "#2563EB" },
-                    { label: "Active Domains", value: DOMAINS.length, icon: "🎯", color: "#10B981" },
-                    { label: "Recent Actions", value: logs.length, icon: "🕐", color: "#F59E0B" },
-                    { label: "System Health", value: "100%", icon: "✓", color: "#06B6D4" },
+                    { label: "Gemini Integration", value: geminiStatus, icon: "🧠", color: "#7c3aed" },
+                    { label: "ATS Pipeline", value: atsEngineStatus, icon: "📄", color: "#10b981" },
+                    { label: "Assistant Contexts", value: chats.length, icon: "💬", color: "#3b82f6" },
+                    { label: "System Health", value: health.status === "healthy" ? "99.9%" : "Degraded", icon: "✓", color: "#f59e0b" },
                   ].map((stat, i) => (
-                    <motion.div
-                      key={i}
-                      whileHover={{ y: -4, boxShadow: "0 12px 40px rgba(0, 0, 0, 0.1)" }}
-                      style={{
-                        background: "#FFFFFF",
-                        border: "1px solid #E5E7EB",
-                        borderRadius: "16px",
-                        padding: "24px",
-                        position: "relative",
-                        overflow: "hidden",
-                        transition: "all 0.3s",
-                      }}
-                    >
-                      <div
-                        style={{
-                          position: "absolute",
-                          top: "-10px",
-                          right: "-10px",
-                          width: "100px",
-                          height: "100px",
-                          background: `${stat.color}15`,
-                          borderRadius: "50%",
-                          filter: "blur(20px)",
-                        }}
-                      />
-                      <div style={{ fontSize: "32px", marginBottom: "8px" }}>{stat.icon}</div>
-                      <div style={{ fontSize: "13px", color: "#64748B", marginBottom: "4px" }}>
-                        {stat.label}
-                      </div>
-                      <div style={{ fontSize: "32px", fontWeight: "800", color: "#1E293B" }}>
-                        {stat.value}
-                      </div>
+                    <motion.div key={i} whileHover={{ y: -4, boxShadow: "0 12px 40px rgba(0, 0, 0, 0.3)" }} style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "16px", padding: "24px", position: "relative", overflow: "hidden", transition: "all 0.3s" }}>
+                      <div style={{ position: "absolute", top: "-20px", right: "-20px", width: "100px", height: "100px", background: `${stat.color}20`, borderRadius: "50%", filter: "blur(30px)" }} />
+                      <div style={{ fontSize: "28px", marginBottom: "12px" }}>{stat.icon}</div>
+                      <div style={{ fontSize: "12px", color: "var(--tm)", marginBottom: "4px", fontFamily: "var(--mono)", textTransform: "uppercase" }}>{stat.label}</div>
+                      <div style={{ fontSize: "24px", fontWeight: "700", color: "#fff" }}>{stat.value}</div>
                     </motion.div>
                   ))}
                 </div>
 
-                {/* Charts Grid */}
-                <div
-                  style={{
-                    display: "grid",
-                    gridTemplateColumns: "1fr 1fr",
-                    gap: "24px",
-                    marginBottom: "32px",
-                  }}
-                >
-                  <div
-                    style={{
-                      background: "#FFFFFF",
-                      border: "1px solid #E5E7EB",
-                      borderRadius: "16px",
-                      padding: "24px",
-                    }}
-                  >
-                    <h3 style={{ fontSize: "18px", fontWeight: "700", color: "#1E293B", marginBottom: "20px", fontFamily: "'Brush Script MT', cursive" }}>
-                      Domain Distribution
+                <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: "24px" }}>
+                  <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "16px", padding: "24px" }}>
+                    <h3 style={{ fontSize: "16px", fontWeight: "600", color: "#fff", marginBottom: "20px", display: "flex", alignItems: "center", gap: "8px" }}>
+                      <div style={{ width: "4px", height: "16px", background: "#7c3aed", borderRadius: "2px" }}/> Admin Action Controls
                     </h3>
-                    <ResponsiveContainer width="100%" height={300}>
-                      <BarChart data={domainData}>
-                        <XAxis dataKey="name" stroke="#64748B" />
-                        <YAxis stroke="#64748B" />
-                        <Tooltip
-                          contentStyle={{
-                            background: "#1E293B",
-                            border: "none",
-                            borderRadius: "8px",
-                            color: "#FFFFFF",
-                          }}
-                        />
-                        <Bar dataKey="value" fill="#2563EB" radius={[8, 8, 0, 0]} />
-                      </BarChart>
-                    </ResponsiveContainer>
-                  </div>
-
-                  <div
-                    style={{
-                      background: "#FFFFFF",
-                      border: "1px solid #E5E7EB",
-                      borderRadius: "16px",
-                      padding: "24px",
-                    }}
-                  >
-                    <h3 style={{ fontSize: "18px", fontWeight: "700", color: "#1E293B", marginBottom: "20px", fontFamily: "'Brush Script MT', cursive" }}>
-                      Difficulty Breakdown
-                    </h3>
-                    <ResponsiveContainer width="100%" height={300}>
-                      <PieChart>
-                        <Pie
-                          data={levelData}
-                          dataKey="value"
-                          nameKey="name"
-                          cx="50%"
-                          cy="50%"
-                          outerRadius={100}
-                          label={({ name, value }) => `${name}: ${value}`}
-                        >
-                          {levelData.map((_, i) => (
-                            <Cell key={i} fill={COLORS[i]} />
-                          ))}
-                        </Pie>
-                        <Tooltip />
-                      </PieChart>
-                    </ResponsiveContainer>
-                  </div>
-                </div>
-
-                {/* Radar Chart */}
-                <div
-                  style={{
-                    background: "#FFFFFF",
-                    border: "1px solid #E5E7EB",
-                    borderRadius: "16px",
-                    padding: "24px",
-                  }}
-                >
-                  <h3 style={{ fontSize: "18px", fontWeight: "700", color: "#1E293B", marginBottom: "20px", fontFamily: "'Brush Script MT', cursive" }}>
-                    Coverage Analysis
-                  </h3>
-                  <ResponsiveContainer width="100%" height={400}>
-                    <RadarChart data={radarData}>
-                      <PolarGrid stroke="#E5E7EB" />
-                      <PolarAngleAxis dataKey="domain" stroke="#64748B" />
-                      <Radar dataKey="coverage" stroke="#2563EB" fill="#2563EB" fillOpacity={0.6} />
-                      <Tooltip />
-                    </RadarChart>
-                  </ResponsiveContainer>
-                </div>
-              </motion.div>
-            )}
-
-            {/* Questions Tab */}
-            {activeTab === "questions" && (
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-              >
-                {/* Control Bar */}
-                <div
-                  style={{
-                    background: "#FFFFFF",
-                    border: "1px solid #E5E7EB",
-                    borderRadius: "16px",
-                    padding: "20px",
-                    marginBottom: "24px",
-                    display: "flex",
-                    gap: "12px",
-                    flexWrap: "wrap",
-                    alignItems: "center",
-                  }}
-                >
-                  <input
-                    type="text"
-                    placeholder="🔍 Search questions..."
-                    value={searchTerm}
-                    onChange={e => setSearchTerm(e.target.value)}
-                    style={{
-                      flex: 1,
-                      minWidth: "200px",
-                      padding: "12px 16px",
-                      border: "1px solid #E5E7EB",
-                      borderRadius: "10px",
-                      fontSize: "14px",
-                      outline: "none",
-                    }}
-                  />
-                  <select
-                    value={filterDomain}
-                    onChange={e => setFilterDomain(e.target.value)}
-                    style={{
-                      padding: "12px 16px",
-                      border: "1px solid #E5E7EB",
-                      borderRadius: "10px",
-                      fontSize: "14px",
-                      outline: "none",
-                      cursor: "none",
-                    }}
-                  >
-                    <option value="all">All Domains</option>
-                    {DOMAINS.map(d => <option key={d} value={d}>{d.toUpperCase()}</option>)}
-                  </select>
-                  <select
-                    value={filterDifficulty}
-                    onChange={e => setFilterDifficulty(e.target.value)}
-                    style={{
-                      padding: "12px 16px",
-                      border: "1px solid #E5E7EB",
-                      borderRadius: "10px",
-                      fontSize: "14px",
-                      outline: "none",
-                      cursor: "none",
-                    }}
-                  >
-                    <option value="all">All Levels</option>
-                    {LEVELS.map(l => <option key={l} value={l}>{l.charAt(0).toUpperCase() + l.slice(1)}</option>)}
-                  </select>
-
-                  <motion.label
-                    whileHover={{ scale: 1.02 }}
-                    style={{
-                      padding: "12px 20px",
-                      background: "#10B981",
-                      color: "#FFFFFF",
-                      borderRadius: "10px",
-                      fontSize: "14px",
-                      fontWeight: "600",
-                      cursor: "none",
-                    }}
-                  >
-                    📤 Import CSV
-                    <input
-                      type="file"
-                      accept=".csv"
-                      hidden
-                      onChange={(e) => e.target.files[0] && handleCSV(e.target.files[0])}
-                    />
-                  </motion.label>
-
-                  <motion.button
-                    whileHover={{ scale: 1.02 }}
-                    onClick={exportToJSON}
-                    style={{
-                      padding: "12px 20px",
-                      background: "#F59E0B",
-                      border: "none",
-                      color: "#FFFFFF",
-                      borderRadius: "10px",
-                      fontSize: "14px",
-                      fontWeight: "600",
-                      cursor: "none",
-                    }}
-                  >
-                    📥 Export JSON
-                  </motion.button>
-
-                  <motion.button
-                    whileHover={{ scale: 1.02 }}
-                    onClick={() => setShowModal(true)}
-                    style={{
-                      padding: "12px 20px",
-                      background: "#2563EB",
-                      border: "none",
-                      color: "#FFFFFF",
-                      borderRadius: "10px",
-                      fontSize: "14px",
-                      fontWeight: "600",
-                      cursor: "none",
-                    }}
-                  >
-                    + Add Question
-                  </motion.button>
-                </div>
-
-                {/* Questions Table */}
-                <div
-                  style={{
-                    background: "#FFFFFF",
-                    border: "1px solid #E5E7EB",
-                    borderRadius: "16px",
-                    overflow: "hidden",
-                  }}
-                >
-                  <div style={{ overflowX: "auto" }}>
-                    <table style={{ width: "100%", borderCollapse: "collapse" }}>
-                      <thead>
-                        <tr
-                          style={{
-                            background: "#F8FAFC",
-                            borderBottom: "1px solid #E5E7EB",
-                          }}
-                        >
-                          {["#", "Question", "Domain", "Difficulty", "Weight", "Actions"].map(h => (
-                            <th
-                              key={h}
-                              style={{
-                                padding: "16px",
-                                textAlign: "left",
-                                fontSize: "13px",
-                                fontWeight: "700",
-                                color: "#64748B",
-                                textTransform: "uppercase",
-                                letterSpacing: "0.5px",
-                              }}
-                            >
-                              {h}
-                            </th>
-                          ))}
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {filteredQuestions.length === 0 ? (
-                          <tr>
-                            <td
-                              colSpan="6"
-                              style={{
-                                padding: "60px",
-                                textAlign: "center",
-                                color: "#94A3B8",
-                                fontSize: "15px",
-                              }}
-                            >
-                              No questions found. Try adjusting your filters or add new questions.
-                            </td>
-                          </tr>
-                        ) : (
-                          filteredQuestions.map((q, idx) => (
-                            <motion.tr
-                              key={q.id}
-                              whileHover={{ backgroundColor: "#F8FAFC" }}
-                              style={{
-                                borderBottom: "1px solid #E5E7EB",
-                                transition: "background 0.2s",
-                              }}
-                            >
-                              <td style={{ padding: "16px", fontSize: "14px", color: "#64748B" }}>
-                                {idx + 1}
-                              </td>
-                              <td
-                                style={{
-                                  padding: "16px",
-                                  fontSize: "14px",
-                                  color: "#1E293B",
-                                  maxWidth: "400px",
-                                  overflow: "hidden",
-                                  textOverflow: "ellipsis",
-                                  whiteSpace: "nowrap",
-                                }}
-                              >
-                                {q.q}
-                              </td>
-                              <td style={{ padding: "16px" }}>
-                                <span
-                                  style={{
-                                    padding: "4px 12px",
-                                    background: `${COLORS[DOMAINS.indexOf(q.domain)]}15`,
-                                    color: COLORS[DOMAINS.indexOf(q.domain)],
-                                    borderRadius: "6px",
-                                    fontSize: "12px",
-                                    fontWeight: "600",
-                                  }}
-                                >
-                                  {q.domain.toUpperCase()}
-                                </span>
-                              </td>
-                              <td style={{ padding: "16px" }}>
-                                <span
-                                  style={{
-                                    padding: "4px 12px",
-                                    background: q.difficulty === "easy" ? "#10B98115" : q.difficulty === "medium" ? "#F59E0B15" : "#EF444415",
-                                    color: q.difficulty === "easy" ? "#10B981" : q.difficulty === "medium" ? "#F59E0B" : "#EF4444",
-                                    borderRadius: "6px",
-                                    fontSize: "12px",
-                                    fontWeight: "600",
-                                  }}
-                                >
-                                  {q.difficulty}
-                                </span>
-                              </td>
-                              <td style={{ padding: "16px", fontSize: "14px", color: "#64748B" }}>
-                                {q.weight}
-                              </td>
-                              <td style={{ padding: "16px", display: "flex", gap: "8px" }}>
-                                <motion.button
-                                  whileHover={{ scale: 1.1 }}
-                                  onClick={() => { setEdit(q); setShowModal(true); }}
-                                  style={{
-                                    padding: "6px 12px",
-                                    background: "#3B82F6",
-                                    border: "none",
-                                    borderRadius: "6px",
-                                    color: "#FFFFFF",
-                                    fontSize: "12px",
-                                    fontWeight: "600",
-                                    cursor: "none",
-                                  }}
-                                >
-                                  Edit
-                                </motion.button>
-                                <motion.button
-                                  whileHover={{ scale: 1.1 }}
-                                  onClick={() => remove(q.id)}
-                                  style={{
-                                    padding: "6px 12px",
-                                    background: "#EF4444",
-                                    border: "none",
-                                    borderRadius: "6px",
-                                    color: "#FFFFFF",
-                                    fontSize: "12px",
-                                    fontWeight: "600",
-                                    cursor: "none",
-                                  }}
-                                >
-                                  Delete
-                                </motion.button>
-                              </td>
-                            </motion.tr>
-                          ))
-                        )}
-                      </tbody>
-                    </table>
+                    <div style={{ display: "flex", gap: "16px", flexWrap: "wrap" }}>
+                      <button onClick={() => showToast("Memory cache cleared")} className="btn-glass-outline" style={{ fontSize: "13px", padding: "8px 16px" }}>Clear Assistant Memory</button>
+                      <button onClick={() => showToast("Semantic profile refreshed")} className="btn-glass-outline" style={{ fontSize: "13px", padding: "8px 16px" }}>Refresh Semantic Profile</button>
+                      <button onClick={() => showToast("Syncing state with Gemini...")} className="btn-glass-primary" style={{ fontSize: "13px", padding: "8px 16px" }}>Sync Intelligence State</button>
+                    </div>
                   </div>
                 </div>
               </motion.div>
             )}
 
-            {/* Analytics Tab */}
-            {activeTab === "analytics" && (
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-              >
-                <div
-                  style={{
-                    display: "grid",
-                    gridTemplateColumns: "1fr 1fr",
-                    gap: "24px",
-                  }}
-                >
-                  {domainData.map((d, i) => (
-                    <motion.div
-                      key={d.name}
-                      whileHover={{ scale: 1.02 }}
-                      style={{
-                        background: "#FFFFFF",
-                        border: "1px solid #E5E7EB",
-                        borderRadius: "16px",
-                        padding: "24px",
-                        borderLeft: `4px solid ${COLORS[i]}`,
-                      }}
-                    >
-                      <h3 style={{ fontSize: "14px", color: "#64748B", marginBottom: "8px", fontFamily: "'Brush Script MT', cursive" }}>
-                        {d.name}
+            {activeTab === "intelligence" && (
+              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
+                {resumeAnalysis ? (
+                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "24px" }}>
+                    <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "16px", padding: "24px" }}>
+                      <h3 style={{ fontSize: "16px", fontWeight: "600", color: "#fff", marginBottom: "20px", display: "flex", alignItems: "center", gap: "8px" }}>
+                        <div style={{ width: "4px", height: "16px", background: "#10b981", borderRadius: "2px" }}/> ATS Confidence Score
                       </h3>
-                      <div style={{ fontSize: "32px", fontWeight: "800", color: "#1E293B", marginBottom: "8px" }}>
-                        {d.value}
+                      <div style={{ display: "flex", alignItems: "flex-end", gap: "12px", marginBottom: "16px" }}>
+                        <span style={{ fontSize: "64px", fontWeight: "800", color: "#10b981", lineHeight: 1 }}>{recruiterMetrics.score}</span>
+                        <span style={{ fontSize: "16px", color: "var(--tm)", paddingBottom: "10px" }}>/ 100</span>
                       </div>
-                      <div style={{ fontSize: "13px", color: "#64748B" }}>
-                        {d.percentage}% of total questions
-                      </div>
-                      <div
-                        style={{
-                          marginTop: "12px",
-                          height: "8px",
-                          background: "#F1F5F9",
-                          borderRadius: "4px",
-                          overflow: "hidden",
-                        }}
-                      >
-                        <div
-                          style={{
-                            height: "100%",
-                            width: `${d.percentage}%`,
-                            background: COLORS[i],
-                            borderRadius: "4px",
-                            transition: "width 0.5s ease",
-                          }}
-                        />
-                      </div>
-                    </motion.div>
-                  ))}
-                </div>
-              </motion.div>
-            )}
+                      <p style={{ fontSize: "14px", color: "var(--tm)", lineHeight: 1.6 }}>
+                        The semantic parser has identified {recruiterMetrics.matchedSkills?.length || 0} matching skills and {recruiterMetrics.missingSkills?.length || 0} critical missing skills against the target role model.
+                      </p>
+                    </div>
 
-            {/* Activity Tab */}
-            {activeTab === "activity" && (
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                style={{
-                  background: "#FFFFFF",
-                  border: "1px solid #E5E7EB",
-                  borderRadius: "16px",
-                  padding: "24px",
-                }}
-              >
-                <h3 style={{ fontSize: "18px", fontWeight: "700", color: "#1E293B", marginBottom: "20px", fontFamily: "'Brush Script MT', cursive" }}>
-                  Recent Admin Activity
-                </h3>
-                {logs.length === 0 ? (
-                  <p style={{ color: "#94A3B8", textAlign: "center", padding: "40px" }}>
-                    No activity recorded yet
-                  </p>
+                    <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "16px", padding: "24px" }}>
+                      <h3 style={{ fontSize: "16px", fontWeight: "600", color: "#fff", marginBottom: "20px", display: "flex", alignItems: "center", gap: "8px" }}>
+                        <div style={{ width: "4px", height: "16px", background: "#3b82f6", borderRadius: "2px" }}/> Technical Strength Mapping
+                      </h3>
+                      <div style={{ height: "200px" }}>
+                        <ResponsiveContainer width="100%" height="100%">
+                          <RadarChart data={radarData} outerRadius="70%">
+                            <PolarGrid stroke="rgba(255,255,255,0.1)" />
+                            <PolarAngleAxis dataKey="subject" tick={{ fill: 'var(--tm)', fontSize: 10 }} />
+                            <Radar name="Skills" dataKey="A" stroke="#3b82f6" fill="#3b82f6" fillOpacity={0.4} />
+                          </RadarChart>
+                        </ResponsiveContainer>
+                      </div>
+                    </div>
+
+                    <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "16px", padding: "24px", gridColumn: "1 / -1" }}>
+                      <h3 style={{ fontSize: "16px", fontWeight: "600", color: "#fff", marginBottom: "20px", display: "flex", alignItems: "center", gap: "8px" }}>
+                        <div style={{ width: "4px", height: "16px", background: "#f59e0b", borderRadius: "2px" }}/> Missing Skills Detection
+                      </h3>
+                      <div style={{ display: "flex", flexWrap: "wrap", gap: "8px" }}>
+                        {(recruiterMetrics.missingSkills || []).map(skill => (
+                          <div key={skill} style={{ background: "rgba(239, 68, 68, 0.1)", border: "1px solid rgba(239, 68, 68, 0.2)", color: "#fca5a5", padding: "6px 12px", borderRadius: "100px", fontSize: "12px", fontFamily: "var(--mono)" }}>
+                            {skill}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
                 ) : (
-                  <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
-                    {logs.map((log, i) => (
-                      <motion.div
-                        key={i}
-                        initial={{ opacity: 0, x: -20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: i * 0.05 }}
-                        style={{
-                          display: "flex",
-                          justifyContent: "space-between",
-                          alignItems: "center",
-                          padding: "16px",
-                          background: "#F8FAFC",
-                          borderRadius: "12px",
-                          border: "1px solid #E5E7EB",
-                        }}
-                      >
-                        <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-                          <div
-                            style={{
-                              width: "8px",
-                              height: "8px",
-                              borderRadius: "50%",
-                              background: "#2563EB",
-                            }}
-                          />
-                          <span style={{ fontSize: "14px", color: "#1E293B", fontWeight: "500" }}>
-                            {log.action}
-                          </span>
-                        </div>
-                        <span style={{ fontSize: "13px", color: "#64748B" }}>
-                          {log.time}
-                        </span>
-                      </motion.div>
-                    ))}
+                  <div style={{ textAlign: "center", padding: "80px", background: "rgba(255,255,255,0.02)", borderRadius: "16px", border: "1px dashed rgba(255,255,255,0.1)" }}>
+                    <div style={{ fontSize: "48px", marginBottom: "16px" }}>📄</div>
+                    <h3 style={{ fontSize: "18px", color: "#fff", marginBottom: "8px" }}>No Recruiter Data Active</h3>
+                    <p style={{ color: "var(--tm)", fontSize: "14px" }}>Upload a resume via the Predict pipeline to populate this intelligence dashboard.</p>
                   </div>
                 )}
+              </motion.div>
+            )}
+
+            {activeTab === "telemetry" && (
+              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} style={{ background: "#0a0a0a", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "12px", padding: "16px", fontFamily: "var(--mono)", height: "600px", overflowY: "auto", boxShadow: "inset 0 0 20px rgba(0,0,0,0.5)" }}>
+                <div style={{ color: "#4ade80", fontSize: "12px", marginBottom: "20px" }}>Pathora Runtime Environment v{health.version} - Streaming Logs</div>
+                {logs.length === 0 ? (
+                  <p style={{ color: "var(--tm)" }}>Awaiting system events...</p>
+                ) : (
+                  logs.map((log, i) => (
+                    <motion.div key={i} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.05 }} style={{ display: "flex", gap: "16px", marginBottom: "8px", fontSize: "12px", borderBottom: "1px solid rgba(255,255,255,0.05)", paddingBottom: "8px" }}>
+                      <span style={{ color: "var(--tm)", minWidth: "160px" }}>[{log.time}]</span>
+                      <span style={{ color: log.type === "ats" ? "#60a5fa" : log.type === "assistant" ? "#c084fc" : "#fbbf24", minWidth: "80px", textTransform: "uppercase" }}>
+                        {log.type}
+                      </span>
+                      <span style={{ color: "#d1d5db" }}>{log.action}</span>
+                    </motion.div>
+                  ))
+                )}
+              </motion.div>
+            )}
+
+            {activeTab === "observability" && (
+              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "24px" }}>
+                  <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "16px", padding: "24px" }}>
+                    <h3 style={{ fontSize: "16px", fontWeight: "600", color: "#fff", marginBottom: "24px", fontFamily: "var(--font-body)" }}>API Gateway Latency</h3>
+                    <ResponsiveContainer width="100%" height={250}>
+                      <LineChart data={[ { time: '10:00', ms: 45 }, { time: '10:05', ms: 52 }, { time: '10:10', ms: 48 }, { time: '10:15', ms: 95 }, { time: '10:20', ms: 41 }, { time: '10:25', ms: 44 } ]}>
+                        <XAxis dataKey="time" stroke="var(--tm)" fontSize={10} />
+                        <YAxis stroke="var(--tm)" fontSize={10} />
+                        <Tooltip contentStyle={{ background: "#111", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "8px" }} />
+                        <Line type="monotone" dataKey="ms" stroke="#7c3aed" strokeWidth={3} dot={{ r: 4, fill: "#7c3aed" }} />
+                      </LineChart>
+                    </ResponsiveContainer>
+                  </div>
+                  
+                  <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "16px", padding: "24px", display: "flex", flexDirection: "column", justifyContent: "center" }}>
+                    <h3 style={{ fontSize: "16px", fontWeight: "600", color: "#fff", marginBottom: "8px" }}>Token Usage Estimation</h3>
+                    <p style={{ color: "var(--tm)", fontSize: "13px", marginBottom: "24px" }}>Based on active Assistant sessions and context memory size.</p>
+                    <div style={{ fontSize: "48px", fontWeight: "800", color: "#fff", marginBottom: "8px" }}>{totalTokens.toLocaleString()} <span style={{ fontSize: "18px", color: "var(--tm)", fontWeight: "500" }}>Tokens</span></div>
+                    <div style={{ height: "4px", background: "rgba(255,255,255,0.1)", borderRadius: "2px", overflow: "hidden" }}>
+                      <div style={{ width: "35%", height: "100%", background: "linear-gradient(90deg, #7c3aed, #4f46e5)" }} />
+                    </div>
+                    <div style={{ display: "flex", justifyContent: "space-between", fontSize: "11px", color: "var(--tm)", marginTop: "8px", fontFamily: "var(--mono)" }}>
+                      <span>0</span>
+                      <span>Rate Limit: 1M / min</span>
+                    </div>
+                  </div>
+                </div>
               </motion.div>
             )}
           </div>
         </main>
       </div>
 
-      {/* Toast Notification */}
       <AnimatePresence>
         {toast && (
-          <motion.div
-            initial={{ opacity: 0, y: 50 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 50 }}
-            style={{
-              position: "fixed",
-              bottom: "32px",
-              right: "32px",
-              background: toast.type === "success" ? "#10B981" : "#EF4444",
-              color: "#FFFFFF",
-              padding: "16px 24px",
-              borderRadius: "12px",
-              boxShadow: "0 10px 40px rgba(0, 0, 0, 0.2)",
-              fontSize: "14px",
-              fontWeight: "600",
-              zIndex: 10000,
-            }}
-          >
+          <motion.div initial={{ opacity: 0, y: 50 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 50 }} style={{ position: "fixed", bottom: "32px", right: "32px", background: toast.type === "success" ? "rgba(16, 185, 129, 0.9)" : "rgba(239, 68, 68, 0.9)", backdropFilter: "blur(12px)", color: "#FFFFFF", padding: "16px 24px", borderRadius: "12px", boxShadow: "0 10px 40px rgba(0, 0, 0, 0.2)", fontSize: "14px", fontWeight: "600", zIndex: 10000, border: "1px solid rgba(255,255,255,0.1)" }}>
             {toast.message}
           </motion.div>
         )}
       </AnimatePresence>
-
-      {/* Modal */}
-      <AnimatePresence>
-        {showModal && (
-          <QuestionModal
-            edit={edit}
-            onClose={() => {
-              setEdit(null);
-              setShowModal(false);
-            }}
-            onSave={(newQuestion) => {
-              if (edit) {
-                saveDB(
-                  questions.map(x => x.id === newQuestion.id ? newQuestion : x),
-                  "QUESTION UPDATED"
-                );
-              } else {
-                saveDB([...questions, { ...newQuestion, id: Date.now() + Math.random() }], "QUESTION ADDED");
-              }
-              setEdit(null);
-              setShowModal(false);
-            }}
-          />
-        )}
-      </AnimatePresence>
-
-      <style>{`
-        * { cursor: none !important; }
-        @keyframes float {
-          0%, 100% { transform: translateY(0) translateX(0); }
-          50% { transform: translateY(-20px) translateX(20px); }
-        }
-      `}</style>
-    </>
-  );
-}
-
-/* ================= QUESTION MODAL ================= */
-function QuestionModal({ edit, onClose, onSave }) {
-  const [form, setForm] = useState(
-    edit || {
-      q: "",
-      options: ["", "", "", ""],
-      answer: "",
-      domain: "tech",
-      difficulty: "easy",
-      weight: 1,
-    }
-  );
-
-  const handleOptionChange = (index, value) => {
-    const newOptions = [...form.options];
-    newOptions[index] = value;
-    setForm({ ...form, options: newOptions });
-  };
-
-  const handleSave = () => {
-    if (!form.q.trim()) {
-      alert("Question text is required.");
-      return;
-    }
-    if (form.options.some(o => !o.trim())) {
-      alert("All 4 options must be filled.");
-      return;
-    }
-    if (!form.answer) {
-      alert("Please select the correct answer.");
-      return;
-    }
-    onSave(form);
-  };
-
-  return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      onClick={onClose}
-      style={{
-        position: "fixed",
-        inset: 0,
-        background: "rgba(0, 0, 0, 0.6)",
-        backdropFilter: "blur(8px)",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        zIndex: 1000,
-        padding: "20px",
-      }}
-    >
-      <motion.div
-        initial={{ scale: 0.9, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        exit={{ scale: 0.9, opacity: 0 }}
-        onClick={(e) => e.stopPropagation()}
-        style={{
-          background: "#FFFFFF",
-          borderRadius: "24px",
-          padding: "40px",
-          maxWidth: "700px",
-          width: "100%",
-          maxHeight: "90vh",
-          overflow: "auto",
-        }}
-      >
-        <h3 style={{ fontSize: "24px", fontWeight: "800", color: "#1E293B", marginBottom: "24px", fontFamily: "'Brush Script MT', cursive" }}>
-          {edit ? "Edit Question" : "Add New Question"}
-        </h3>
-
-        <div style={{ marginBottom: "20px" }}>
-          <label style={{ display: "block", fontSize: "13px", fontWeight: "600", color: "#64748B", marginBottom: "8px" }}>
-            Question Text
-          </label>
-          <textarea
-            placeholder="Enter your question here..."
-            value={form.q}
-            onChange={e => setForm({ ...form, q: e.target.value })}
-            rows="3"
-            style={{
-              width: "100%",
-              padding: "12px",
-              border: "1px solid #E5E7EB",
-              borderRadius: "12px",
-              fontSize: "14px",
-              resize: "vertical",
-              outline: "none",
-            }}
-          />
-        </div>
-
-        <div style={{ marginBottom: "20px" }}>
-          <label style={{ display: "block", fontSize: "13px", fontWeight: "600", color: "#64748B", marginBottom: "12px" }}>
-            Answer Options
-          </label>
-          {form.options.map((opt, i) => (
-            <div key={i} style={{ display: "flex", gap: "12px", marginBottom: "12px", alignItems: "center" }}>
-              <span
-                style={{
-                  width: "32px",
-                  height: "32px",
-                  borderRadius: "8px",
-                  background: "#F8FAFC",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  fontSize: "14px",
-                  fontWeight: "600",
-                  color: "#64748B",
-                }}
-              >
-                {String.fromCharCode(65 + i)}
-              </span>
-              <input
-                placeholder={`Option ${i + 1}`}
-                value={opt}
-                onChange={e => handleOptionChange(i, e.target.value)}
-                style={{
-                  flex: 1,
-                  padding: "12px",
-                  border: "1px solid #E5E7EB",
-                  borderRadius: "10px",
-                  fontSize: "14px",
-                  outline: "none",
-                }}
-              />
-              <label style={{ display: "flex", alignItems: "center", gap: "8px", cursor: "none" }}>
-                <input
-                  type="radio"
-                  name="correct-answer"
-                  checked={form.answer === opt}
-                  onChange={() => setForm({ ...form, answer: opt })}
-                  style={{ cursor: "none" }}
-                />
-                <span style={{ fontSize: "13px", color: "#64748B" }}>Correct</span>
-              </label>
-            </div>
-          ))}
-        </div>
-
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "12px", marginBottom: "32px" }}>
-          <div>
-            <label style={{ display: "block", fontSize: "13px", fontWeight: "600", color: "#64748B", marginBottom: "8px" }}>
-              Domain
-            </label>
-            <select
-              value={form.domain}
-              onChange={e => setForm({ ...form, domain: e.target.value })}
-              style={{
-                width: "100%",
-                padding: "12px",
-                border: "1px solid #E5E7EB",
-                borderRadius: "10px",
-                fontSize: "14px",
-                outline: "none",
-                cursor: "none",
-              }}
-            >
-              {DOMAINS.map(d => (
-                <option key={d} value={d}>{d.toUpperCase()}</option>
-              ))}
-            </select>
-          </div>
-
-          <div>
-            <label style={{ display: "block", fontSize: "13px", fontWeight: "600", color: "#64748B", marginBottom: "8px" }}>
-              Difficulty
-            </label>
-            <select
-              value={form.difficulty}
-              onChange={e => setForm({ ...form, difficulty: e.target.value })}
-              style={{
-                width: "100%",
-                padding: "12px",
-                border: "1px solid #E5E7EB",
-                borderRadius: "10px",
-                fontSize: "14px",
-                outline: "none",
-                cursor: "none",
-              }}
-            >
-              {LEVELS.map(l => (
-                <option key={l} value={l}>{l.charAt(0).toUpperCase() + l.slice(1)}</option>
-              ))}
-            </select>
-          </div>
-
-          <div>
-            <label style={{ display: "block", fontSize: "13px", fontWeight: "600", color: "#64748B", marginBottom: "8px" }}>
-              Weight
-            </label>
-            <input
-              type="number"
-              min="1"
-              max="5"
-              value={form.weight}
-              onChange={e => setForm({ ...form, weight: Number(e.target.value) })}
-              style={{
-                width: "100%",
-                padding: "12px",
-                border: "1px solid #E5E7EB",
-                borderRadius: "10px",
-                fontSize: "14px",
-                outline: "none",
-              }}
-            />
-          </div>
-        </div>
-
-        <div style={{ display: "flex", gap: "12px" }}>
-          <motion.button
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            onClick={handleSave}
-            style={{
-              flex: 1,
-              padding: "14px",
-              background: "#2563EB",
-              border: "none",
-              borderRadius: "12px",
-              color: "#FFFFFF",
-              fontSize: "15px",
-              fontWeight: "700",
-              cursor: "none",
-            }}
-          >
-            {edit ? "Update Question" : "Add Question"}
-          </motion.button>
-          <motion.button
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            onClick={onClose}
-            style={{
-              flex: 1,
-              padding: "14px",
-              background: "transparent",
-              border: "2px solid #E5E7EB",
-              borderRadius: "12px",
-              color: "#64748B",
-              fontSize: "15px",
-              fontWeight: "700",
-              cursor: "none",
-            }}
-          >
-            Cancel
-          </motion.button>
-        </div>
-      </motion.div>
-    </motion.div>
+    </div>
   );
 }

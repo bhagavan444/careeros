@@ -5,6 +5,7 @@ import { auth } from "../firebase";
 import { Light as SyntaxHighlighter } from "react-syntax-highlighter";
 import { githubGist } from "react-syntax-highlighter/dist/esm/styles/hljs";
 import { useIntelligenceStore } from "../store/intelligenceStore";
+import "./Home.css";
 
 // ─── CONSTANTS ────────────────────────────────────────────────────────────────
 const API_BASE = import.meta.env.VITE_API_BASE_URL ? `${import.meta.env.VITE_API_BASE_URL}/api/v1` : "https://pathora-backend1.onrender.com/api/v1";
@@ -1026,14 +1027,16 @@ export default function ChatUI() {
   // ─── RENDER ────────────────────────────────────────────────────────────────
   return (
     <div
+      className="home-wrap"
       onDragOver={onDragOver}
       onDragLeave={onDragLeave}
       onDrop={onDrop}
       style={{
         display: "flex", flexDirection: "column", height: "100vh", width: "100%",
-        background: "transparent", color: "var(--text-primary)", overflow: "hidden",
+        color: "var(--text-primary)", overflow: "hidden",
         fontFamily: "var(--font-body)",
       }}>
+      <div className="grid-bg" />
 
       <Toast toasts={toasts} dismiss={(id) => setToasts((p) => p.filter((t) => t.id !== id))} />
 
@@ -1108,87 +1111,8 @@ export default function ChatUI() {
         )}
       </AnimatePresence>
 
-      {/* ── WORKSPACE TOP BAR ── */}
-      <div style={{
-        display: "flex", alignItems: "center", justifyContent: "space-between",
-        height: "46px", padding: "0 16px", flexShrink: 0,
-        background: "rgba(255,255,255,0.82)", backdropFilter: "blur(24px) saturate(180%)", WebkitBackdropFilter: "blur(24px) saturate(180%)",
-        borderBottom: "1px solid rgba(0,0,0,0.06)", zIndex: 300,
-      }}>
-        {/* Left: Sidebar Toggle & Logo */}
-        <div style={{ display: "flex", alignItems: "center", gap: "12px", minWidth: "140px" }}>
-          <button 
-            onClick={() => setSidebarOpen(!sidebarOpen)}
-            style={{
-              background: "transparent", border: "none", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", color: "var(--text-muted)", padding: "6px", borderRadius: "6px", transition: "all 0.15s ease"
-            }}
-            onMouseEnter={e => { e.currentTarget.style.background = "rgba(0,0,0,0.04)"; e.currentTarget.style.color = "#111"; }}
-            onMouseLeave={e => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = "var(--text-muted)"; }}
-          >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-              <line x1="4" y1="12" x2="20" y2="12" />
-              <line x1="4" y1="7" x2="14" y2="7" />
-              <line x1="4" y1="17" x2="18" y2="17" />
-            </svg>
-          </button>
-          <a href="/" style={{ display: "flex", alignItems: "center", gap: "7px", textDecoration: "none" }}>
-             <div style={{ width: 13, height: 13, background: "#111", borderRadius: "3px" }} />
-             <span style={{ fontSize: "13.5px", fontWeight: "600", color: "#111", letterSpacing: "-0.3px" }}>Pathora</span>
-          </a>
-        </div>
-        
-        {/* Center: Animated Tabs */}
-        <div style={{ display: "flex", alignItems: "center", gap: "4px", height: "100%" }}>
-          {[
-            { label: "Assistant", href: "/chat", active: true },
-            { label: "Predict", href: "/predict", active: false },
-            { label: "Assessments", href: "/quiz", active: false },
-            { label: "Roadmaps", href: "/plans", active: false },
-          ].map(tab => (
-            <a key={tab.label} href={tab.href} style={{
-              fontSize: "12.5px", fontWeight: tab.active ? "600" : "500",
-              color: tab.active ? "#111" : "var(--text-muted)",
-              textDecoration: "none", height: "100%", display: "flex", alignItems: "center",
-              padding: "0 12px", position: "relative", transition: "color 0.2s ease",
-            }}
-            onMouseEnter={e => { if (!tab.active) e.currentTarget.style.color = "var(--text-secondary)"; }}
-            onMouseLeave={e => { if (!tab.active) e.currentTarget.style.color = "var(--text-muted)"; }}
-            >
-              {tab.label}
-              {tab.active && (
-                <motion.div
-                  layoutId="workspace-tab-indicator"
-                  style={{
-                    position: "absolute", bottom: 0, left: "12px", right: "12px", height: "2px",
-                    background: "#7c3aed", borderRadius: "2px 2px 0 0",
-                  }}
-                  transition={{ type: "spring", stiffness: 400, damping: 30 }}
-                />
-              )}
-            </a>
-          ))}
-        </div>
-        
-        {/* Right: Status & Profile */}
-        <div style={{ display: "flex", alignItems: "center", gap: "12px", minWidth: "140px", justifyContent: "flex-end" }}>
-           <div style={{ display: "flex", alignItems: "center", gap: "5px" }}>
-              <span style={{ width: "5px", height: "5px", borderRadius: "50%", background: "#10b981", boxShadow: "0 0 4px rgba(16,185,129,0.35)" }} />
-              <span style={{ fontSize: "11px", fontWeight: "500", color: "var(--text-muted)", letterSpacing: "0.2px" }}>Online</span>
-           </div>
-           <div style={{
-             width: "24px", height: "24px", borderRadius: "50%",
-             background: firebaseUser ? "linear-gradient(135deg, #818cf8, #a78bfa)" : "rgba(0,0,0,0.08)",
-             display: "flex", alignItems: "center", justifyContent: "center",
-             fontSize: "10px", fontWeight: "700", color: firebaseUser ? "#fff" : "#666",
-             transition: "all 0.2s ease",
-           }}>
-             {firebaseUser?.displayName?.[0]?.toUpperCase() || firebaseUser?.email?.[0]?.toUpperCase() || "U"}
-           </div>
-        </div>
-      </div>
-
       {/* ── LAYOUT ── */}
-      <div style={{ display: "flex", flex: 1, overflow: "hidden" }}>
+      <div style={{ display: "flex", flex: 1, overflow: "hidden", paddingTop: "80px" }}>
 
         {/* ── SIDEBAR ── */}
         <AnimatePresence>
@@ -1202,9 +1126,9 @@ export default function ChatUI() {
               transition={{ type: "spring", stiffness: 350, damping: 35, bounce: 0 }}
               style={{
                 display: "flex", flexDirection: "column", height: "100%", flexShrink: 0,
-                background: "rgba(249,250,251,0.92)",
+                background: "rgba(255,255,255,0.1)",
                 backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)",
-                borderRight: "1px solid rgba(0,0,0,0.06)",
+                borderRight: "1px solid rgba(255,255,255,0.1)",
                 overflow: "hidden", position: isMobile ? "absolute" : "relative",
                 zIndex: 200, left: 0, top: 0,
                 borderRadius: isMobile ? "0 20px 20px 0" : "0",
@@ -1346,7 +1270,24 @@ export default function ChatUI() {
         </AnimatePresence>
 
         {/* ── MAIN ── */}
-        <main style={{ display: "flex", flexDirection: "column", flex: 1, overflow: "hidden", background: "radial-gradient(ellipse at top right, rgba(255,255,255,0.55), rgba(248,248,252,0.5))", backdropFilter: "blur(20px) saturate(160%)", WebkitBackdropFilter: "blur(20px) saturate(160%)" }}>
+        <main style={{ position: "relative", display: "flex", flexDirection: "column", flex: 1, overflow: "hidden", background: "transparent" }}>
+          {/* Floating Sidebar Toggle */}
+          <button 
+            onClick={() => setSidebarOpen(!sidebarOpen)}
+            style={{
+              position: "absolute", top: "16px", left: "16px", zIndex: 300,
+              background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.2)",
+              backdropFilter: "blur(10px)", cursor: "pointer", display: "flex", 
+              alignItems: "center", justifyContent: "center", color: "var(--text-primary)", 
+              padding: "8px", borderRadius: "8px", transition: "all 0.2s ease"
+            }}
+          >
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+              <line x1="4" y1="12" x2="20" y2="12" />
+              <line x1="4" y1="7" x2="14" y2="7" />
+              <line x1="4" y1="17" x2="18" y2="17" />
+            </svg>
+          </button>
 
           {/* Error banner */}
           <AnimatePresence>

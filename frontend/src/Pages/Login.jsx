@@ -14,6 +14,7 @@ const googleProvider = new GoogleAuthProvider();
 import { useNavigate } from "react-router-dom";
 import { motion, useReducedMotion } from "framer-motion";
 import './Login.css';
+import './Home.css';
 
 /* ================= HIGH PERFORMANCE CUSTOM CURSOR ================= */
 const CustomCursor = memo(() => {
@@ -282,12 +283,9 @@ export default function Login({ handleLogin }) {
 
   /* ================= RENDER ================= */
   return (
-    <div className="login-container">
+    <div className="login-container home-wrap">
       <CustomCursor />
-      
-      {/* Ambient Visuals */}
-      <div className="login-ambient-overlay" />
-      <div className="login-glow-orb" />
+      <div className="grid-bg" />
 
       {/* LEFT PANEL - BRAND SHOWCASE */}
       <div className="login-left-panel">

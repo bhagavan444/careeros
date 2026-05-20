@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef, memo } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import Footer from '../components/Footer';
 import './Contact.css';
+import './Home.css';
 
 // ----------------------------------------------------------------------
 // 1. HIGH PERFORMANCE CUSTOM CURSOR (DESKTOP ONLY)
@@ -160,10 +161,9 @@ function Contact() {
   };
 
   return (
-    <div className="contact-page-container">
+    <div className="contact-page-container home-wrap">
       <CustomCursor />
-      <div className="contact-ambient-bg" />
-      <div className="contact-grid-overlay" />
+      <div className="grid-bg" />
 
       {/* Hero Section */}
       <section style={{ maxWidth: "1200px", margin: "0 auto", padding: "8rem 2rem 2rem", textAlign: "center" }}>

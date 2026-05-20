@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import Footer from '../components/Footer';
 import { useIntelligenceStore } from '../store/intelligenceStore';
+import "./Home.css";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "https://pathora-backend1.onrender.com";
 
@@ -2418,14 +2419,13 @@ export default function Predict() {
   const sc    = result ? getScoreColor(targetDisplayScore) : "#7c3aed";
 
   return (
-    <div style={{
-      minHeight:"100vh", background: 'transparent', color:"#111",
+    <div className="home-wrap" style={{
+      minHeight:"100vh", color:"#111",
       fontFamily:"'Outfit',sans-serif", cursor:"none",
       position:"relative", overflowX:"hidden",
     }}>
+      <div className="grid-bg" />
       <MagneticCursor />
-      <AmbientBg scoreColor={sc} />
-      <div style={{ position: "fixed", inset: 0, background: "linear-gradient(180deg, rgba(255,255,255,0.4) 0%, rgba(250,250,248,0.7) 100%)", pointerEvents: "none", zIndex: 0 }} />
 
       {/* â”€â”€ 1. LOADING PIPELINE ANIMATION COVER â”€â”€ */}
       <AnimatePresence>

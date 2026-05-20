@@ -2,6 +2,7 @@ import React, { useEffect, useRef, memo } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import Footer from '../components/Footer';
 import './About.css';
+import './Home.css';
 
 // Throttled custom cursor logic
 const CustomCursor = () => {
@@ -157,9 +158,9 @@ function About() {
   const y = useTransform(scrollYProgress, [0, 1], ["0%", "50%"]);
   
   return (
-    <div className="about-page-container">
+    <div className="about-page-container home-wrap">
       <CustomCursor />
-      <div className="about-ambient-glow" />
+      <div className="grid-bg" />
 
       {/* Hero Section */}
       <section className="about-section" style={{ minHeight: '90vh', display: 'flex', alignItems: 'center' }}>

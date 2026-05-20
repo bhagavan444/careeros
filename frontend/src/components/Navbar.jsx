@@ -89,12 +89,10 @@ export default function Navbar({ handleLogout }) {
     { label: "Assistant", to: "/chat" },
     { label: "Roadmaps", to: "/#roadmap", isRoadmap: true },
     { label: "Assessments", to: "/quiz" },
+    { label: "About", to: "/about" },
+    { label: "Contact", to: "/contact" },
   ];
 
-  // Do not render navbar on chat route to avoid visual collision
-  if (location.pathname === "/chat") {
-    return null;
-  }
 
   return (
     <>
