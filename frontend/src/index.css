@@ -27,6 +27,20 @@ body {
   min-width: 320px;
   min-height: 100vh;
   display: block; /* ✅ fixed: normal page flow */
+  overscroll-behavior-y: none; /* Prevents mobile scroll bounce lag */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* Force hardware acceleration on common heavy UI elements */
+.glass-effect, .glass-panel, .pnx-nav-container {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000;
 }
 
 /* Navbar spacing fix */

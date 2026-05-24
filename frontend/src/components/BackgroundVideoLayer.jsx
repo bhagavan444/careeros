@@ -196,7 +196,7 @@ export default function BackgroundVideoLayer() {
             filter: `blur(${config.blurAmount}px) saturate(120%) brightness(0.95) contrast(1.05)`,
             transform: "translate3d(0, 0, 0) scale(1.02)",
             backfaceVisibility: "hidden",
-            willChange: "opacity, filter",
+            willChange: "opacity, transform",
             transition: "opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1), filter 0.8s ease",
           }}
         >
@@ -236,10 +236,10 @@ export default function BackgroundVideoLayer() {
             right: "-10%",
             width: "60vw",
             height: "60vw",
-            background: "radial-gradient(circle, rgba(139, 92, 246, 0.07) 0%, transparent 55%)",
-            filter: "blur(60px)",
+            background: "radial-gradient(circle, rgba(139, 92, 246, 0.07) 0%, transparent 60%)",
             animation: "bgv-breathe 12s ease-in-out infinite",
             willChange: "opacity, transform",
+            transform: "translateZ(0)",
           }}
         />
 
@@ -251,10 +251,10 @@ export default function BackgroundVideoLayer() {
             left: "-10%",
             width: "50vw",
             height: "50vw",
-            background: "radial-gradient(circle, rgba(99, 102, 241, 0.05) 0%, transparent 50%)",
-            filter: "blur(50px)",
+            background: "radial-gradient(circle, rgba(99, 102, 241, 0.05) 0%, transparent 60%)",
             animation: "bgv-breathe 16s ease-in-out infinite 4s",
             willChange: "opacity, transform",
+            transform: "translateZ(0)",
           }}
         />
 
@@ -266,10 +266,10 @@ export default function BackgroundVideoLayer() {
             left: "40%",
             width: "40vw",
             height: "40vw",
-            background: "radial-gradient(circle, rgba(200, 200, 220, 0.04) 0%, transparent 50%)",
-            filter: "blur(40px)",
+            background: "radial-gradient(circle, rgba(200, 200, 220, 0.04) 0%, transparent 60%)",
             animation: "bgv-pulse-glow 10s ease-in-out infinite 2s",
             willChange: "opacity",
+            transform: "translateZ(0)",
           }}
         />
       </div>

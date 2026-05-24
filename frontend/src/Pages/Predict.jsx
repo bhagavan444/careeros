@@ -679,17 +679,17 @@ function AmbientBg({ scoreColor }) {
     <div style={{ position:"fixed", inset:0, pointerEvents:"none", zIndex:0, overflow:"hidden" }}>
       <div style={{
         position:"absolute", width:900, height:900, borderRadius:"50%",
-        background:`radial-gradient(circle, ${c}12 0%, transparent 70%)`,
+        background:`radial-gradient(circle, ${c}12 0%, transparent 60%)`,
         top:"-300px", right:"-200px",
         animation:"orb 20s ease-in-out infinite",
-        filter:"blur(90px)",
+        transform: "translateZ(0)"
       }} />
       <div style={{
         position:"absolute", width:700, height:700, borderRadius:"50%",
-        background:"radial-gradient(circle, rgba(99,102,241,0.1) 0%, transparent 70%)",
+        background:"radial-gradient(circle, rgba(99,102,241,0.1) 0%, transparent 60%)",
         bottom:"-150px", left:"-150px",
         animation:"orb 25s ease-in-out infinite reverse",
-        filter:"blur(80px)",
+        transform: "translateZ(0)"
       }} />
       <svg style={{ position:"absolute", inset:0, width:"100%", height:"100%", opacity:0.015 }}>
         <defs>

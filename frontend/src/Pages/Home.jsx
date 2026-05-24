@@ -6,12 +6,20 @@ import { RevealSection, RevealDiv, AnimatedCounter, CinematicUniverseCore, TechM
 import Footer from '../components/Footer';
 import { motion } from "framer-motion";
 import { useIntelligenceStore } from '../store/intelligenceStore';
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "../firebase";
 
 export default function Home() {
   const navigate = useNavigate();
   const location = useLocation();
   const fileRef = useRef(null);
-  const user = typeof localStorage !== 'undefined' ? JSON.parse(localStorage.getItem("user_profile") || "null") : null;
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    if (!auth) return;
+    const unsubscribe = onAuthStateChanged(auth, setUser);
+    return unsubscribe;
+  }, []);
   
   const selectedDomain = useIntelligenceStore((state) => state.currentDomain);
   const setSelectedDomain = useIntelligenceStore((state) => state.setDomain);
@@ -57,7 +65,7 @@ export default function Home() {
           initial={{ opacity: 0 }} 
           animate={{ opacity: 1 }} 
           transition={{ duration: 2 }}
-          style={{ position:"absolute",top:"8%",left:"-10%",width:"50vw",height:"50vw",borderRadius:"50%",background:"radial-gradient(circle,rgba(129,140,248,.08) 0%,transparent 65%)",filter:"blur(70px)",pointerEvents:"none" }} 
+          style={{ position:"absolute",top:"8%",left:"-10%",width:"50vw",height:"50vw",borderRadius:"50%",background:"radial-gradient(circle,rgba(129,140,248,.08) 0%,transparent 60%)",pointerEvents:"none", transform: "translateZ(0)" }} 
         />
         <div className="hero-grid">
           <motion.div 
@@ -312,7 +320,7 @@ export default function Home() {
 
       {/* ═══ SUCCESS STORIES ═══ */}
       <RevealSection className="sec" style={{ overflow:"hidden" }}>
-        <div style={{ position:"absolute",top:"10%",right:"-5%",width:"40vw",height:"40vw",borderRadius:"50%",background:"radial-gradient(circle,rgba(103,232,249,.05) 0%,transparent 70%)",filter:"blur(60px)",pointerEvents:"none" }} />
+        <div style={{ position:"absolute",top:"10%",right:"-5%",width:"40vw",height:"40vw",borderRadius:"50%",background:"radial-gradient(circle,rgba(103,232,249,.05) 0%,transparent 60%)",pointerEvents:"none", transform: "translateZ(0)" }} />
         <div className="sec-inner">
           <div className="sec-head">
             <div className="sec-tag" style={{ color:"var(--success)" }}>Student Reviews</div>

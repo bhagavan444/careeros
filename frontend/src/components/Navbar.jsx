@@ -87,7 +87,7 @@ export default function Navbar({ handleLogout }) {
     { label: "Home", to: "/" },
     { label: "Predict", to: "/predict", isPredict: true },
     { label: "Assistant", to: "/chat" },
-    { label: "Roadmaps", to: "/#roadmap", isRoadmap: true },
+    { label: "Plans", to: "/plans" },
     { label: "Assessments", to: "/quiz" },
     { label: "About", to: "/about" },
     { label: "Contact", to: "/contact" },
@@ -937,8 +937,8 @@ export default function Navbar({ handleLogout }) {
                       <span className="pnx-mobile-nav-desc">
                         {item.label === "Home" && "Gateway Hub"}
                         {item.label === "Predict" && "ATS Scanner"}
-                        {item.label === "AI Assistant" && "Interactive Guide"}
-                        {item.label === "Roadmaps" && "Trajectory Map"}
+                        {item.label === "Assistant" && "Interactive Guide"}
+                        {item.label === "Plans" && "Pricing Tier"}
                         {item.label === "About" && "Our Mission"}
                         {item.label === "Contact" && "Get In Touch"}
                       </span>
@@ -950,10 +950,6 @@ export default function Navbar({ handleLogout }) {
                 <Link to="/quiz" onClick={() => setMenuOpen(false)} className="pnx-mobile-nav-card">
                   <span className="pnx-mobile-nav-label">Quiz</span>
                   <span className="pnx-mobile-nav-desc">Assessments</span>
-                </Link>
-                <Link to="/plans" onClick={() => setMenuOpen(false)} className="pnx-mobile-nav-card">
-                  <span className="pnx-mobile-nav-label">Plans</span>
-                  <span className="pnx-mobile-nav-desc">Pricing Tier</span>
                 </Link>
                 <Link to="/dashboard" onClick={() => setMenuOpen(false)} className="pnx-mobile-nav-card">
                   <span className="pnx-mobile-nav-label">Dashboard</span>
