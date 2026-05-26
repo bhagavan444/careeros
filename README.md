@@ -456,4 +456,5 @@ Based on the uploaded architecture analysis document.
 
 # 🎥 Platform Preview
 
-![Pathora Banner](docs/assets/pathora-preview.png)
+<img width="1919" height="1061" alt="image" src="https://github.com/user-attachments/assets/23e371a4-507a-406d-8704-9ab889a34622" />
+
