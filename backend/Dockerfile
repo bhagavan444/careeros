@@ -24,5 +24,4 @@ COPY . .
 # Expose port
 EXPOSE 8000
 
-# Start Uvicorn with Gunicorn for production scalability
-CMD ["gunicorn", "app.main:app", "--workers", "4", "--worker-class", "uvicorn.workers.UvicornWorker", "--bind", "0.0.0.0:8000"]
+CMD ["gunicorn", "flask_app:app", "--workers", "2", "--worker-class", "gthread", "--threads", "4", "--timeout", "180", "--bind", "0.0.0.0:8000"]

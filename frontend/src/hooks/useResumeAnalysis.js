@@ -64,6 +64,9 @@ export function useResumeAnalysis() {
           if (response.status === 404) {
               throw new Error(`[API_ROUTE_NOT_FOUND] POST /api/v1/resume/analyze/stream returned 404. Ensure your frontend is talking to the local backend (http://localhost:5000) and not a stale production endpoint.`);
           }
+          if (response.status === 504) {
+              throw new Error(`[TIMEOUT] The intelligence engine is processing heavily and the connection timed out. If you are on a free tier, please try again in a moment.`);
+          }
           let errData;
           try { errData = await response.json(); } catch(e) {}
           const errMsg = errData?.error || errData?.message || `HTTP Error ${response.status}`;
@@ -137,8 +140,8 @@ export function useResumeAnalysis() {
       
       // Specifically target network disconnects
       if (err.message === "Network Error" || err.message === "Failed to fetch") {
-          errorType = "BACKEND_OFFLINE_OR_CORS";
-          finalMessage = "Network connection failed. Ensure the Flask server is running locally on port 5000 and CORS is allowing the connection.";
+          errorType = "BACKEND_OFFLINE_OR_TIMEOUT";
+          finalMessage = "Network connection failed or timed out. If deployed on a serverless/free tier, the backend may still be warming up. Please try again.";
       } else if (err.message.includes("API_ROUTE_NOT_FOUND")) {
           errorType = "PROXY_FAILURE";
       }

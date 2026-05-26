@@ -650,11 +650,17 @@ def v1_upload_document():
         file = request.files["files"]
         filename = file.filename
         
+        logger.info(f"[UPLOAD_STAGE] Starting PDF extraction for {filename}")
+        import time
+        start_time = time.perf_counter()
+        
         with TelemetryService.track_execution("pdf_parse", {"filename": filename}):
             try:
                 resume_text = extract_resume_text(file)
                 if not resume_text:
                     raise ValueError("Could not extract text from PDF. It may be scanned or malformed.")
+                parse_duration = time.perf_counter() - start_time
+                logger.info(f"[UPLOAD_STAGE] PDF extraction complete in {parse_duration:.2f}s")
             except Exception as e:
                 logger.error(f"[UPLOAD_STAGE] PDF Parse failed: {traceback.format_exc()}")
                 return jsonify({"success": False, "stage": "pdf_parse", "message": str(e), "debug_id": "UPL_002"}), 400
@@ -933,7 +939,12 @@ def v1_analyze_resume_stream():
             }
             yield f"data: {json.dumps({'event': 'error', 'payload': error_payload})}\n\n"
 
-    return Response(generate_analysis(), mimetype="text/event-stream")
+    response = Response(generate_analysis(), mimetype="text/event-stream")
+    # CRITICAL: Prevent Nginx/Vercel/Render from buffering SSE packets
+    response.headers["Cache-Control"] = "no-cache"
+    response.headers["Connection"] = "keep-alive"
+    response.headers["X-Accel-Buffering"] = "no"
+    return response
 
 # ---------------- PHASE 3: SETTINGS & INFRASTRUCTURE ROUTES ----------------
 
