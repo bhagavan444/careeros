@@ -21,7 +21,6 @@ import SkillGapAnalysisComponent from '../components/predict/SkillGapAnalysis';
 import SalaryProjectionComponent from '../components/predict/SalaryProjection';
 import AnalysisTimelineComponent from '../components/predict/AnalysisTimeline';
 import { getReadyLabel, getScoreColor } from '../services/analyticsService';
-import { useProfileSimulator } from '../hooks/useProfileSimulator';
 
 // Memoize heavy components to prevent layout thrashing during streaming and animations
 const ATSOverview = React.memo(ATSOverviewComponent);
@@ -53,10 +52,11 @@ function PredictOrchestrator() {
     submit, reset, loadStep
   } = useResumeAnalysis();
 
-  const { upgrades, toggleUpgrade, simulatedResult } = useProfileSimulator(result);
+  const activeResult = result;
   
-  // Use simulatedResult for the entire dashboard rendering when available
-  const activeResult = simulatedResult || result;
+  if (activeResult) {
+    console.log("REAL BACKEND RESPONSE:", activeResult);
+  }
 
   const reportRef = useRef(null);
   const { width } = useWindowSize();
@@ -185,14 +185,14 @@ function PredictOrchestrator() {
             
             {/* Top Priority Section: ATS Score + Core KPIs */}
             <div style={{ display: "grid", gridTemplateColumns: isMed ? "1fr" : "1.1fr 0.9fr", gap: 24, alignItems: "stretch" }}>
-                <ATSOverview animScore={activeResult.ats_score || targetDisplayScore} targetDisplayScore={activeResult.ats_score || targetDisplayScore} result={activeResult} />
+                <ATSOverview animScore={activeResult.ats_score} targetDisplayScore={activeResult.ats_score} result={activeResult} />
                 
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
                     {[
-                    { label: "Recruiter Trust Score", val: String(activeResult.recruiterTrust), unit: "/100", color: "#4f46e5", icon: <Eye size={14} />, desc: "Credibility based on metrics & proof." },
-                    { label: "Project Complexity", val: String(activeResult.projectComplexity), unit: "/100", color: "#7c3aed", icon: <Cpu size={14} />, desc: `Tier: ${activeResult.projectTier}` },
-                    { label: "Market Percentile", val: String(activeResult.marketPercentile), unit: "%", color: "#059669", icon: <TrendingUp size={14} />, desc: activeResult.marketComparison },
-                    { label: "Engineering Maturity", val: String(activeResult.engineeringMaturity), unit: "/100", color: "#111827", icon: <Globe size={14} />, desc: `Level: ${activeResult.engineeringLevel}` }
+                    { label: "Recruiter Trust Score", val: String(activeResult.recruiterTrust || activeResult.recruiter_trust || activeResult.recruiter_trust_score || 0), unit: "/100", color: "#4f46e5", icon: <Eye size={14} />, desc: "Credibility based on metrics & proof." },
+                    { label: "Project Complexity", val: String(activeResult.projectComplexity || activeResult.project_complexity || 0), unit: "/100", color: "#7c3aed", icon: <Cpu size={14} />, desc: `Tier: ${activeResult.projectTier || activeResult.project_tier || "Unknown"}` },
+                    { label: "Market Percentile", val: String(activeResult.marketPercentile || activeResult.market_percentile || 0), unit: "%", color: "#059669", icon: <TrendingUp size={14} />, desc: activeResult.marketComparison || activeResult.market_comparison || "Unknown" },
+                    { label: "Engineering Maturity", val: String(activeResult.engineeringMaturity || activeResult.engineering_maturity || 0), unit: "/100", color: "#111827", icon: <Globe size={14} />, desc: `Level: ${activeResult.engineeringLevel || activeResult.engineering_level || "Unknown"}` }
                     ].map((kpi, idx) => (
                     <div className="kpi-card reveal-up" key={idx} style={{ animationDelay: `${0.1 + idx * 0.08}s`, padding: "20px 16px" }}>
                         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
@@ -216,7 +216,7 @@ function PredictOrchestrator() {
               <DashboardMetrics result={activeResult} />
             </div>
             <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
-              <SkillGapAnalysis result={activeResult} upgrades={upgrades} onToggleUpgrade={toggleUpgrade} />
+              <SkillGapAnalysis result={activeResult} />
             </div>
           </div>
         </motion.div>
