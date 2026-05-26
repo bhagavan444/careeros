@@ -1,3 +1,17 @@
+# 🌐 Live Platform
+
+## 🚀 Production Deployment
+
+| Service | Link |
+|---|---|
+| Frontend (Vercel) | https://carrer-intelligence.vercel.app/ |
+| Backend API (Render) | https://pathora-backend1.onrender.com |
+| GitHub Repository | https://github.com/bhagavan444/pathora |
+
+---
+
+
+
 # 🚀 Pathora — AI Career Intelligence Platform
 
 > **A production-grade AI-powered engineering career intelligence system that evaluates resumes like a Staff Engineer — not a keyword bot.**
@@ -436,13 +450,7 @@ It is engineered as:
 Based on the uploaded architecture analysis document. 
 # 🌐 Live Platform
 
-### 🚀 Production Deployment
 
-| Service | Link |
-|---|---|
-| Frontend (Vercel) https://carrer-intelligence.vercel.app/|
-| Backend API (Render) | https://pathora-backend1.onrender.com|
-| GitHub Repository | https://github.com/bhagavan444/pathora |
 
 ---
 
