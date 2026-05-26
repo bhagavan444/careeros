@@ -60,7 +60,7 @@ export function useResumeAnalysis() {
       });
       
       const rawRes = response.data;
-      console.log("FULL BACKEND RESPONSE:", rawRes);
+      console.log("REAL BACKEND PAYLOAD:", JSON.stringify(response.data, null, 2));
       
       if (!rawRes) throw new Error("Backend did not return final payload.");
       

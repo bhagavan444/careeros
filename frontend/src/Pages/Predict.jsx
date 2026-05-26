@@ -54,8 +54,34 @@ function PredictOrchestrator() {
 
   const activeResult = result;
   
+  const recruiterTrust =
+    activeResult?.recruiterTrust ??
+    activeResult?.recruiter_trust ??
+    activeResult?.recruiter_trust_score ??
+    0;
+
+  const projectComplexity =
+    activeResult?.projectComplexity ??
+    activeResult?.project_complexity ??
+    0;
+
+  const engineeringMaturity =
+    activeResult?.engineeringMaturity ??
+    activeResult?.engineering_maturity ??
+    0;
+
+  const projectTier =
+    activeResult?.projectTier ??
+    activeResult?.project_tier ??
+    "Unknown";
+
+  const marketPercentile =
+    activeResult?.marketPercentile ??
+    activeResult?.market_percentile ??
+    0;
+
   if (activeResult) {
-    console.log("REAL BACKEND RESPONSE:", activeResult);
+    console.log("ACTIVE RESULT:", activeResult);
   }
 
   const reportRef = useRef(null);
@@ -189,10 +215,10 @@ function PredictOrchestrator() {
                 
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
                     {[
-                    { label: "Recruiter Trust Score", val: String(activeResult.recruiterTrust || activeResult.recruiter_trust || activeResult.recruiter_trust_score || 0), unit: "/100", color: "#4f46e5", icon: <Eye size={14} />, desc: "Credibility based on metrics & proof." },
-                    { label: "Project Complexity", val: String(activeResult.projectComplexity || activeResult.project_complexity || 0), unit: "/100", color: "#7c3aed", icon: <Cpu size={14} />, desc: `Tier: ${activeResult.projectTier || activeResult.project_tier || "Unknown"}` },
-                    { label: "Market Percentile", val: String(activeResult.marketPercentile || activeResult.market_percentile || 0), unit: "%", color: "#059669", icon: <TrendingUp size={14} />, desc: activeResult.marketComparison || activeResult.market_comparison || "Unknown" },
-                    { label: "Engineering Maturity", val: String(activeResult.engineeringMaturity || activeResult.engineering_maturity || 0), unit: "/100", color: "#111827", icon: <Globe size={14} />, desc: `Level: ${activeResult.engineeringLevel || activeResult.engineering_level || "Unknown"}` }
+                    { label: "Recruiter Trust Score", val: String(recruiterTrust), unit: "/100", color: "#4f46e5", icon: <Eye size={14} />, desc: "Credibility based on metrics & proof." },
+                    { label: "Project Complexity", val: String(projectComplexity), unit: "/100", color: "#7c3aed", icon: <Cpu size={14} />, desc: `Tier: ${projectTier}` },
+                    { label: "Market Percentile", val: String(marketPercentile), unit: "%", color: "#059669", icon: <TrendingUp size={14} />, desc: activeResult.marketComparison || activeResult.market_comparison || "Unknown" },
+                    { label: "Engineering Maturity", val: String(engineeringMaturity), unit: "/100", color: "#111827", icon: <Globe size={14} />, desc: `Level: ${activeResult.engineeringLevel || activeResult.engineering_level || "Unknown"}` }
                     ].map((kpi, idx) => (
                     <div className="kpi-card reveal-up" key={idx} style={{ animationDelay: `${0.1 + idx * 0.08}s`, padding: "20px 16px" }}>
                         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
