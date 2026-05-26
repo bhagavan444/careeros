@@ -1,356 +1,128 @@
-# 🚀 Pathora — AI Career Intelligence Platform
-
-### AI-Powered Resume Intelligence, Career Prediction & ATS Optimization
-
----
-
-## 🌐 Live Demo
-
-🔗 [https://carrer-intelligence.vercel.app/](https://carrer-intelligence.vercel.app/)
-
----
-
-# 📌 About The Project
-
-Pathora is a modern AI-powered career intelligence platform designed to help students and aspiring engineers analyze resumes, optimize ATS performance, identify skill gaps, and receive personalized engineering career recommendations.
-
-The platform combines full-stack MERN engineering with AI-assisted analysis to create a scalable employability intelligence system.
-
-Unlike traditional student CRUD projects, Pathora focuses on solving real-world hiring and career-development challenges through intelligent automation and production-oriented architecture.
-
----
-
-# ⚡ Core Features
-
-* 🤖 AI Career Recommendations
-* 📄 Resume Analysis & ATS Optimization
-* 📊 Skill Gap Detection
-* 🧠 AI Engineering Assistant
-* 📝 Technical Assessments & Quizzes
-* 📈 Career Analytics Dashboard
-* 🔐 JWT Authentication System
-* 🌐 Responsive SaaS-Level UI
-* ⚙️ REST API Backend Architecture
-
----
-
-# 🧠 Problem Statement
-
-Many students struggle with:
-
-* poor resume quality
-* weak ATS compatibility
-* unclear engineering career paths
-* missing industry skills
-* lack of personalized mentorship
-
-Pathora addresses these challenges through AI-powered career intelligence and scalable full-stack engineering systems.
-
----
-
-# 🔄 Platform Workflow
-
-```text
-Resume Upload
-      ↓
-Skill Extraction
-      ↓
-ATS & Keyword Analysis
-      ↓
-Career Prediction
-      ↓
-Skill Gap Evaluation
-      ↓
-Personalized Career Roadmap
-```
-
----
-
-# 🏗️ Tech Stack
-
 <div align="center">
+  <img src="https://via.placeholder.com/150x150/7c3aed/ffffff?text=Pathora" alt="Pathora Logo" width="120" height="120">
 
-### 🎨 Frontend
+  <h1>Pathora</h1>
+  <p><b>AI-Powered Engineering Career Intelligence Platform</b></p>
+  <p>
+    <a href="https://carrer-intelligence.vercel.app"><b>Live Demo (Frontend)</b></a> •
+    <a href="https://pathora-backend1.onrender.com/health"><b>Live API (Backend)</b></a>
+  </p>
 
-<img src="https://skillicons.dev/icons?i=react,vite,tailwind,js,html,css" />
-
----
-
-### ⚙️ Backend
-
-<img src="https://skillicons.dev/icons?i=nodejs,express,mongodb" />
-
----
-
-### 🤖 AI Integration
-
-<img src="https://skillicons.dev/icons?i=python,tensorflow" />
-
----
-
-### ☁️ Deployment & Cloud
-
-<img src="https://skillicons.dev/icons?i=vercel,git,github" />
-
----
-
-### 🛠️ Tools & Development
-
-<img src="https://skillicons.dev/icons?i=vscode,postman,npm" />
-
+  <p>
+    <img src="https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB" alt="React" />
+    <img src="https://img.shields.io/badge/Vite-B73BFE?style=for-the-badge&logo=vite&logoColor=FFD62E" alt="Vite" />
+    <img src="https://img.shields.io/badge/FastAPI-009688?style=for-the-badge&logo=FastAPI&logoColor=white" alt="FastAPI" />
+    <img src="https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white" alt="PostgreSQL" />
+    <img src="https://img.shields.io/badge/Gemini_AI-8E75B2?style=for-the-badge&logo=google&logoColor=white" alt="Gemini AI" />
+  </p>
 </div>
 
 ---
 
-# 📸 Screenshots
+## ⚡ Overview
 
-## 🏠 Landing Page
+Pathora is a production-grade AI career intelligence platform built specifically for software engineers. It moves beyond generic keyword-matching ATS parsers by acting as a strict **Staff Engineer evaluator**. 
 
-![Landing Page](https://github.com/user-attachments/assets/9c0ca906-cca4-4450-b385-4f733a40302c)
+By leveraging a hybrid architecture of **Deterministic Scoring Engines** (NLP parsing, structural heuristics) and **AI Orchestration** (Gemini), Pathora deeply analyzes engineering resumes to generate actionable career roadmaps, market percentile benchmarking, and technical skill gap intelligence.
 
----
+## 🏗 Architecture
 
-## 🤖 AI Assistant
+Pathora operates on a modern, decoupled architecture designed for high performance and low latency.
 
-![AI Assistant](https://github.com/user-attachments/assets/05879d83-0fd3-4d31-a247-711720050d8d)
-
----
-
-## 📊 Assessment Dashboard
-
-![Assessment Dashboard](https://github.com/user-attachments/assets/3c41ddb6-1929-4cac-9851-2b900dea6a7c)
-
----
-
-## 📝 Quiz System
-
-![Quiz System](https://github.com/user-attachments/assets/f98d8d43-b435-424c-a78c-8af3b8affc5d)
-
----
-
-## 📄 Resume Intelligence
-
-![Resume Analysis](https://github.com/user-attachments/assets/ba2289c6-020b-4920-bc48-a517f8113856)
-
----
-
-# 🚀 Engineering Highlights
-
-✅ Production-Oriented MERN Architecture
-✅ AI-Integrated Career Intelligence
-✅ ATS Resume Analysis Pipeline
-✅ JWT Authentication & Protected Routes
-✅ Modular Backend Engineering
-✅ RESTful API Design
-✅ Responsive SaaS-Level UI
-✅ MongoDB Cloud Integration
-✅ Real Deployment Environment
-✅ AI Assistant Integration
-
----
-
-# 📂 Project Structure
-
-```bash
-pathora/
-│
-├── client/
-│   ├── src/
-│   ├── components/
-│   ├── pages/
-│   ├── services/
-│   └── assets/
-│
-├── server/
-│   ├── controllers/
-│   ├── routes/
-│   ├── middleware/
-│   ├── models/
-│   ├── config/
-│   └── utils/
-│
-├── screenshots/
-└── README.md
+```mermaid
+graph TD
+    A[React/Vite Client] -->|Upload PDF & Request| B(FastAPI Gateway)
+    B --> C{Orchestration Engine}
+    C -->|Extract Entities| D[Deterministic Spacy NLP]
+    C -->|Semantic Context| E[Gemini AI Model]
+    C -->|Persist Metadata| F[(PostgreSQL)]
+    D --> G[Pipeline Normalization]
+    E --> G
+    G -->|Stream SSE Data| A
 ```
 
+### Tech Stack
+*   **Frontend**: React, Vite, Framer Motion, Recharts, Lucide React
+*   **Backend**: Python, FastAPI, Uvicorn, pdfplumber, Spacy, a2wsgi
+*   **AI Integration**: Google GenAI SDK (Gemini)
+*   **Database**: PostgreSQL, SQLAlchemy
+*   **Infrastructure**: Vercel (Frontend), Render (Backend)
+
 ---
 
-# ⚙️ Installation
+## 🚀 Feature Highlights
 
-## Clone Repository
+*   **Engineering Vector Mapping**: Generates a multi-dimensional radar chart evaluating candidates across Core Logic, Visual Engineering, Infrastructure, Intelligence, and System Design against market benchmarks.
+*   **Recruiter Intelligence Scan**: Deterministically maps resume structures to highlight structural bottlenecks and technical penalties that would trigger recruiter rejection.
+*   **Deterministic Trajectory Engine**: Maps extracted skills against a target domain dependency graph to generate a prioritized, phased learning roadmap.
+*   **Real-time AI Chatbot**: An integrated SSE-streamed chatbot capable of acting as an engineering mentor to discuss resume gaps in real-time.
 
+---
+
+## 🧠 The Hybrid AI Intelligence Pipeline
+
+Relying purely on LLMs for resume evaluation results in hallucinated scores and unstable data. Pathora solves this via a hybrid pipeline:
+
+1.  **Ingestion**: `pdfplumber` synchronously extracts raw text into a heavily optimized in-memory cache.
+2.  **Deterministic Evaluation**: The text is pushed through `spacy` entity extractors and proprietary heuristic scoring engines (Keyword Density, Project Complexity) to establish a mathematical baseline.
+3.  **Semantic Evaluation**: The text is forwarded to Gemini with strict system prompts enforcing JSON output to evaluate abstract concepts (Engineering Maturity, Recruiter Trust).
+4.  **Payload Normalization**: The backend aggregates all models into a single, flat JSON schema. The frontend translation layer dynamically maps these keys to nested component states, ensuring the UI remains robust even if the AI drops a key.
+
+---
+
+## 🛠 Installation & Setup
+
+### Prerequisites
+*   Node.js 18+
+*   Python 3.12+
+*   PostgreSQL (Optional for full DB support)
+*   Google Gemini API Key
+
+### Backend Setup (FastAPI)
 ```bash
-git clone https://github.com/bhagavan444/pathora.git
+cd backend
+python -m venv venv
+source venv/bin/activate  # Windows: venv\Scripts\activate
+pip install -r requirements.txt
+
+# Create a .env file and add:
+# GEMINI_API_KEY=your_key_here
+# POSTGRES_URI=your_db_uri (optional)
+
+uvicorn app.main:app --reload
 ```
 
----
-
-## Install Frontend
-
+### Frontend Setup (React/Vite)
 ```bash
-cd client
+cd frontend
 npm install
-```
 
----
+# Create a .env file and add:
+# VITE_API_BASE_URL=http://127.0.0.1:8000
 
-## Install Backend
-
-```bash
-cd ../server
-npm install
-```
-
----
-
-# 🔑 Environment Variables
-
-Create `.env` file inside `server/`
-
-```env
-PORT=5000
-
-MONGO_URI=your_mongodb_connection
-
-JWT_SECRET=your_secret_key
-
-GEMINI_API_KEY=your_gemini_api_key
-
-CLIENT_URL=http://localhost:5173
-```
-
----
-
-# ▶️ Run Project
-
-## Backend
-
-```bash
-npm run server
-```
-
-## Frontend
-
-```bash
 npm run dev
 ```
 
 ---
 
-# 🌐 Deployment
+## 🌍 Deployment Architecture & Optimizations
 
-| Service  | Platform      |
-| -------- | ------------- |
-| Frontend | Vercel        |
-| Backend  | Render        |
-| Database | MongoDB Atlas |
+### Frontend (Vercel)
+Deployed via Vercel with aggressive static asset caching. The API client dynamically resolves between `localhost` and the Render production URL based on Vite's environment modes.
 
----
-
-# 📡 API Endpoints
-
-## Authentication
-
-```http
-POST /api/auth/register
-POST /api/auth/login
-GET  /api/auth/profile
-```
+### Backend (Render Free Tier)
+Deploying a complex AI orchestration pipeline on a 512MB RAM environment required aggressive dependency optimization:
+*   **ML Library Pruning**: Stripped `torch`, `sentence-transformers`, and `faiss-gpu` from the environment, relying entirely on lightweight NLP (`spacy`) and external API inference to maintain a <200MB memory footprint.
+*   **ASGI-to-WSGI Bridging**: To seamlessly integrate with Render's native Python web service (which defaults to Gunicorn/WSGI), we implemented `a2wsgi` to intercept the boot sequence and wrap the asynchronous FastAPI application, completely eliminating deployment startup crashes without requiring manual dashboard configuration.
+*   **Synchronous Caching**: Replaced heavy Celery/Redis background task queues with an active, request-lifecycle in-memory dictionary for high-speed document text availability.
 
 ---
 
-## Resume Analysis
+## 🗺 Future Scalability Roadmap
 
-```http
-POST /api/resume/upload
-POST /api/resume/analyze
-GET  /api/resume/history
-```
+1.  **Distributed Caching**: Migrate the in-memory document store to Redis to support horizontally scaled, multi-instance Render deployments.
+2.  **Persistent Vector Storage**: Reintegrate semantic embeddings (Phase 2 feature) using **pgvector** natively within PostgreSQL to maintain the lightweight footprint while enabling RAG capabilities.
+3.  **Auth & Profiles**: Implement persistent JWT-based authentication bridging the existing SQLAlchemy User models with the Vercel frontend.
 
 ---
-
-## Career Intelligence
-
-```http
-GET  /api/career/recommend
-POST /api/career/skills-gap
-GET  /api/career/analytics
-```
-
----
-
-# 📈 Future Improvements
-
-* AI Resume Rewriter
-* GitHub Profile Analysis
-* Real-Time Job Matching
-* Interview Preparation AI
-* Docker Deployment
-* CI/CD Pipelines
-* Vector Search Integration
-* Personalized Learning Roadmaps
-
----
-
-# 🧪 Scalability Vision
-
-Pathora can evolve into:
-
-* AI Career SaaS Platform
-* Resume Intelligence Service
-* Engineering Mentorship Ecosystem
-* Employability Analytics Platform
-* University Career Support System
-
----
-
-# 👨‍💻 Author
-
-## G S S S BHAGAVAN
-
-### B.Tech — Artificial Intelligence & Data Science
-
-### Focus Areas
-
-* Full Stack Engineering
-* MERN Stack Development
-* AI Integration
-* Backend Systems
-* Intelligent SaaS Platforms
-
----
-
-# ⭐ Why This Project Stands Out
-
-Most student projects focus only on CRUD functionality or cloned interfaces.
-
-Pathora focuses on:
-
-* solving a real-world employability problem
-* combining AI with scalable full-stack engineering
-* creating production-oriented architecture
-* delivering practical user value
-
-The goal was to build an intelligent platform with real-world relevance, scalability potential, and modern SaaS engineering principles.
-
----
-
-# 🤝 Contributions
-
-Contributions and improvements are welcome.
-
-```bash
-Fork → Clone → Create Branch → Commit → Push → Pull Request
-```
-
----
-
-# 📜 License
-
-This project is licensed under the MIT License.
-
----
-
-# 🌟 Support The Project
-
-If you found this project valuable, consider giving it a ⭐ on GitHub.
+*Developed by [Bhagavan] - Building the next generation of Engineering Career Intelligence.*
