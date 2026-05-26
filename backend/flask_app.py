@@ -686,6 +686,7 @@ def v1_upload_document():
         logger.error(f"[UPLOAD_STAGE] Unhandled upload route exception: {traceback.format_exc()}")
         return jsonify({"success": False, "stage": "upload_route", "message": "Internal Server Error during upload processing", "debug_id": "UPL_500", "traceback": traceback.format_exc()}), 500
 
+@app.route("/api/v1/resume/analyze/stream", methods=["POST"])
 @app.route("/api/v1/resume/analyze", methods=["POST"])
 def v1_analyze_resume_sync():
     try:
@@ -770,30 +771,40 @@ def v1_analyze_resume_sync():
         
         # Final Flat Payload requested by user
         final_payload = {
-            "ats_score": ats_result.get("ats_score", 50),
-            "recruiter_trust_score": recruiter_metrics.get("recruiter_trust_score", 0),
-            "project_complexity_score": project_metrics.get("project_complexity_index", 0),
-            "engineering_maturity_score": maturity_metrics.get("engineering_maturity_index", 0),
-            "production_readiness": skill_gap.get("readiness_score", 0),
-            "keyword_density": ats_result.get("keyword_density", 0.0),
-            "project_tier": project_metrics.get("complexity_tier", "Unknown"),
-            "engineering_level": maturity_metrics.get("maturity_level", "Unknown"),
+            "ats_score": int(ats_result.get("ats_score", 50) or 0),
+            "recruiter_trust": int(recruiter_metrics.get("recruiter_trust_score", 0) or 0),
+            "project_complexity": int(project_metrics.get("project_complexity_index", 0) or 0),
+            "engineering_maturity": int(maturity_metrics.get("engineering_maturity_index", 0) or 0),
+            "market_percentile": int(benchmark_metrics.get("percentile", 0) if benchmark_metrics else 0),
+            "project_tier": str(project_metrics.get("complexity_tier", "Unknown") if project_metrics else "Unknown"),
+            "engineering_level": str(maturity_metrics.get("maturity_level", "Unknown") if maturity_metrics else "Unknown"),
+            "market_comparison": str(benchmark_metrics.get("comparison", "Unknown") if benchmark_metrics else "Unknown"),
+            "aspect_scores": genome_result.get("aspect_scores", []) if genome_result else [],
+            "skills": list(extracted_skills) if extracted_skills else [],
+            "strengths": list(recruiter_insights.get("standouts", [])) if recruiter_insights else [],
+            "weaknesses": list(recruiter_insights.get("concerns", [])) if recruiter_insights else [],
+            "recommendations": list(skill_gap.get("roadmap", [])) if skill_gap else [],
+            
+            # Keep original fields for backward compatibility with other frontend components
+            "recruiter_trust_score": int(recruiter_metrics.get("recruiter_trust_score", 0) or 0),
+            "project_complexity_score": int(project_metrics.get("project_complexity_index", 0) or 0),
+            "engineering_maturity_score": int(maturity_metrics.get("engineering_maturity_index", 0) or 0),
+            "production_readiness": int(skill_gap.get("readiness_score", 0) if skill_gap else 0),
+            "keyword_density": float(ats_result.get("keyword_density", 0.0) or 0.0),
             "telemetry": {
                 "pipeline_latency": "218ms",
-                "vectors_mapped": len(extracted_skills),
-                "confidence": recruiter_metrics.get("confidence_score", 0.94)
+                "vectors_mapped": len(extracted_skills) if extracted_skills else 0,
+                "confidence": float(recruiter_metrics.get("confidence_score", 0.94) or 0.94)
             },
-            
-            # Additional nested properties required by Predict.jsx UI
-            "recruiter_metrics": recruiter_metrics,
-            "project_metrics": project_metrics,
-            "maturity_metrics": maturity_metrics,
-            "benchmark_metrics": benchmark_metrics,
-            "aspect_scores": genome_result.get("aspect_scores", []),
-            "matched_skills": skill_gap.get("core_skills_matched", []) or extracted_skills,
-            "missing_skills": skill_gap.get("missing_skills", []),
-            "improvement_suggestions": skill_gap.get("roadmap", [])
+            "recruiter_metrics": recruiter_metrics or {},
+            "project_metrics": project_metrics or {},
+            "maturity_metrics": maturity_metrics or {},
+            "benchmark_metrics": benchmark_metrics or {},
+            "matched_skills": list(skill_gap.get("core_skills_matched", [])) if skill_gap else list(extracted_skills or []),
+            "missing_skills": list(skill_gap.get("missing_skills", [])) if skill_gap else [],
+            "improvement_suggestions": list(skill_gap.get("roadmap", [])) if skill_gap else []
         }
+        print("FINAL ANALYTICS PAYLOAD:", final_payload)
         
         return jsonify(final_payload), 200
 
