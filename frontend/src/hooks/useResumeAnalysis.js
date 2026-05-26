@@ -59,9 +59,31 @@ export function useResumeAnalysis() {
         target_role: domain || "General Tech Role"
       });
       
-      const finalRes = response.data;
+      const rawRes = response.data;
+      console.log("FULL BACKEND RESPONSE:", rawRes);
       
-      if (!finalRes) throw new Error("Backend did not return final payload.");
+      if (!rawRes) throw new Error("Backend did not return final payload.");
+      
+      const normalizedData = {
+          // Keep all original fields so we don't break sub-components
+          ...rawRes,
+          
+          // Normalized root properties for Predict.jsx top-level cards
+          atsScore: rawRes.ats_score || 0,
+          recruiterTrust: rawRes.recruiter_trust_score || rawRes.recruiter?.trust_score || rawRes.recruiter_metrics?.recruiter_trust_score || 0,
+          projectComplexity: rawRes.project_complexity_score || rawRes.metrics?.project_complexity || rawRes.project_metrics?.project_complexity_index || 0,
+          engineeringMaturity: rawRes.engineering_maturity_score || rawRes.maturity?.score || rawRes.maturity_metrics?.engineering_maturity_index || 0,
+          projectTier: rawRes.project_tier || rawRes.project_metrics?.complexity_tier?.split('(')[0]?.trim() || "Unknown",
+          engineeringLevel: rawRes.engineering_level || rawRes.maturity_metrics?.maturity_level?.split('/')[0]?.trim() || "Unknown",
+          marketPercentile: rawRes.benchmark_metrics?.percentile || rawRes.competitiveness?.percentile || 0,
+          marketComparison: rawRes.benchmark_metrics?.comparison || rawRes.competitiveness?.comparison || "Heuristic Benchmark",
+          telemetry: rawRes.telemetry || {},
+          strongMatches: rawRes.matched_skills || rawRes.strong_matches || [],
+          missingSkills: rawRes.missing_skills || [],
+          recruiterSummary: rawRes.improvement_suggestions || rawRes.recruiter_summary || []
+      };
+      
+      const finalRes = normalizedData;
       
       // Update Real Intelligence Context
       setResult(finalRes);

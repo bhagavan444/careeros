@@ -175,16 +175,24 @@ function PredictOrchestrator() {
           </div>
 
           <div style={{ display: "flex", flexDirection: "column", gap: 30, marginBottom: 30 }}>
+            {/* DEBUG BLOCK - Verify Backend Payload mapping */}
+            {import.meta.env.MODE === "development" && (
+                <div style={{ padding: "10px", background: "#f1f5f9", border: "1px dashed #cbd5e1", borderRadius: "8px", fontSize: "12px", overflow: "auto", maxHeight: "200px", fontFamily: "monospace" }}>
+                    <strong>DEBUG: normalizedData Payload</strong>
+                    <pre>{JSON.stringify(activeResult, null, 2)}</pre>
+                </div>
+            )}
+            
             {/* Top Priority Section: ATS Score + Core KPIs */}
             <div style={{ display: "grid", gridTemplateColumns: isMed ? "1fr" : "1.1fr 0.9fr", gap: 24, alignItems: "stretch" }}>
                 <ATSOverview animScore={activeResult.ats_score || targetDisplayScore} targetDisplayScore={activeResult.ats_score || targetDisplayScore} result={activeResult} />
                 
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
                     {[
-                    { label: "Recruiter Trust Score", val: String(activeResult.recruiter_metrics?.recruiter_trust_score || 0), unit: "/100", color: "#4f46e5", icon: <Eye size={14} />, desc: "Credibility based on metrics & proof." },
-                    { label: "Project Complexity", val: String(activeResult.project_metrics?.project_complexity_index || 0), unit: "/100", color: "#7c3aed", icon: <Cpu size={14} />, desc: `Tier: ${activeResult.project_metrics?.complexity_tier?.split('(')[0] || 'Unknown'}` },
-                    { label: "Market Percentile", val: String(activeResult.benchmark_metrics?.percentile || 0), unit: "%", color: "#059669", icon: <TrendingUp size={14} />, desc: activeResult.benchmark_metrics?.comparison || "Heuristic Benchmark" },
-                    { label: "Engineering Maturity", val: String(activeResult.maturity_metrics?.engineering_maturity_index || 0), unit: "/100", color: "#111827", icon: <Globe size={14} />, desc: `Level: ${activeResult.maturity_metrics?.maturity_level?.split('/')[0] || 'Unknown'}` }
+                    { label: "Recruiter Trust Score", val: String(activeResult.recruiterTrust), unit: "/100", color: "#4f46e5", icon: <Eye size={14} />, desc: "Credibility based on metrics & proof." },
+                    { label: "Project Complexity", val: String(activeResult.projectComplexity), unit: "/100", color: "#7c3aed", icon: <Cpu size={14} />, desc: `Tier: ${activeResult.projectTier}` },
+                    { label: "Market Percentile", val: String(activeResult.marketPercentile), unit: "%", color: "#059669", icon: <TrendingUp size={14} />, desc: activeResult.marketComparison },
+                    { label: "Engineering Maturity", val: String(activeResult.engineeringMaturity), unit: "/100", color: "#111827", icon: <Globe size={14} />, desc: `Level: ${activeResult.engineeringLevel}` }
                     ].map((kpi, idx) => (
                     <div className="kpi-card reveal-up" key={idx} style={{ animationDelay: `${0.1 + idx * 0.08}s`, padding: "20px 16px" }}>
                         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
