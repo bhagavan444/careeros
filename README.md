@@ -1,128 +1,451 @@
-<div align="center">
-  <img src="https://via.placeholder.com/150x150/7c3aed/ffffff?text=Pathora" alt="Pathora Logo" width="120" height="120">
+# 🚀 Pathora — AI Career Intelligence Platform
 
-  <h1>Pathora</h1>
-  <p><b>AI-Powered Engineering Career Intelligence Platform</b></p>
-  <p>
-    <a href="https://carrer-intelligence.vercel.app"><b>Live Demo (Frontend)</b></a> •
-    <a href="https://pathora-backend1.onrender.com/health"><b>Live API (Backend)</b></a>
-  </p>
+> **A production-grade AI-powered engineering career intelligence system that evaluates resumes like a Staff Engineer — not a keyword bot.**
 
-  <p>
-    <img src="https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB" alt="React" />
-    <img src="https://img.shields.io/badge/Vite-B73BFE?style=for-the-badge&logo=vite&logoColor=FFD62E" alt="Vite" />
-    <img src="https://img.shields.io/badge/FastAPI-009688?style=for-the-badge&logo=FastAPI&logoColor=white" alt="FastAPI" />
-    <img src="https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white" alt="PostgreSQL" />
-    <img src="https://img.shields.io/badge/Gemini_AI-8E75B2?style=for-the-badge&logo=google&logoColor=white" alt="Gemini AI" />
-  </p>
-</div>
+<p align="center">
+
+![React](https://img.shields.io/badge/Frontend-React%20%2B%20Vite-61DAFB?style=for-the-badge\&logo=react)
+![FastAPI](https://img.shields.io/badge/Backend-FastAPI-009688?style=for-the-badge\&logo=fastapi)
+![Python](https://img.shields.io/badge/AI-Python%20%2B%20Gemini-3776AB?style=for-the-badge\&logo=python)
+![Render](https://img.shields.io/badge/Deployment-Render-46E3B7?style=for-the-badge)
+![Vercel](https://img.shields.io/badge/Frontend-Vercel-000000?style=for-the-badge\&logo=vercel)
+![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)
+
+</p>
 
 ---
 
-## ⚡ Overview
+# 🌌 What is Pathora?
 
-Pathora is a production-grade AI career intelligence platform built specifically for software engineers. It moves beyond generic keyword-matching ATS parsers by acting as a strict **Staff Engineer evaluator**. 
+**Pathora** is an advanced AI Career Intelligence Platform engineered specifically for software engineers and technical students.
 
-By leveraging a hybrid architecture of **Deterministic Scoring Engines** (NLP parsing, structural heuristics) and **AI Orchestration** (Gemini), Pathora deeply analyzes engineering resumes to generate actionable career roadmaps, market percentile benchmarking, and technical skill gap intelligence.
+Unlike traditional ATS scanners that only count keywords, Pathora combines:
 
-## 🏗 Architecture
+* Deterministic Engineering Analysis
+* AI Semantic Intelligence
+* Career Benchmarking
+* Market Competitiveness Evaluation
+* Technical Skill Gap Detection
+* Recruiter-Level Resume Auditing
 
-Pathora operates on a modern, decoupled architecture designed for high performance and low latency.
-
-```mermaid
-graph TD
-    A[React/Vite Client] -->|Upload PDF & Request| B(FastAPI Gateway)
-    B --> C{Orchestration Engine}
-    C -->|Extract Entities| D[Deterministic Spacy NLP]
-    C -->|Semantic Context| E[Gemini AI Model]
-    C -->|Persist Metadata| F[(PostgreSQL)]
-    D --> G[Pipeline Normalization]
-    E --> G
-    G -->|Stream SSE Data| A
-```
-
-### Tech Stack
-*   **Frontend**: React, Vite, Framer Motion, Recharts, Lucide React
-*   **Backend**: Python, FastAPI, Uvicorn, pdfplumber, Spacy, a2wsgi
-*   **AI Integration**: Google GenAI SDK (Gemini)
-*   **Database**: PostgreSQL, SQLAlchemy
-*   **Infrastructure**: Vercel (Frontend), Render (Backend)
+The system evaluates resumes similarly to how a **Senior Engineer / Hiring Manager** reviews candidates in real hiring pipelines.
 
 ---
 
-## 🚀 Feature Highlights
+# ⚡ Core Vision
 
-*   **Engineering Vector Mapping**: Generates a multi-dimensional radar chart evaluating candidates across Core Logic, Visual Engineering, Infrastructure, Intelligence, and System Design against market benchmarks.
-*   **Recruiter Intelligence Scan**: Deterministically maps resume structures to highlight structural bottlenecks and technical penalties that would trigger recruiter rejection.
-*   **Deterministic Trajectory Engine**: Maps extracted skills against a target domain dependency graph to generate a prioritized, phased learning roadmap.
-*   **Real-time AI Chatbot**: An integrated SSE-streamed chatbot capable of acting as an engineering mentor to discuss resume gaps in real-time.
+Most resume analyzers are shallow.
+
+They:
+
+* Match keywords
+* Generate random scores
+* Hallucinate feedback
+* Fail under real engineering evaluation
+
+Pathora was designed to solve this problem.
+
+The platform uses:
+
+✅ Deterministic Scoring Engines
+✅ AI-Orchestrated Semantic Analysis
+✅ Engineering Maturity Detection
+✅ Resume Intelligence Pipelines
+✅ Real Deployment Constraints Optimization
+
+to produce stable, production-grade evaluations.
 
 ---
 
-## 🧠 The Hybrid AI Intelligence Pipeline
+# 🧠 Key Features
 
-Relying purely on LLMs for resume evaluation results in hallucinated scores and unstable data. Pathora solves this via a hybrid pipeline:
+## 📄 Resume Intelligence Engine
 
-1.  **Ingestion**: `pdfplumber` synchronously extracts raw text into a heavily optimized in-memory cache.
-2.  **Deterministic Evaluation**: The text is pushed through `spacy` entity extractors and proprietary heuristic scoring engines (Keyword Density, Project Complexity) to establish a mathematical baseline.
-3.  **Semantic Evaluation**: The text is forwarded to Gemini with strict system prompts enforcing JSON output to evaluate abstract concepts (Engineering Maturity, Recruiter Trust).
-4.  **Payload Normalization**: The backend aggregates all models into a single, flat JSON schema. The frontend translation layer dynamically maps these keys to nested component states, ensuring the UI remains robust even if the AI drops a key.
+* PDF Resume Upload
+* Resume Parsing
+* ATS Benchmarking
+* Engineering Competitiveness Analysis
+* Market Percentile Estimation
+* Recruiter Trust Signal Detection
+* Resume Structure Evaluation
 
 ---
 
-## 🛠 Installation & Setup
+## 🧬 Career Genome System
 
-### Prerequisites
-*   Node.js 18+
-*   Python 3.12+
-*   PostgreSQL (Optional for full DB support)
-*   Google Gemini API Key
+Pathora generates a dynamic engineering profile called:
 
-### Backend Setup (FastAPI)
+> **Career Genome**
+
+This analyzes:
+
+* Technical depth
+* Deployment maturity
+* Real-world project complexity
+* Stack diversity
+* Engineering consistency
+* Hiring readiness
+
+---
+
+## 📊 Advanced Dashboard Analytics
+
+Interactive visual intelligence including:
+
+* ATS Score Rings
+* Radar Charts
+* Skill Distribution Mapping
+* Career Progression Curves
+* Market Benchmark Metrics
+* Gap Analysis Systems
+
+---
+
+## 🤖 AI-Powered Career Advisor
+
+Integrated Gemini AI orchestration enables:
+
+* Semantic resume understanding
+* Project quality evaluation
+* Engineering maturity analysis
+* Personalized career roadmap generation
+* Interview readiness insights
+
+---
+
+## ⚡ Real-Time AI Chatbot
+
+Features:
+
+* Server-Sent Event Streaming (SSE)
+* Real-time chunked AI responses
+* Low latency interaction model
+* Context-aware career guidance
+
+---
+
+# 🏗️ Production Architecture
+
+# 🧭 System Architecture
+
+<img width="1758" height="480" alt="image" src="https://github.com/user-attachments/assets/856c8ea7-d6f0-4f1a-af95-e3076bcdd6a7" />
+
+
+# ⚙️ Resume Analysis Pipeline
+<img width="824" height="776" alt="image" src="https://github.com/user-attachments/assets/75de75b9-fbd8-46f4-a00d-6b91a95438ac" />
+
+
+---
+
+# 🧠 AI Intelligence Flow
+<img width="1475" height="409" alt="image" src="https://github.com/user-attachments/assets/9c0619f9-ef04-4f74-8443-48c3c6757342" />
+
+
+# 🛠️ Tech Stack
+
+| Layer            | Technologies                         |
+| ---------------- | ------------------------------------ |
+| Frontend         | React, Vite, Framer Motion, Recharts |
+| Backend          | FastAPI, Python                      |
+| AI               | Gemini AI, spaCy                     |
+| PDF Processing   | pdfplumber                           |
+| Deployment       | Vercel + Render                      |
+| State Management | React Hooks                          |
+| Streaming        | SSE                                  |
+| Visualization    | Recharts                             |
+| Styling          | Advanced CSS + Motion UI             |
+
+---
+
+# 🔥 Engineering Challenges Solved
+
+## 🚨 Render 512MB Memory Constraint
+
+### Problem
+
+Heavy ML libraries caused:
+
+* Out Of Memory crashes
+* Deployment failures
+* Slow cold starts
+
+### Solution
+
+Pathora aggressively optimized the backend by:
+
+* Removing Torch
+* Removing Sentence Transformers
+* Eliminating FAISS
+* Using lightweight NLP systems
+* Offloading inference to Gemini APIs
+
+### Result
+
+✅ Stable deployment on Render Free Tier
+✅ Reduced memory footprint dramatically
+✅ Faster API response times
+
+---
+
+## 🚨 Flask → FastAPI Migration
+
+### Problem
+
+Legacy Flask backend failed under:
+
+* AI streaming workloads
+* Concurrent requests
+* SSE streaming
+
+### Solution
+
+Migrated architecture to:
+
+* FastAPI ASGI
+* Async streaming pipelines
+* a2wsgi compatibility bridge
+
+### Result
+
+✅ Real-time streaming support
+✅ Better scalability
+✅ Improved developer experience
+
+---
+
+## 🚨 Frontend Payload Mismatch
+
+### Problem
+
+Frontend expected nested AI payloads while backend returned flat responses.
+
+### Solution
+
+Created strict normalization layers inside:
+
+* `useResumeAnalysis.js`
+
+### Result
+
+✅ Stable rendering
+✅ No fake ATS values
+✅ Accurate dashboard metrics
+
+---
+
+# 🎨 UI/UX Philosophy
+
+Pathora follows a cinematic SaaS design system inspired by:
+
+* Apple
+* Linear
+* Vercel
+* Perplexity
+* Arc Browser
+
+Design goals:
+
+* Premium dark aesthetic
+* Motion-first interactions
+* Minimal visual noise
+* Intelligent information density
+* Enterprise-grade feel
+
+---
+
+# 📂 Project Structure
+
 ```bash
-cd backend
-python -m venv venv
-source venv/bin/activate  # Windows: venv\Scripts\activate
-pip install -r requirements.txt
-
-# Create a .env file and add:
-# GEMINI_API_KEY=your_key_here
-# POSTGRES_URI=your_db_uri (optional)
-
-uvicorn app.main:app --reload
+Pathora/
+│
+├── frontend/
+│   ├── src/
+│   │   ├── pages/
+│   │   ├── components/
+│   │   ├── hooks/
+│   │   ├── services/
+│   │   ├── styles/
+│   │   └── assets/
+│   │
+│   └── public/
+│
+├── backend/
+│   ├── app/
+│   │   ├── api/
+│   │   ├── core/
+│   │   ├── services/
+│   │   ├── models/
+│   │   └── utils/
+│   │
+│   ├── requirements.txt
+│   └── main.py
+│
+└── README.md
 ```
 
-### Frontend Setup (React/Vite)
+---
+
+# 🚀 Deployment Architecture
+
+<img width="609" height="441" alt="image" src="https://github.com/user-attachments/assets/00f5ce2c-d814-4a81-90b1-24a259f60a58" />
+
+
+# 📈 Future Scalability Roadmap
+
+## Planned Upgrades
+
+### 🔹 Redis Distributed Cache
+
+Replace runtime memory storage.
+
+### 🔹 PostgreSQL + pgvector
+
+Persistent vector search infrastructure.
+
+### 🔹 JWT Authentication
+
+Persistent secure user systems.
+
+### 🔹 Multi-Agent AI Career System
+
+Advanced autonomous AI career planning.
+
+### 🔹 RAG-Based Engineering Knowledge Layer
+
+Context-aware engineering recommendations.
+
+---
+
+# 🧪 Local Development Setup
+
+## Clone Repository
+
+```bash
+git clone https://github.com/your-username/pathora.git
+```
+
+---
+
+## Frontend Setup
+
 ```bash
 cd frontend
-npm install
 
-# Create a .env file and add:
-# VITE_API_BASE_URL=http://127.0.0.1:8000
+npm install
 
 npm run dev
 ```
 
 ---
 
-## 🌍 Deployment Architecture & Optimizations
+## Backend Setup
 
-### Frontend (Vercel)
-Deployed via Vercel with aggressive static asset caching. The API client dynamically resolves between `localhost` and the Render production URL based on Vite's environment modes.
+```bash
+cd backend
 
-### Backend (Render Free Tier)
-Deploying a complex AI orchestration pipeline on a 512MB RAM environment required aggressive dependency optimization:
-*   **ML Library Pruning**: Stripped `torch`, `sentence-transformers`, and `faiss-gpu` from the environment, relying entirely on lightweight NLP (`spacy`) and external API inference to maintain a <200MB memory footprint.
-*   **ASGI-to-WSGI Bridging**: To seamlessly integrate with Render's native Python web service (which defaults to Gunicorn/WSGI), we implemented `a2wsgi` to intercept the boot sequence and wrap the asynchronous FastAPI application, completely eliminating deployment startup crashes without requiring manual dashboard configuration.
-*   **Synchronous Caching**: Replaced heavy Celery/Redis background task queues with an active, request-lifecycle in-memory dictionary for high-speed document text availability.
+pip install -r requirements.txt
+
+uvicorn main:app --reload
+```
+
+---
+
+# 🌐 Environment Variables
+
+## Frontend
+
+```env
+VITE_API_BASE_URL=http://localhost:8000
+```
+
+## Backend
+
+```env
+GOOGLE_API_KEY=your_gemini_api_key
+```
 
 ---
 
-## 🗺 Future Scalability Roadmap
+# 📊 Real Engineering Strengths
 
-1.  **Distributed Caching**: Migrate the in-memory document store to Redis to support horizontally scaled, multi-instance Render deployments.
-2.  **Persistent Vector Storage**: Reintegrate semantic embeddings (Phase 2 feature) using **pgvector** natively within PostgreSQL to maintain the lightweight footprint while enabling RAG capabilities.
-3.  **Auth & Profiles**: Implement persistent JWT-based authentication bridging the existing SQLAlchemy User models with the Vercel frontend.
+| Capability                 | Rating |
+| -------------------------- | ------ |
+| AI Systems Integration     | ⭐⭐⭐⭐⭐  |
+| Deployment Engineering     | ⭐⭐⭐⭐⭐  |
+| Frontend UX Engineering    | ⭐⭐⭐⭐⭐  |
+| Resume Intelligence Design | ⭐⭐⭐⭐⭐  |
+| Production Optimization    | ⭐⭐⭐⭐⭐  |
 
 ---
-*Developed by [Bhagavan] - Building the next generation of Engineering Career Intelligence.*
+
+# 🎯 Why Pathora is Different
+
+Most student projects:
+
+* are CRUD apps
+* use fake AI
+* have static dashboards
+* cannot scale
+* fail in production
+
+Pathora instead demonstrates:
+
+✅ Real AI orchestration
+✅ Production optimization
+✅ System architecture thinking
+✅ Engineering tradeoff decisions
+✅ Streaming AI systems
+✅ Advanced frontend visualization
+✅ Infrastructure constraints handling
+
+This transforms the project from:
+
+> “college project”
+
+into:
+
+> **production-grade engineering platform**
+
+---
+
+
+---
+
+# 📜 License
+
+MIT License
+
+---
+
+# ⭐ Final Note
+
+Pathora is not designed to be another resume checker.
+
+It is engineered as:
+
+> **An AI-powered engineering career intelligence operating system for modern developers.**
+
+---
+
+# 🌌 Pathora
+
+### *Decode Your Engineering Potential.*
+
+---
+
+Based on the uploaded architecture analysis document. 
+# 🌐 Live Platform
+
+### 🚀 Production Deployment
+
+| Service | Link |
+|---|---|
+| Frontend (Vercel) https://carrer-intelligence.vercel.app/|
+| Backend API (Render) | https://pathora-backend1.onrender.com|
+| GitHub Repository | https://github.com/bhagavan444/pathora |
+
+---
+
+# 🎥 Platform Preview
+
+![Pathora Banner](docs/assets/pathora-preview.png)
