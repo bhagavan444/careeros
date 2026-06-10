@@ -139,10 +139,14 @@ export default function Navbar({ handleLogout }) {
         .pnx-nav-wrapper.scrolled {
           padding: 4px 24px;
           background: rgba(255, 255, 255, 0.1);
-          backdrop-filter: blur(32px) saturate(120%);
-          -webkit-backdrop-filter: blur(32px) saturate(120%);
+          backdrop-filter: blur(24px) saturate(120%);
+          -webkit-backdrop-filter: blur(24px) saturate(120%);
           border-bottom: 1px solid rgba(0, 0, 0, 0.03);
           box-shadow: 0 4px 24px rgba(0,0,0,0.02);
+        }
+        @media (max-width: 480px) {
+          .pnx-nav-wrapper { padding: 8px 16px; }
+          .pnx-nav-wrapper.scrolled { padding: 4px 16px; }
         }
 
         .pnx-nav-container {
@@ -541,8 +545,9 @@ export default function Navbar({ handleLogout }) {
           position: fixed;
           top: 0; right: 0; bottom: 0;
           width: 300px;
+          max-width: 85vw; /* Crucial for foldable screens */
           background: rgba(255, 255, 255, 0.95);
-          backdrop-filter: blur(32px) saturate(180%);
+          backdrop-filter: blur(24px) saturate(180%);
           border-left: 1px solid rgba(0, 0, 0, 0.06);
           box-shadow: -10px 0 40px rgba(0, 0, 0, 0.05);
           z-index: 10000;
@@ -551,6 +556,8 @@ export default function Navbar({ handleLogout }) {
           flex-direction: column;
           gap: 32px;
           overflow-y: auto;
+          -webkit-overflow-scrolling: touch;
+          will-change: transform;
         }
         
         .pnx-mobile-close {
@@ -623,7 +630,7 @@ export default function Navbar({ handleLogout }) {
         className={`pnx-nav-wrapper ${scrolled ? "scrolled" : ""}`}
         initial={{ y: -80, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
       >
         <div className="pnx-nav-container">
           {/* LEFT: Branding */}

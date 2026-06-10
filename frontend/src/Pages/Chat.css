@@ -1588,9 +1588,12 @@
 }
 
 @media (max-width: 480px) {
-  .message { padding: 10px 12px 8px; }
-  .avatar { width: 26px; height: 26px; font-size: 11px; }
-  .message-row { gap: 8px; }
+  .message { padding: 8px 10px 6px; }
+  .avatar { width: 24px; height: 24px; font-size: 10px; margin-top: 4px; }
+  .message-row { gap: 6px; }
+  .chat-input-area { padding: 8px 8px 10px; }
+  /* Specifically target foldables 320px and below */
+  .chat-sidebar { width: 100vw; }
 }
 
 /* ── Focus visible accessibility ── */
