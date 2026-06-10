@@ -19,6 +19,13 @@ chat_sessions = {}
 
 # ─── CRUD Operations ────────────────────────────────────────────────────────────
 
+@router.get("/health")
+async def chat_health():
+    return {
+        "model": "gemini-2.5-flash",
+        "status": "ready"
+    }
+
 @router.get("/chats")
 async def get_chats():
     sessions = []

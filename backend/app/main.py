@@ -110,7 +110,7 @@ async def debug_dependencies():
         deps["spacy"] = str(e)
         
     try:
-        import google.generativeai
+        import google.genai
         deps["gemini"] = "ok"
     except Exception as e:
         deps["gemini"] = str(e)
