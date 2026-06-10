@@ -53,18 +53,18 @@ class AIOrchestrator:
             error_str = str(e)
             logger.error(f"Gemini API error for session {session_id}: {error_str}", exc_info=True)
 
-            # Provide user-friendly messages based on error type
+            # Provide detailed error messages for debugging
             if "429" in error_str or "ResourceExhausted" in error_str or "RESOURCE_EXHAUSTED" in error_str:
-                yield "I've reached the usage limit temporarily. Please wait a minute and try again."
+                yield f"Rate limit exceeded (429). Details: {error_str}"
             elif "403" in error_str or "PERMISSION_DENIED" in error_str:
-                yield "The AI service encountered an authentication issue. Please verify the API key configuration."
+                yield f"Authentication failed (403). Details: {error_str}"
             elif "404" in error_str or "NOT_FOUND" in error_str:
-                yield f"The AI model '{MODEL_NAME}' is not available. Please contact support."
+                yield f"Model '{MODEL_NAME}' not found (404). Details: {error_str}"
             elif "INVALID_ARGUMENT" in error_str:
-                yield "The request was malformed. Please try rephrasing your message."
+                yield f"The request was malformed (INVALID_ARGUMENT). Details: {error_str}"
             elif "UNAVAILABLE" in error_str or "ServiceUnavailable" in error_str:
-                yield "The AI service is temporarily unavailable. Please try again in a moment."
+                yield f"Service unavailable (503). Details: {error_str}"
             elif "DeadlineExceeded" in error_str or "DEADLINE_EXCEEDED" in error_str:
-                yield "The request timed out. Please try a shorter or simpler question."
+                yield f"Request timeout (DEADLINE_EXCEEDED). Details: {error_str}"
             else:
-                yield "I encountered an issue generating a response. Please try again."
+                yield f"Unknown generation error. Details: {error_str}"
