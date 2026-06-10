@@ -1,6 +1,8 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
+from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 import logging
+import traceback
 import os
 
 from app.core.config import settings
@@ -16,10 +18,25 @@ app = FastAPI(
     version="2.0.0"
 )
 
-# ─── CORS Origins ───────────────────────────────────────────────────────────────
-# Single source of truth for all allowed origins.
-# Pull from env var CORS_ORIGINS (comma-separated) with sensible defaults.
+# ─── Global Exception Handler ───────────────────────────────────────────────────
+@app.exception_handler(Exception)
+async def global_exception_handler(request: Request, exc: Exception):
+    """
+    Catches ALL unhandled crashes and converts them into visible JSON 500s.
+    Prevents silent connection drops and ensures CORS headers are returned 
+    even on catastrophic internal failures.
+    """
+    logger.error(f"CRITICAL UNHANDLED EXCEPTION on {request.method} {request.url.path}: {exc}\n{traceback.format_exc()}")
+    return JSONResponse(
+        status_code=500,
+        content={
+            "error": "Internal Server Error",
+            "detail": str(exc),
+            "path": request.url.path
+        }
+    )
 
+# ─── CORS Origins ───────────────────────────────────────────────────────────────
 _default_origins = [
     "https://carrer-intelligence.vercel.app",
     "http://localhost:5173",
@@ -53,13 +70,10 @@ except Exception as e:
     logger.warning(f"Security middleware skipped: {e}")
 
 # CORS — MUST be the last add_middleware() call (outermost middleware).
-# allow_credentials=False because we don't use cookies/sessions.
-# This avoids the strict browser requirement for exact origin matching
-# on every single response and simplifies the CORS handshake.
 app.add_middleware(
     CORSMiddleware,
     allow_origins=CORS_ORIGINS,
-    allow_credentials=False,
+    allow_credentials=False, # Critical for avoiding strict CORS issues
     allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
     allow_headers=["*"],
     expose_headers=["X-Request-ID"],
@@ -85,26 +99,29 @@ async def startup_event():
     logger.info(f"CORS origins: {CORS_ORIGINS}")
     logger.info(f"GEMINI_API_KEY configured: {'Yes' if settings.GEMINI_API_KEY else 'No'}")
     
-    # Check optional infrastructure services
-    optional_services = {
-        "PostgreSQL": settings.POSTGRES_URI,
-        "MongoDB": settings.MONGODB_URI,
-        "Redis": settings.REDIS_URI,
-        "Qdrant": settings.QDRANT_URL,
-    }
-    
-    for service, uri in optional_services.items():
-        if uri:
-            logger.info(f"  [ACTIVE] {service} configured")
-        else:
-            logger.info(f"  [SKIPPED] {service} not configured (lightweight mode)")
+    # Optional diagnostics logging
+    try:
+        import psutil
+        process = psutil.Process(os.getpid())
+        mem_info = process.memory_info()
+        logger.info(f"Startup Memory Usage: {mem_info.rss / 1024 / 1024:.2f} MB")
+    except ImportError:
+        pass
 
 
 @app.get("/health")
 async def health_check():
-    return {
+    health_data = {
         "status": "healthy",
         "version": app.version,
         "gemini_configured": bool(settings.GEMINI_API_KEY),
         "cors_origins": CORS_ORIGINS,
     }
+    try:
+        import psutil
+        process = psutil.Process(os.getpid())
+        health_data["memory_mb"] = round(process.memory_info().rss / 1024 / 1024, 2)
+    except ImportError:
+        pass
+        
+    return health_data

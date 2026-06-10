@@ -3,7 +3,8 @@ services:
     name: pathora-backend1
     env: python
     buildCommand: cd backend && pip install -r requirements.txt
-    startCommand: cd backend && uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    # Added --timeout-keep-alive 75 to prevent premature proxy kills during heavy processing
+    startCommand: cd backend && uvicorn app.main:app --host 0.0.0.0 --port $PORT --timeout-keep-alive 75
     healthCheckPath: /health
     envVars:
       - key: PYTHON_VERSION
