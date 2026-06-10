@@ -9,8 +9,12 @@ logger = logging.getLogger("security")
 
 class SecurityMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request: Request, call_next):
-        # Allow openapi, docs, and health checks to bypass strict auth for now
-        open_paths = ["/api/v1/openapi.json", "/docs", "/health"]
+        # Always pass through CORS preflight requests — CORSMiddleware handles them
+        if request.method == "OPTIONS":
+            return await call_next(request)
+
+        # Allow openapi, docs, and health checks to bypass strict auth
+        open_paths = ["/api/v1/openapi.json", "/docs", "/health", "/redoc"]
         
         if any(request.url.path.startswith(path) for path in open_paths):
             return await call_next(request)
@@ -27,4 +31,11 @@ class SecurityMiddleware(BaseHTTPMiddleware):
         #     except jwt.PyJWTError:
         #         return JSONResponse(status_code=401, content={"detail": "Invalid token"})
         
-        return await call_next(request)
+        try:
+            return await call_next(request)
+        except Exception as e:
+            logger.error(f"Security middleware caught unhandled error: {e}")
+            return JSONResponse(
+                status_code=500,
+                content={"detail": "Internal server error"}
+            )

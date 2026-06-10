@@ -5,10 +5,11 @@ import { auth } from "../firebase";
 import { Light as SyntaxHighlighter } from "react-syntax-highlighter";
 import { githubGist } from "react-syntax-highlighter/dist/esm/styles/hljs";
 import { useIntelligenceStore } from "../store/intelligenceStore";
+import API_BASE_ROOT from "../config/api";
 import "./Home.css";
 
 // ─── CONSTANTS ────────────────────────────────────────────────────────────────
-const API_BASE = import.meta.env.VITE_API_BASE_URL ? `${import.meta.env.VITE_API_BASE_URL}/api/v1` : "https://pathora-backend1.onrender.com/api/v1";
+const API_BASE = `${API_BASE_ROOT}/api/v1`;
 const uid = () => crypto.randomUUID?.() || Math.random().toString(36).slice(2);
 const wait = (ms) => new Promise((r) => setTimeout(r, ms));
 

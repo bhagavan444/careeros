@@ -16,7 +16,27 @@ app = FastAPI(
     version="2.0.0"
 )
 
+# ─── CORS Origins ───────────────────────────────────────────────────────────────
+# Single source of truth for all allowed origins.
+# Pull from env var CORS_ORIGINS (comma-separated) with sensible defaults.
+
+_default_origins = [
+    "https://carrer-intelligence.vercel.app",
+    "http://localhost:5173",
+    "http://localhost:3000",
+    "http://127.0.0.1:5173",
+]
+CORS_ORIGINS: list[str] = [
+    o.strip()
+    for o in os.environ.get("CORS_ORIGINS", "").split(",")
+    if o.strip()
+] or _default_origins
+
+logger.info(f"CORS allowed origins: {CORS_ORIGINS}")
+
 # ─── Middlewares ────────────────────────────────────────────────────────────────
+# Starlette executes middleware in REVERSE registration order.
+# Register CORS LAST so it wraps everything (outermost = first to run).
 
 # Telemetry middleware (lightweight, always safe to load)
 try:
@@ -32,18 +52,18 @@ try:
 except Exception as e:
     logger.warning(f"Security middleware skipped: {e}")
 
-# CORS — must be added last so it's the outermost middleware (executed first)
+# CORS — MUST be the last add_middleware() call (outermost middleware).
+# allow_credentials=False because we don't use cookies/sessions.
+# This avoids the strict browser requirement for exact origin matching
+# on every single response and simplifies the CORS handshake.
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "https://carrer-intelligence.vercel.app",
-        "http://localhost:5173",
-        "http://localhost:3000",
-        "http://127.0.0.1:5173"
-    ],
-    allow_credentials=True,
-    allow_methods=["*"],
+    allow_origins=CORS_ORIGINS,
+    allow_credentials=False,
+    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
     allow_headers=["*"],
+    expose_headers=["X-Request-ID"],
+    max_age=600,  # Cache preflight for 10 minutes
 )
 
 # ─── Prometheus Metrics (optional) ─────────────────────────────────────────────
@@ -62,6 +82,7 @@ app.include_router(api_router, prefix=settings.API_V1_STR)
 async def startup_event():
     logger.info("=== Starting Pathora AI Backend ===")
     logger.info(f"API prefix: {settings.API_V1_STR}")
+    logger.info(f"CORS origins: {CORS_ORIGINS}")
     logger.info(f"GEMINI_API_KEY configured: {'Yes' if settings.GEMINI_API_KEY else 'No'}")
     
     # Check optional infrastructure services
@@ -85,4 +106,5 @@ async def health_check():
         "status": "healthy",
         "version": app.version,
         "gemini_configured": bool(settings.GEMINI_API_KEY),
+        "cors_origins": CORS_ORIGINS,
     }

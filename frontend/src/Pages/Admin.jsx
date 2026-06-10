@@ -5,6 +5,7 @@ import {
   PieChart, Pie, Cell, LineChart, Line, RadarChart, PolarGrid, PolarAngleAxis, Radar
 } from "recharts";
 import { useIntelligenceStore } from '../store/intelligenceStore';
+import API_BASE from '../config/api';
 import './Home.css';
 
 /* ================= CONFIG ================= */
@@ -275,7 +276,7 @@ function AdminDashboard({ onLogout }) {
   useEffect(() => {
     const fetchTelemetry = async () => {
       try {
-        const baseUrl = import.meta.env.VITE_API_BASE_URL || "https://pathora-backend1.onrender.com";
+        const baseUrl = API_BASE;
         const hRes = await fetch(`${baseUrl}/health`);
         if (hRes.ok) {
           setHealth(await hRes.json());

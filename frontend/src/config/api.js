@@ -5,10 +5,16 @@
 // Never hardcode localhost or production URLs in components.
 // ============================================================
 
-const API_BASE = import.meta.env.VITE_API_BASE_URL
-  || (import.meta.env.MODE === "development"
-    ? "http://localhost:5000"
-    : "https://pathora-backend1.onrender.com");
+// Guard against empty-string override from .env.local (VITE_API_BASE_URL=)
+// Vite loads .env.local with higher priority than .env, so an empty value
+// from .env.local would override the valid URL in .env.
+const envUrl = import.meta.env.VITE_API_BASE_URL;
+
+const API_BASE = (envUrl && envUrl.trim())
+  ? envUrl.trim().replace(/\/+$/, '')       // Use env value, strip trailing slashes
+  : (import.meta.env.MODE === "development"
+    ? "http://localhost:5000"                // Local FastAPI dev server
+    : "https://pathora-backend1.onrender.com");  // Production Render backend
 
 // Log active backend target on startup (visible in browser console)
 console.log(`[PATHORA] API_BASE resolved to: ${API_BASE} (mode: ${import.meta.env.MODE})`);

@@ -3,7 +3,7 @@ import logging
 import uuid
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.requests import Request
-from starlette.responses import Response
+from starlette.responses import Response, JSONResponse
 
 logger = logging.getLogger("telemetry")
 
@@ -31,4 +31,10 @@ class TelemetryMiddleware(BaseHTTPMiddleware):
         except Exception as e:
             process_time = time.perf_counter() - start_time
             logger.error(f"Request failed | id: {request_id} | error: {str(e)} | duration: {process_time:.4f}s")
-            raise
+            # Return a proper response instead of raising — this allows
+            # CORSMiddleware to still attach CORS headers to error responses.
+            return JSONResponse(
+                status_code=500,
+                content={"detail": "Internal server error", "request_id": request_id},
+                headers={"X-Request-ID": request_id}
+            )
