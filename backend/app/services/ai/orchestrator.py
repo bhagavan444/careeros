@@ -6,7 +6,7 @@ from app.core.config import settings
 logger = logging.getLogger("ai_orchestrator")
 
 # ─── Supported model (use latest stable model) ─────────────────────────────
-MODEL_NAME = "gemini-2.5-flash"
+MODEL_NAME = "gemini-1.5-flash"
 
 
 class AIOrchestrator:

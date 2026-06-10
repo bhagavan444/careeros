@@ -3,7 +3,10 @@ import { useNavigate } from "react-router-dom";
 import { Terminal, Database, Activity, Network, Layers, ShieldCheck, Zap } from "lucide-react";
 import html2pdf from "html2pdf.js";
 import { auth } from "../firebase";
+import API_BASE_ROOT from "../config/api";
 import "./Quiz.css";
+
+const API_BASE = `${API_BASE_ROOT}/api/v1`;
 
 /* ======================================================
    MASTER QUESTION BANK (150 questions across 9 domains)
@@ -460,7 +463,7 @@ export default function Quiz() {
     
     try {
       const token = await getToken();
-      const res = await fetch('/api/assessments/start', {
+      const res = await fetch(`${API_BASE}/assessments/start`, {
         method: 'POST',
         headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
         body: JSON.stringify({ track: selectedTrack })
@@ -524,7 +527,7 @@ export default function Quiz() {
         setTimeout(() => addLog("[RECRUITER CORE] Computing credibility coefficients..."), 2000);
         setTimeout(() => addLog("[ROADMAP DAG] Regenerating progression infrastructure..."), 3000);
         
-        const res = await fetch('/api/assessments/submit', {
+        const res = await fetch(`${API_BASE}/assessments/submit`, {
           method: 'POST',
           headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
           body: JSON.stringify({ assessment_id: assessmentId, answers: allAnswers })
