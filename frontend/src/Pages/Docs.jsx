@@ -25,17 +25,17 @@ const SIDEBAR = [
 const DOCS_CONTENT = {
   "Introduction": {
     title: "Introduction",
-    subtitle: "Pathora Evaluation Infrastructure — API Reference v2.4",
+    subtitle: "CareerOS Evaluation Infrastructure — API Reference v2.4",
     blocks: [
       {
         type: "text",
-        content: "Pathora exposes a deterministic evaluation API that accepts structured resume data and returns scored engineering maturity telemetry. All endpoints return JSON payloads with consistent schema versioning."
+        content: "CareerOS exposes a deterministic evaluation API that accepts structured resume data and returns scored engineering maturity telemetry. All endpoints return JSON payloads with consistent schema versioning."
       },
       {
         type: "code",
         label: "Base URL",
         language: "bash",
-        content: "https://api.pathora.dev/v2"
+        content: "https://api.careeros.dev/v2"
       },
       {
         type: "text",
@@ -45,7 +45,7 @@ const DOCS_CONTENT = {
         type: "code",
         label: "Authentication Header",
         language: "bash",
-        content: 'curl -X POST https://api.pathora.dev/v2/evaluate \\\n  -H "Authorization: Bearer pk_live_xxxxxxxx" \\\n  -H "Content-Type: application/json" \\\n  -d \'{"resume_url": "https://..."}\''
+        content: 'curl -X POST https://api.careeros.dev/v2/evaluate \\\n  -H "Authorization: Bearer pk_live_xxxxxxxx" \\\n  -H "Content-Type: application/json" \\\n  -d \'{"resume_url": "https://..."}\''
       }
     ]
   },
@@ -92,9 +92,7 @@ const DOCS_CONTENT = {
 export default function Docs() {
   const [active, setActive] = useState("Introduction");
 
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
+  
 
   const content = DOCS_CONTENT[active] || DOCS_CONTENT["Introduction"];
 

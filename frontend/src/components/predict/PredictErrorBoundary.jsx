@@ -32,7 +32,7 @@ class PredictErrorBoundary extends Component {
         }}>
           <AlertTriangle size={48} color="#ef4444" style={{ marginBottom: 20 }} />
           <h2 style={{ fontSize: 24, marginBottom: 12 }}>Cognitive UI Engine Failure</h2>
-          <p style={{ color: "#9ca3af", maxWidth: 600, marginBottom: 30, fontSize: 14 }}>
+          <p style={{ color: "#86868b", maxWidth: 600, marginBottom: 30, fontSize: 14 }}>
             A critical error occurred while rendering the intelligence interface.
             The error has been safely contained by the Error Boundary to prevent full application crash.
           </p>

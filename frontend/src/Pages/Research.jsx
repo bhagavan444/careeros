@@ -6,35 +6,35 @@ import "./Home.css";
 const PAPERS = [
   {
     title: "Deterministic Heuristic Matrices for Engineering Profile Evaluation",
-    authors: "Pathora Research · 2025",
+    authors: "CareerOS Research · 2025",
     abstract: "We present a deterministic scoring framework that replaces stochastic NLP-based resume parsers with reproducible heuristic matrices. Our approach achieves 99.8% consistency across repeated evaluations of identical profiles.",
     tags: ["Heuristics", "Scoring", "Reproducibility"],
     status: "Published"
   },
   {
     title: "Vector Scoring Across 5-Dimensional Engineering Maturity Space",
-    authors: "Pathora Research · 2025",
-    abstract: "This paper formalizes the 5-dimensional maturity radar used in Pathora's evaluation engine: architecture, deployment, testing, infrastructure, and communication. We demonstrate how weighted vector projection maps to recruiter decision patterns.",
+    authors: "CareerOS Research · 2025",
+    abstract: "This paper formalizes the 5-dimensional maturity radar used in CareerOS's evaluation engine: architecture, deployment, testing, infrastructure, and communication. We demonstrate how weighted vector projection maps to recruiter decision patterns.",
     tags: ["Vector Spaces", "Maturity Mapping", "Evaluation"],
     status: "Published"
   },
   {
     title: "Recruiter Behavior Analysis: Automated Screening Decision Patterns",
-    authors: "Pathora Research · 2026",
+    authors: "CareerOS Research · 2026",
     abstract: "An empirical study of 12,000 recruiter screening decisions, identifying the 7 primary heuristic signals that determine whether an engineering profile advances past automated filters.",
     tags: ["Recruiter Trust", "Behavioral Analysis", "ATS"],
     status: "Preprint"
   },
   {
     title: "Deployment Signal Extraction from Unstructured Resume Data",
-    authors: "Pathora Research · 2026",
+    authors: "CareerOS Research · 2026",
     abstract: "We introduce a structured extraction pipeline that identifies production deployment evidence, CI/CD sophistication, and infrastructure scale indicators from natural language project descriptions.",
     tags: ["NLP", "Signal Extraction", "Infrastructure"],
     status: "In Review"
   },
   {
     title: "Engineering Maturity Benchmarking: A Cross-Industry Framework",
-    authors: "Pathora Research · 2026",
+    authors: "CareerOS Research · 2026",
     abstract: "A comprehensive benchmarking system that normalizes engineering maturity scores across 6 technology domains, enabling fair cross-domain comparison of technical capability.",
     tags: ["Benchmarking", "Cross-Domain", "Normalization"],
     status: "Draft"
@@ -42,9 +42,7 @@ const PAPERS = [
 ];
 
 export default function Research() {
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
+  
 
   return (
     <div className="home-wrap">

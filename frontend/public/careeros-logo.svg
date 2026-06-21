@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
+  <!-- The "C" (Outer Intelligence Ring) -->
+  <path 
+    d="M 383.28 128.72 A 180 180 0 1 0 383.28 383.28" 
+    stroke="#111827" 
+    stroke-width="72" 
+    stroke-linecap="round" 
+  />
+  
+  <!-- The "O" (Inner Human Potential Core) -->
+  <circle cx="256" cy="256" r="72" fill="#2563EB" />
+</svg>

@@ -1,0 +1,963 @@
+{
+  "truth_score": {
+    "score": 52,
+    "evidence_coverage": 45,
+    "verification_score": 58,
+    "confidence_level": "Medium",
+    "source_coverage": {
+      "resume": true,
+      "github": true,
+      "linkedin": true,
+      "portfolio": false
+    },
+    "score_reasoning": "Truth Score is 52. The candidate has 2 fully verified skills, 6 cross-source confirmations, 20 partial confirmations, and 0 unsupported claims. Evidence Coverage is 45%. Evidence Density is Low."
+  },
+  "verification_matrix": {
+    "verified_skills": [
+      {
+        "skill": "JavaScript",
+        "resume_present": true,
+        "github_present": true,
+        "linkedin_present": true,
+        "portfolio_present": false,
+        "confidence_score": 90,
+        "evidence": [
+          {
+            "source": "GitHub",
+            "description": "Primary language in Bhagavan"
+          },
+          {
+            "source": "GitHub",
+            "description": "Primary language in Resumebuilderwebapp"
+          },
+          {
+            "source": "GitHub",
+            "description": "Primary language in pathora"
+          },
+          {
+            "source": "GitHub",
+            "description": "Primary language in News-detector"
+          },
+          {
+            "source": "GitHub",
+            "description": "Primary language in shamir-secret-sharing"
+          },
+          {
+            "source": "GitHub",
+            "description": "Primary language in hacakthon-project"
+          },
+          {
+            "source": "GitHub",
+            "description": "Repository topic in Resumebuilderwebapp"
+          },
+          {
+            "source": "LinkedIn",
+            "description": "Listed in LinkedIn Profile/Experience"
+          },
+          {
+            "source": "Resume",
+            "description": "Claimed on resume text"
+          }
+        ]
+      },
+      {
+        "skill": "Node.js",
+        "resume_present": true,
+        "github_present": true,
+        "linkedin_present": true,
+        "portfolio_present": false,
+        "confidence_score": 90,
+        "evidence": [
+          {
+            "source": "GitHub",
+            "description": "Repository topic in Resumebuilderwebapp"
+          },
+          {
+            "source": "LinkedIn",
+            "description": "Listed in LinkedIn Profile/Experience"
+          },
+          {
+            "source": "Resume",
+            "description": "Claimed on resume text"
+          }
+        ]
+      }
+    ],
+    "partially_verified_skills": [
+      {
+        "skill": "AWS",
+        "resume_present": true,
+        "github_present": false,
+        "linkedin_present": false,
+        "portfolio_present": false,
+        "confidence_score": 50,
+        "evidence": [
+          {
+            "source": "Resume",
+            "description": "Claimed on resume text"
+          }
+        ]
+      },
+      {
+        "skill": "Authentication",
+        "resume_present": false,
+        "github_present": true,
+        "linkedin_present": false,
+        "portfolio_present": false,
+        "confidence_score": 50,
+        "evidence": [
+          {
+            "source": "GitHub",
+            "description": "Repository topic in Resumebuilderwebapp"
+          }
+        ]
+      },
+      {
+        "skill": "Excel",
+        "resume_present": true,
+        "github_present": false,
+        "linkedin_present": false,
+        "portfolio_present": false,
+        "confidence_score": 50,
+        "evidence": [
+          {
+            "source": "Resume",
+            "description": "Claimed on resume text"
+          }
+        ]
+      },
+      {
+        "skill": "Express",
+        "resume_present": true,
+        "github_present": true,
+        "linkedin_present": false,
+        "portfolio_present": false,
+        "confidence_score": 75,
+        "evidence": [
+          {
+            "source": "GitHub",
+            "description": "Repository topic in Resumebuilderwebapp"
+          },
+          {
+            "source": "Resume",
+            "description": "Claimed on resume text"
+          }
+        ]
+      },
+      {
+        "skill": "Flask",
+        "resume_present": true,
+        "github_present": false,
+        "linkedin_present": false,
+        "portfolio_present": false,
+        "confidence_score": 50,
+        "evidence": [
+          {
+            "source": "Resume",
+            "description": "Claimed on resume text"
+          }
+        ]
+      },
+      {
+        "skill": "Git",
+        "resume_present": true,
+        "github_present": false,
+        "linkedin_present": false,
+        "portfolio_present": false,
+        "confidence_score": 50,
+        "evidence": [
+          {
+            "source": "Resume",
+            "description": "Claimed on resume text"
+          }
+        ]
+      },
+      {
+        "skill": "Java",
+        "resume_present": true,
+        "github_present": false,
+        "linkedin_present": false,
+        "portfolio_present": false,
+        "confidence_score": 50,
+        "evidence": [
+          {
+            "source": "Resume",
+            "description": "Claimed on resume text"
+          }
+        ]
+      },
+      {
+        "skill": "Machine Learning",
+        "resume_present": true,
+        "github_present": false,
+        "linkedin_present": false,
+        "portfolio_present": false,
+        "confidence_score": 50,
+        "evidence": [
+          {
+            "source": "Resume",
+            "description": "Claimed on resume text"
+          }
+        ]
+      },
+      {
+        "skill": "Machine-Learning",
+        "resume_present": false,
+        "github_present": true,
+        "linkedin_present": false,
+        "portfolio_present": false,
+        "confidence_score": 50,
+        "evidence": [
+          {
+            "source": "GitHub",
+            "description": "Repository topic in Heart-Disease-Web-"
+          },
+          {
+            "source": "GitHub",
+            "description": "Repository topic in News-detector"
+          }
+        ]
+      },
+      {
+        "skill": "Mern-Stack",
+        "resume_present": false,
+        "github_present": true,
+        "linkedin_present": false,
+        "portfolio_present": false,
+        "confidence_score": 50,
+        "evidence": [
+          {
+            "source": "GitHub",
+            "description": "Repository topic in Resumebuilderwebapp"
+          },
+          {
+            "source": "GitHub",
+            "description": "Repository topic in chatbotwebapp"
+          },
+          {
+            "source": "GitHub",
+            "description": "Repository topic in Heart-Disease-Web-"
+          },
+          {
+            "source": "GitHub",
+            "description": "Repository topic in News-detector"
+          }
+        ]
+      },
+      {
+        "skill": "MongoDB",
+        "resume_present": true,
+        "github_present": true,
+        "linkedin_present": false,
+        "portfolio_present": false,
+        "confidence_score": 75,
+        "evidence": [
+          {
+            "source": "GitHub",
+            "description": "Repository topic in Resumebuilderwebapp"
+          },
+          {
+            "source": "Resume",
+            "description": "Claimed on resume text"
+          }
+        ]
+      },
+      {
+        "skill": "Mysql",
+        "resume_present": true,
+        "github_present": false,
+        "linkedin_present": false,
+        "portfolio_present": false,
+        "confidence_score": 50,
+        "evidence": [
+          {
+            "source": "Resume",
+            "description": "Claimed on resume text"
+          }
+        ]
+      },
+      {
+        "skill": "Nlp",
+        "resume_present": false,
+        "github_present": true,
+        "linkedin_present": false,
+        "portfolio_present": false,
+        "confidence_score": 50,
+        "evidence": [
+          {
+            "source": "GitHub",
+            "description": "Repository topic in News-detector"
+          }
+        ]
+      },
+      {
+        "skill": "Numpy",
+        "resume_present": true,
+        "github_present": false,
+        "linkedin_present": false,
+        "portfolio_present": false,
+        "confidence_score": 50,
+        "evidence": [
+          {
+            "source": "Resume",
+            "description": "Claimed on resume text"
+          }
+        ]
+      },
+      {
+        "skill": "Pandas",
+        "resume_present": true,
+        "github_present": false,
+        "linkedin_present": false,
+        "portfolio_present": false,
+        "confidence_score": 50,
+        "evidence": [
+          {
+            "source": "Resume",
+            "description": "Claimed on resume text"
+          }
+        ]
+      },
+      {
+        "skill": "Python",
+        "resume_present": true,
+        "github_present": true,
+        "linkedin_present": false,
+        "portfolio_present": false,
+        "confidence_score": 75,
+        "evidence": [
+          {
+            "source": "GitHub",
+            "description": "Primary language in chatbotwebapp"
+          },
+          {
+            "source": "GitHub",
+            "description": "Primary language in Heart-Disease-Web-"
+          },
+          {
+            "source": "GitHub",
+            "description": "Primary language in smartbidgeproject"
+          },
+          {
+            "source": "GitHub",
+            "description": "Repository topic in chatbotwebapp"
+          },
+          {
+            "source": "GitHub",
+            "description": "Repository topic in Heart-Disease-Web-"
+          },
+          {
+            "source": "GitHub",
+            "description": "Repository topic in News-detector"
+          },
+          {
+            "source": "Resume",
+            "description": "Claimed on resume text"
+          }
+        ]
+      },
+      {
+        "skill": "React",
+        "resume_present": true,
+        "github_present": false,
+        "linkedin_present": true,
+        "portfolio_present": false,
+        "confidence_score": 75,
+        "evidence": [
+          {
+            "source": "LinkedIn",
+            "description": "Listed in LinkedIn Profile/Experience"
+          },
+          {
+            "source": "Resume",
+            "description": "Claimed on resume text"
+          }
+        ]
+      },
+      {
+        "skill": "Rest",
+        "resume_present": true,
+        "github_present": false,
+        "linkedin_present": false,
+        "portfolio_present": false,
+        "confidence_score": 50,
+        "evidence": [
+          {
+            "source": "Resume",
+            "description": "Claimed on resume text"
+          }
+        ]
+      },
+      {
+        "skill": "Scikit-Learn",
+        "resume_present": true,
+        "github_present": false,
+        "linkedin_present": false,
+        "portfolio_present": false,
+        "confidence_score": 50,
+        "evidence": [
+          {
+            "source": "Resume",
+            "description": "Claimed on resume text"
+          }
+        ]
+      },
+      {
+        "skill": "Sql",
+        "resume_present": true,
+        "github_present": false,
+        "linkedin_present": false,
+        "portfolio_present": false,
+        "confidence_score": 50,
+        "evidence": [
+          {
+            "source": "Resume",
+            "description": "Claimed on resume text"
+          }
+        ]
+      }
+    ],
+    "unverified_skills": []
+  },
+  "evidence_registry": [
+    {
+      "skill": "JavaScript",
+      "source": "GitHub",
+      "evidence_type": "Repository Metadata",
+      "repository": "",
+      "file": "",
+      "description": "Primary language in Bhagavan",
+      "confidence": 90
+    },
+    {
+      "skill": "JavaScript",
+      "source": "GitHub",
+      "evidence_type": "Repository Metadata",
+      "repository": "",
+      "file": "",
+      "description": "Primary language in Resumebuilderwebapp",
+      "confidence": 90
+    },
+    {
+      "skill": "JavaScript",
+      "source": "GitHub",
+      "evidence_type": "Repository Metadata",
+      "repository": "",
+      "file": "",
+      "description": "Primary language in pathora",
+      "confidence": 90
+    },
+    {
+      "skill": "JavaScript",
+      "source": "GitHub",
+      "evidence_type": "Repository Metadata",
+      "repository": "",
+      "file": "",
+      "description": "Primary language in News-detector",
+      "confidence": 90
+    },
+    {
+      "skill": "JavaScript",
+      "source": "GitHub",
+      "evidence_type": "Repository Metadata",
+      "repository": "",
+      "file": "",
+      "description": "Primary language in shamir-secret-sharing",
+      "confidence": 90
+    },
+    {
+      "skill": "JavaScript",
+      "source": "GitHub",
+      "evidence_type": "Repository Metadata",
+      "repository": "",
+      "file": "",
+      "description": "Primary language in hacakthon-project",
+      "confidence": 90
+    },
+    {
+      "skill": "JavaScript",
+      "source": "GitHub",
+      "evidence_type": "Repository Metadata",
+      "repository": "",
+      "file": "",
+      "description": "Repository topic in Resumebuilderwebapp",
+      "confidence": 90
+    },
+    {
+      "skill": "JavaScript",
+      "source": "LinkedIn",
+      "evidence_type": "Direct Claim",
+      "repository": "",
+      "file": "",
+      "description": "Listed in LinkedIn Profile/Experience",
+      "confidence": 90
+    },
+    {
+      "skill": "JavaScript",
+      "source": "Resume",
+      "evidence_type": "Direct Claim",
+      "repository": "",
+      "file": "",
+      "description": "Claimed on resume text",
+      "confidence": 90
+    },
+    {
+      "skill": "Node.js",
+      "source": "GitHub",
+      "evidence_type": "Repository Metadata",
+      "repository": "",
+      "file": "",
+      "description": "Repository topic in Resumebuilderwebapp",
+      "confidence": 90
+    },
+    {
+      "skill": "Node.js",
+      "source": "LinkedIn",
+      "evidence_type": "Direct Claim",
+      "repository": "",
+      "file": "",
+      "description": "Listed in LinkedIn Profile/Experience",
+      "confidence": 90
+    },
+    {
+      "skill": "Node.js",
+      "source": "Resume",
+      "evidence_type": "Direct Claim",
+      "repository": "",
+      "file": "",
+      "description": "Claimed on resume text",
+      "confidence": 90
+    },
+    {
+      "skill": "AWS",
+      "source": "Resume",
+      "evidence_type": "Direct Claim",
+      "repository": "",
+      "file": "",
+      "description": "Claimed on resume text",
+      "confidence": 50
+    },
+    {
+      "skill": "Authentication",
+      "source": "GitHub",
+      "evidence_type": "Repository Metadata",
+      "repository": "",
+      "file": "",
+      "description": "Repository topic in Resumebuilderwebapp",
+      "confidence": 50
+    },
+    {
+      "skill": "Excel",
+      "source": "Resume",
+      "evidence_type": "Direct Claim",
+      "repository": "",
+      "file": "",
+      "description": "Claimed on resume text",
+      "confidence": 50
+    },
+    {
+      "skill": "Express",
+      "source": "GitHub",
+      "evidence_type": "Repository Metadata",
+      "repository": "",
+      "file": "",
+      "description": "Repository topic in Resumebuilderwebapp",
+      "confidence": 75
+    },
+    {
+      "skill": "Express",
+      "source": "Resume",
+      "evidence_type": "Direct Claim",
+      "repository": "",
+      "file": "",
+      "description": "Claimed on resume text",
+      "confidence": 75
+    },
+    {
+      "skill": "Flask",
+      "source": "Resume",
+      "evidence_type": "Direct Claim",
+      "repository": "",
+      "file": "",
+      "description": "Claimed on resume text",
+      "confidence": 50
+    },
+    {
+      "skill": "Git",
+      "source": "Resume",
+      "evidence_type": "Direct Claim",
+      "repository": "",
+      "file": "",
+      "description": "Claimed on resume text",
+      "confidence": 50
+    },
+    {
+      "skill": "Java",
+      "source": "Resume",
+      "evidence_type": "Direct Claim",
+      "repository": "",
+      "file": "",
+      "description": "Claimed on resume text",
+      "confidence": 50
+    },
+    {
+      "skill": "Machine Learning",
+      "source": "Resume",
+      "evidence_type": "Direct Claim",
+      "repository": "",
+      "file": "",
+      "description": "Claimed on resume text",
+      "confidence": 50
+    },
+    {
+      "skill": "Machine-Learning",
+      "source": "GitHub",
+      "evidence_type": "Repository Metadata",
+      "repository": "",
+      "file": "",
+      "description": "Repository topic in Heart-Disease-Web-",
+      "confidence": 50
+    },
+    {
+      "skill": "Machine-Learning",
+      "source": "GitHub",
+      "evidence_type": "Repository Metadata",
+      "repository": "",
+      "file": "",
+      "description": "Repository topic in News-detector",
+      "confidence": 50
+    },
+    {
+      "skill": "Mern-Stack",
+      "source": "GitHub",
+      "evidence_type": "Repository Metadata",
+      "repository": "",
+      "file": "",
+      "description": "Repository topic in Resumebuilderwebapp",
+      "confidence": 50
+    },
+    {
+      "skill": "Mern-Stack",
+      "source": "GitHub",
+      "evidence_type": "Repository Metadata",
+      "repository": "",
+      "file": "",
+      "description": "Repository topic in chatbotwebapp",
+      "confidence": 50
+    },
+    {
+      "skill": "Mern-Stack",
+      "source": "GitHub",
+      "evidence_type": "Repository Metadata",
+      "repository": "",
+      "file": "",
+      "description": "Repository topic in Heart-Disease-Web-",
+      "confidence": 50
+    },
+    {
+      "skill": "Mern-Stack",
+      "source": "GitHub",
+      "evidence_type": "Repository Metadata",
+      "repository": "",
+      "file": "",
+      "description": "Repository topic in News-detector",
+      "confidence": 50
+    },
+    {
+      "skill": "MongoDB",
+      "source": "GitHub",
+      "evidence_type": "Repository Metadata",
+      "repository": "",
+      "file": "",
+      "description": "Repository topic in Resumebuilderwebapp",
+      "confidence": 75
+    },
+    {
+      "skill": "MongoDB",
+      "source": "Resume",
+      "evidence_type": "Direct Claim",
+      "repository": "",
+      "file": "",
+      "description": "Claimed on resume text",
+      "confidence": 75
+    },
+    {
+      "skill": "Mysql",
+      "source": "Resume",
+      "evidence_type": "Direct Claim",
+      "repository": "",
+      "file": "",
+      "description": "Claimed on resume text",
+      "confidence": 50
+    },
+    {
+      "skill": "Nlp",
+      "source": "GitHub",
+      "evidence_type": "Repository Metadata",
+      "repository": "",
+      "file": "",
+      "description": "Repository topic in News-detector",
+      "confidence": 50
+    },
+    {
+      "skill": "Numpy",
+      "source": "Resume",
+      "evidence_type": "Direct Claim",
+      "repository": "",
+      "file": "",
+      "description": "Claimed on resume text",
+      "confidence": 50
+    },
+    {
+      "skill": "Pandas",
+      "source": "Resume",
+      "evidence_type": "Direct Claim",
+      "repository": "",
+      "file": "",
+      "description": "Claimed on resume text",
+      "confidence": 50
+    },
+    {
+      "skill": "Python",
+      "source": "GitHub",
+      "evidence_type": "Repository Metadata",
+      "repository": "",
+      "file": "",
+      "description": "Primary language in chatbotwebapp",
+      "confidence": 75
+    },
+    {
+      "skill": "Python",
+      "source": "GitHub",
+      "evidence_type": "Repository Metadata",
+      "repository": "",
+      "file": "",
+      "description": "Primary language in Heart-Disease-Web-",
+      "confidence": 75
+    },
+    {
+      "skill": "Python",
+      "source": "GitHub",
+      "evidence_type": "Repository Metadata",
+      "repository": "",
+      "file": "",
+      "description": "Primary language in smartbidgeproject",
+      "confidence": 75
+    },
+    {
+      "skill": "Python",
+      "source": "GitHub",
+      "evidence_type": "Repository Metadata",
+      "repository": "",
+      "file": "",
+      "description": "Repository topic in chatbotwebapp",
+      "confidence": 75
+    },
+    {
+      "skill": "Python",
+      "source": "GitHub",
+      "evidence_type": "Repository Metadata",
+      "repository": "",
+      "file": "",
+      "description": "Repository topic in Heart-Disease-Web-",
+      "confidence": 75
+    },
+    {
+      "skill": "Python",
+      "source": "GitHub",
+      "evidence_type": "Repository Metadata",
+      "repository": "",
+      "file": "",
+      "description": "Repository topic in News-detector",
+      "confidence": 75
+    },
+    {
+      "skill": "Python",
+      "source": "Resume",
+      "evidence_type": "Direct Claim",
+      "repository": "",
+      "file": "",
+      "description": "Claimed on resume text",
+      "confidence": 75
+    },
+    {
+      "skill": "React",
+      "source": "LinkedIn",
+      "evidence_type": "Direct Claim",
+      "repository": "",
+      "file": "",
+      "description": "Listed in LinkedIn Profile/Experience",
+      "confidence": 75
+    },
+    {
+      "skill": "React",
+      "source": "Resume",
+      "evidence_type": "Direct Claim",
+      "repository": "",
+      "file": "",
+      "description": "Claimed on resume text",
+      "confidence": 75
+    },
+    {
+      "skill": "Rest",
+      "source": "Resume",
+      "evidence_type": "Direct Claim",
+      "repository": "",
+      "file": "",
+      "description": "Claimed on resume text",
+      "confidence": 50
+    },
+    {
+      "skill": "Scikit-Learn",
+      "source": "Resume",
+      "evidence_type": "Direct Claim",
+      "repository": "",
+      "file": "",
+      "description": "Claimed on resume text",
+      "confidence": 50
+    },
+    {
+      "skill": "Sql",
+      "source": "Resume",
+      "evidence_type": "Direct Claim",
+      "repository": "",
+      "file": "",
+      "description": "Claimed on resume text",
+      "confidence": 50
+    }
+  ],
+  "consistency_analysis": {
+    "consistency_score": 100,
+    "status": "High Consistency",
+    "verified_claims": [
+      "JavaScript",
+      "Node.js"
+    ],
+    "unverified_claims": [],
+    "contradictions": []
+  },
+  "career_positioning": {
+    "level": "Student",
+    "justification": "Little to no professional experience or verified skills. Likely a student or entry-level.",
+    "engineering_maturity_score": 90,
+    "project_complexity_score": 45
+  },
+  "recruiter_readiness": {
+    "technical_readiness": {
+      "score": 100,
+      "explanation": "Based on 2 verified and 20 partially verified skills."
+    },
+    "project_readiness": {
+      "score": 0,
+      "explanation": "Candidate has 0 public repositories."
+    },
+    "portfolio_readiness": {
+      "score": 0,
+      "explanation": "No portfolio provided."
+    },
+    "professional_presence": {
+      "score": 0,
+      "explanation": "Presence detected on: ."
+    },
+    "documentation_readiness": {
+      "score": 50,
+      "explanation": "Based on GitHub repository READMEs and code comments."
+    },
+    "overall_score": 30
+  },
+  "market_readiness": {
+    "startup_readiness": {
+      "score": 20,
+      "explanation": "Matches 1 common startup technologies. Values full-stack agility."
+    },
+    "enterprise_readiness": {
+      "score": 20,
+      "explanation": "Matches 1 enterprise technologies. Needs more scale evidence."
+    },
+    "remote_readiness": {
+      "score": 40,
+      "explanation": "Requires more async collaboration evidence."
+    },
+    "ai_engineering_readiness": {
+      "score": 0,
+      "explanation": "Matches 0 AI/ML technologies."
+    },
+    "product_engineering_readiness": {
+      "score": 0,
+      "explanation": "Matches 0 product/frontend technologies."
+    }
+  },
+  "interview_intelligence": {
+    "difficulty": "Beginner",
+    "likely_topics": {
+      "Frontend": [
+        "JavaScript"
+      ],
+      "Backend": [
+        "Node.js"
+      ]
+    },
+    "suggested_technical_questions": [
+      "Deep dive into state management and component lifecycle in JavaScript.",
+      "Discuss API design and middleware implementation in Node.js."
+    ],
+    "suggested_system_design_questions": [
+      "Discuss the differences between SQL and NoSQL databases."
+    ]
+  },
+  "risk_analysis": {
+    "critical_risks": [
+      {
+        "risk": "No Code Evidence",
+        "description": "No GitHub profile provided to verify technical claims."
+      }
+    ],
+    "moderate_risks": [
+      {
+        "risk": "Missing Testing Signals",
+        "description": "No verified testing frameworks found in evidence sources."
+      }
+    ],
+    "minor_risks": [
+      {
+        "risk": "Weak DevOps Evidence",
+        "description": "No verified skills in deployment or infrastructure."
+      },
+      {
+        "risk": "Missing Portfolio",
+        "description": "No personal portfolio provided for visual/product assessment."
+      }
+    ]
+  },
+  "decision_center": {
+    "recommendation": "Consider",
+    "confidence_level": "Medium",
+    "strengths": [
+      "High cross-platform profile consistency."
+    ],
+    "weaknesses": [
+      "No GitHub profile provided to verify technical claims.",
+      "No verified testing frameworks found in evidence sources."
+    ],
+    "hiring_justification": "Candidate has partially verified claims but carries some risk. Requires rigorous interview assessment.",
+    "interview_focus_areas": [
+      "Probe deeply into: Missing Testing Signals",
+      "Probe deeply into: Weak DevOps Evidence",
+      "Probe deeply into: Missing Portfolio"
+    ],
+    "match_score": null,
+    "missing_skills": []
+  },
+  "coverage_metrics": {
+    "reliability_score": 9,
+    "coverage_score": 75,
+    "evidence_density_score": 90,
+    "verification_strength_score": 45
+  },
+  "audit_summary": {
+    "status": "Completed with Warnings",
+    "warnings": [
+      "Portfolio analysis yielded no evidence or was blocked."
+    ]
+  }
+}

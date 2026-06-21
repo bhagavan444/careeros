@@ -17,6 +17,9 @@ const pageVariants = {
       duration: 0.4,
       ease: [0.16, 1, 0.3, 1], // Ultra-smooth Apple-like ease out
     },
+    transitionEnd: {
+      transform: "none", // Force removal of transform to un-trap position: fixed children
+    }
   },
   out: {
     opacity: 0,
@@ -39,10 +42,7 @@ const PageWrapper = ({ children, className = "" }) => {
       className={className}
       style={{
         width: "100%",
-        minHeight: "100dvh",
-        willChange: "transform, opacity",
-        transform: "translateZ(0)",
-        backfaceVisibility: "hidden"
+        minHeight: "100dvh"
       }}
     >
       {children}

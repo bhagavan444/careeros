@@ -13,9 +13,8 @@ export default function Subscription() {
   const [invoiceId, setInvoiceId] = useState("");
 
   useEffect(() => {
-    window.scrollTo(0, 0);
-    const storedTier = localStorage.getItem("pathora_tier");
-    const storedToken = localStorage.getItem("pathora_api_token");
+    const storedTier = localStorage.getItem("careeros_tier");
+    const storedToken = localStorage.getItem("careeros_api_token");
     if (storedTier) setTier(storedTier);
     if (storedToken) setApiToken(storedToken);
     

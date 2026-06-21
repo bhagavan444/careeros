@@ -14,9 +14,7 @@ export default function Assistant() {
   ]);
   const [isTyping, setIsTyping] = useState(false);
 
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
+  
 
   const handleSend = (e) => {
     e.preventDefault();

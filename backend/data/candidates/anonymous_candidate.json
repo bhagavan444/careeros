@@ -1,0 +1,148 @@
+{
+  "truth_score": {
+    "score": 0,
+    "evidence_coverage": 0,
+    "verification_score": 0,
+    "confidence_level": "Low",
+    "source_coverage": {
+      "resume": false,
+      "github": false,
+      "linkedin": false,
+      "portfolio": false
+    },
+    "score_reasoning": "Truth Score is 0. The candidate has 0 fully verified skills, 0 cross-source confirmations, 0 partial confirmations, and 0 unsupported claims. Evidence Coverage is 0%. Evidence Density is Low."
+  },
+  "verification_matrix": {
+    "verified_skills": [],
+    "partially_verified_skills": [],
+    "unverified_skills": []
+  },
+  "evidence_registry": [],
+  "consistency_analysis": {
+    "consistency_score": 0,
+    "status": "Low Consistency",
+    "verified_claims": [],
+    "unverified_claims": [],
+    "contradictions": []
+  },
+  "career_positioning": {
+    "level": "Student",
+    "justification": "Little to no professional experience or verified skills. Likely a student or entry-level.",
+    "engineering_maturity_score": 0,
+    "project_complexity_score": 0
+  },
+  "recruiter_readiness": {
+    "technical_readiness": {
+      "score": 0,
+      "explanation": "Based on 0 verified and 0 partially verified skills."
+    },
+    "project_readiness": {
+      "score": 0,
+      "explanation": "Candidate has 0 public repositories."
+    },
+    "portfolio_readiness": {
+      "score": 0,
+      "explanation": "No portfolio provided."
+    },
+    "professional_presence": {
+      "score": 0,
+      "explanation": "Presence detected on: ."
+    },
+    "documentation_readiness": {
+      "score": 50,
+      "explanation": "Based on GitHub repository READMEs and code comments."
+    },
+    "overall_score": 10
+  },
+  "market_readiness": {
+    "startup_readiness": {
+      "score": 0,
+      "explanation": "Matches 0 common startup technologies. Values full-stack agility."
+    },
+    "enterprise_readiness": {
+      "score": 0,
+      "explanation": "Matches 0 enterprise technologies. Needs more scale evidence."
+    },
+    "remote_readiness": {
+      "score": 40,
+      "explanation": "Requires more async collaboration evidence."
+    },
+    "ai_engineering_readiness": {
+      "score": 0,
+      "explanation": "Matches 0 AI/ML technologies."
+    },
+    "product_engineering_readiness": {
+      "score": 0,
+      "explanation": "Matches 0 product/frontend technologies."
+    }
+  },
+  "interview_intelligence": {
+    "difficulty": "Beginner",
+    "likely_topics": {},
+    "suggested_technical_questions": [
+      "Assess basic programming fundamentals (data structures and algorithms)."
+    ],
+    "suggested_system_design_questions": [
+      "Discuss the differences between SQL and NoSQL databases."
+    ]
+  },
+  "risk_analysis": {
+    "critical_risks": [
+      {
+        "risk": "No Code Evidence",
+        "description": "No GitHub profile provided to verify technical claims."
+      },
+      {
+        "risk": "Low Cross-Platform Consistency",
+        "description": "Many skills claimed on resume lack external evidence."
+      }
+    ],
+    "moderate_risks": [
+      {
+        "risk": "Missing Testing Signals",
+        "description": "No verified testing frameworks found in evidence sources."
+      }
+    ],
+    "minor_risks": [
+      {
+        "risk": "Weak DevOps Evidence",
+        "description": "No verified skills in deployment or infrastructure."
+      },
+      {
+        "risk": "Missing Portfolio",
+        "description": "No personal portfolio provided for visual/product assessment."
+      }
+    ]
+  },
+  "decision_center": {
+    "recommendation": "Pass",
+    "confidence_level": "High",
+    "strengths": [],
+    "weaknesses": [
+      "No GitHub profile provided to verify technical claims.",
+      "Many skills claimed on resume lack external evidence.",
+      "No verified testing frameworks found in evidence sources."
+    ],
+    "hiring_justification": "Severe lack of evidence, major contradictions, or critically low truth score.",
+    "interview_focus_areas": [
+      "Probe deeply into: Missing Testing Signals",
+      "Probe deeply into: Weak DevOps Evidence",
+      "Probe deeply into: Missing Portfolio"
+    ],
+    "match_score": null,
+    "missing_skills": []
+  },
+  "coverage_metrics": {
+    "reliability_score": 0,
+    "coverage_score": 0,
+    "evidence_density_score": 0,
+    "verification_strength_score": 0
+  },
+  "audit_summary": {
+    "status": "Completed with Warnings",
+    "warnings": [
+      "GitHub returned no verified skills.",
+      "Portfolio analysis yielded no evidence or was blocked."
+    ]
+  }
+}

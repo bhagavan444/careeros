@@ -5,6 +5,7 @@ from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.requests import Request
 from starlette.responses import Response, JSONResponse
 import traceback
+from app.core.logging_config import request_id_ctx_var, user_id_ctx_var
 
 logger = logging.getLogger("telemetry")
 
@@ -13,8 +14,11 @@ class TelemetryMiddleware(BaseHTTPMiddleware):
         request_id = str(uuid.uuid4())
         start_time = time.perf_counter()
         
+        # Set correlation ID in contextvar and request state
+        token1 = request_id_ctx_var.set(request_id)
         request.state.request_id = request_id
-        logger.info(f"[TELEMETRY_START] id: {request_id} | method: {request.method} | path: {request.url.path}")
+        
+        logger.info(f"[TELEMETRY_START] method: {request.method} | path: {request.url.path}")
         
         try:
             response = await call_next(request)

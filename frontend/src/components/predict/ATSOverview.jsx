@@ -16,20 +16,20 @@ export default function ATSOverview({ animScore, targetDisplayScore, result }) {
         <ScoreRing score={animScore} color={sc} size={220} />
         <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-50%)", textAlign: "center" }}>
           <div style={{ fontFamily: "'DM Mono', monospace", fontSize: 56, fontWeight: 400, color: sc, lineHeight: 1, textShadow: `0 0 30px ${sc}40` }}>{animScore}</div>
-          <div style={{ fontSize: 12, color: "#6b7280", fontFamily: "'DM Mono', monospace", marginTop: 4, letterSpacing: "0.1em" }}>/ 100 ATS</div>
+          <div style={{ fontSize: 12, color: "#86868b", fontFamily: "'DM Mono', monospace", marginTop: 4, letterSpacing: "0.1em" }}>/ 100 ATS</div>
         </div>
       </div>
 
       <div style={{ flex: 1, minWidth: 300 }}>
         <p className="eyebrow" style={{ marginBottom: 12 }}><Activity size={12} /> Core Profile Alignment</p>
         <h3 style={{ fontSize: 26, fontWeight: 700, marginBottom: 10, color: "#111" }}>{getScoreLabel(targetDisplayScore)}</h3>
-        <p style={{ color: "#4b5563", marginBottom: 20, lineHeight: 1.6, fontSize: 14 }}>
+        <p style={{ color: "#86868b", marginBottom: 20, lineHeight: 1.6, fontSize: 14 }}>
           Your technical blueprint is currently matched to <strong>Production Engineering Benchmark</strong> criteria. The engine parsed outstanding framework keywords, but detected missing production-grade engineering signals that could lower screening priority.
         </p>
 
         <div style={{ background: "rgba(124, 58, 237, 0.05)", padding: 12, borderRadius: 8, borderLeft: "3px solid #7c3aed", marginBottom: 20 }}>
           <span style={{ fontSize: 11, fontFamily: "'DM Mono', monospace", color: "#7c3aed", fontWeight: 700, textTransform: "uppercase", display: "block", marginBottom: 4 }}>Why this matters</span>
-          <span style={{ fontSize: 13, color: "#4b5563", lineHeight: 1.5 }}>
+          <span style={{ fontSize: 13, color: "#86868b", lineHeight: 1.5 }}>
             Deployment and infrastructure exposure are commonly used as indicators of engineering ownership and operational familiarity.
           </span>
         </div>
@@ -42,8 +42,8 @@ export default function ATSOverview({ animScore, targetDisplayScore, result }) {
           ].map((bar, i) => (
             <div key={i}>
               <div style={{ display: "flex", justifyItems: "center", justifyContent: "space-between", marginBottom: 4, fontSize: 12 }}>
-                <span style={{ fontWeight: 600, color: "#374151" }}>{bar.name}</span>
-                <span style={{ fontFamily: "'DM Mono', monospace", color: "#6b7280" }}>{bar.val}%</span>
+                <span style={{ fontWeight: 600, color: "#1d1d1f" }}>{bar.name}</span>
+                <span style={{ fontFamily: "'DM Mono', monospace", color: "#86868b" }}>{bar.val}%</span>
               </div>
               <div style={{ height: 4, background: "rgba(0,0,0,0.05)", borderRadius: 2, overflow: "hidden" }}>
                 <div style={{ width: `${bar.val}%`, height: "100%", background: sc, borderRadius: 2 }} />

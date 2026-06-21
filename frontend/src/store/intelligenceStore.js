@@ -81,7 +81,7 @@ export const useIntelligenceStore = create(
       })
     }),
     {
-      name: 'pathora-intelligence-storage',
+      name: 'careeros-intelligence-storage',
       // Persist meaningful state to keep context across page reloads
       partialize: (state) => ({
         resumeAnalysis: state.resumeAnalysis,

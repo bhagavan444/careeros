@@ -1,454 +1,381 @@
-import React, { useEffect, useState, useRef, memo } from "react";
+import React, { useEffect, useState } from "react";
 import {
   signInWithPopup,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   onAuthStateChanged,
   sendPasswordResetEmail,
-  sendEmailVerification,
-  GoogleAuthProvider
+  sendEmailVerification
 } from "firebase/auth";
-import { auth } from "../firebase";
+import { auth, googleProvider, githubProvider } from "../firebase";
+import { useNavigate, useLocation } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
+import { CheckCircle, Mail, AlertCircle, Github, Chrome, AlertTriangle, Info, X } from "lucide-react";
+import { useToast } from "../context/ToastContext";
+import "./Login.css";
 
-const googleProvider = new GoogleAuthProvider();
-import { useNavigate } from "react-router-dom";
-import { motion, useReducedMotion } from "framer-motion";
-import './Login.css';
-import './Home.css';
-
-/* ================= ANIMATION COMPONENT ================= */
-const FadeSection = ({ children, delay = 0, yOffset = 20, className = "" }) => {
-  const prefersReducedMotion = useReducedMotion();
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: prefersReducedMotion ? 0 : yOffset }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6, delay, ease: [0.16, 1, 0.3, 1] }}
-      className={className}
-    >
-      {children}
-    </motion.div>
-  );
-};
-
-/* ================= MAIN LOGIN COMPONENT ================= */
 export default function Login({ handleLogin }) {
-  /* ================= STATE ================= */
-  const [mode, setMode] = useState("login");
+  const [mode, setMode] = useState("login"); // 'login' or 'signup'
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [errorMsg, setErrorMsg] = useState("");
-  const [successMsg, setSuccessMsg] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [termsAccepted, setTermsAccepted] = useState(false);
-  const [passwordScore, setPasswordScore] = useState(0);
-  const [loginAttempts, setLoginAttempts] = useState(0);
-  const [currentFeature, setCurrentFeature] = useState(0);
+  
+  const [loading, setLoading] = useState(false);
+  const [initializing, setInitializing] = useState(false);
+  const [initStep, setInitStep] = useState(0);
 
+  // Toasts State
+  const { addToast } = useToast();
+  
   const navigate = useNavigate();
+  const location = useLocation();
 
-  const features = [
-    { title: "Resume Intelligence", description: "AI-powered resume analysis and optimization" },
-    { title: "Career Readiness Index", description: "Comprehensive skill assessment and gap analysis" },
-    { title: "Role Matching Engine", description: "Precision matching with industry opportunities" },
-    { title: "Skill Gap Analysis", description: "Identify and bridge critical skill gaps" }
-  ];
+  // Extract redirect path from URL params
+  const queryParams = new URLSearchParams(location.search);
+  const redirectPath = queryParams.get("redirect") || "/";
 
-  /* ================= AUTH WATCH ================= */
-  useEffect(() => {
-    if (!auth) {
-      console.warn("[Login] Firebase auth is undefined. Skipping onAuthStateChanged listener.");
-      return;
+  const handleAuthError = (err) => {
+    console.error("Auth Error:", err);
+    let title = "Authentication Failed";
+    let message = "An unexpected error occurred. Please try again.";
+    let type = "error";
+    let duration = 5000;
+
+    switch (err.code) {
+      case "auth/account-exists-with-different-credential":
+        title = "Account Already Exists";
+        message = "An account already exists with this email address.\n\nPlease sign in using the provider you originally used (Google, GitHub, Microsoft, or Email & Password). After signing in, you can connect additional providers from Account Settings.";
+        type = "warning";
+        duration = 8000;
+        break;
+      case "auth/popup-closed-by-user":
+        title = "Authentication Cancelled";
+        message = "The sign-in window was closed before authentication completed.";
+        type = "info";
+        break;
+      case "auth/network-request-failed":
+        title = "Connection Error";
+        message = "Unable to connect. Please check your internet connection and try again.";
+        type = "error";
+        break;
+      case "auth/too-many-requests":
+        title = "Account Temporarily Locked";
+        message = "Too many login attempts detected. Please wait a few minutes and try again.";
+        type = "warning";
+        break;
+      case "auth/user-not-found":
+        title = "Account Not Found";
+        message = "No CareerOS account was found with this email address.";
+        type = "error";
+        break;
+      case "auth/wrong-password":
+        title = "Authentication Failed";
+        message = "Incorrect password. Please try again.";
+        type = "error";
+        break;
+      case "auth/email-already-in-use":
+        title = "Email In Use";
+        message = "An account with this email already exists. Please sign in instead.";
+        type = "warning";
+        break;
+      default:
+        message = err.message ? err.message.replace('Firebase: ', '') : message;
     }
+
+    addToast(title, message, type, duration);
+  };
+
+  useEffect(() => {
+    if (!auth) return;
     const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) navigate("/recommend");
+      if (user && !initializing) {
+        navigate(redirectPath);
+      }
     });
     return unsubscribe;
-  }, [navigate]);
+  }, [navigate, initializing, redirectPath]);
 
-  /* ================= PASSWORD STRENGTH ================= */
-  useEffect(() => {
-    setPasswordScore(calculatePasswordScore(password));
-  }, [password]);
-
-  /* ================= FEATURE ROTATION ================= */
-  useEffect(() => {
+  const runInitialization = () => {
+    setInitializing(true);
+    const steps = [
+      "Verifying Identity",
+      "Loading Professional Memory",
+      "Initializing Intelligence Engine",
+      "Preparing Workspace"
+    ];
+    let currentStep = 0;
+    
     const interval = setInterval(() => {
-      setCurrentFeature((prev) => (prev + 1) % features.length);
-    }, 4000);
-    return () => clearInterval(interval);
-  }, []);
-
-  /* ================= RATE LIMIT LOAD ================= */
-  useEffect(() => {
-    const attempts = Number(localStorage.getItem("login_attempts") || 0);
-    setLoginAttempts(attempts);
-  }, []);
-
-  /* ================= HELPERS ================= */
-  const resetMessages = () => {
-    setErrorMsg("");
-    setSuccessMsg("");
+      currentStep++;
+      if (currentStep < steps.length) {
+        setInitStep(currentStep);
+      } else {
+        clearInterval(interval);
+        if (handleLogin) handleLogin();
+        
+        // Show Session Intelligence Banner before navigating
+        addToast("Welcome to CareerOS", "Your professional intelligence workspace is ready.", "success", 4000);
+        
+        setTimeout(() => {
+          navigate(redirectPath);
+        }, 100);
+      }
+    }, 600); // ~2.4 seconds total
   };
 
-  const isValidEmail = (value) =>
-    /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(value);
-
-  function calculatePasswordScore(pw = "") {
-    let score = 0;
-    if (pw.length >= 8) score++;
-    if (/[A-Z]/.test(pw)) score++;
-    if (/[a-z]/.test(pw)) score++;
-    if (/\d/.test(pw)) score++;
-    if (/[@#$%^&+=!]/.test(pw)) score++;
-    return score;
-  }
-
-  const recordFailedAttempt = () => {
-    const next = loginAttempts + 1;
-    setLoginAttempts(next);
-    localStorage.setItem("login_attempts", next);
-
-    if (next >= 5) {
-      setErrorMsg("Too many attempts. Please try again later.");
-    } else {
-      setErrorMsg(`Authentication failed. ${5 - next} attempts remaining.`);
-    }
-  };
-
-  /* ================= AUTH HANDLERS ================= */
-  const loginWithEmail = async () => {
-    resetMessages();
-    if (!auth) return setErrorMsg("Firebase auth is not initialized. Please check configuration.");
-    if (!isValidEmail(email)) return setErrorMsg("Please enter a valid email address");
-    if (password.length < 6) return setErrorMsg("Password must be at least 6 characters");
-
+  const loginWithEmail = async (e) => {
+    e?.preventDefault();
+    if (!auth) return addToast("System Error", "Firebase auth is not initialized.", "error");
     try {
       setLoading(true);
       await signInWithEmailAndPassword(auth, email, password);
-      localStorage.setItem("login_attempts", 0);
-      if (handleLogin) handleLogin();
-      navigate("/recommend");
+      addToast("Welcome back", "You have successfully signed in to CareerOS.", "success", 3000);
+      runInitialization();
     } catch (err) {
-      recordFailedAttempt();
-    } finally {
+      handleAuthError(err);
       setLoading(false);
     }
   };
 
-  const signupWithEmail = async () => {
-    resetMessages();
-    if (!auth) return setErrorMsg("Firebase auth is not initialized. Please check configuration.");
-    if (!termsAccepted) return setErrorMsg("Please accept the Privacy Policy to continue");
-    if (!isValidEmail(email)) return setErrorMsg("Please enter a valid email address");
-    if (passwordScore < 3) return setErrorMsg("Please use a stronger password");
-
+  const signupWithEmail = async (e) => {
+    e?.preventDefault();
+    if (!auth) return addToast("System Error", "Firebase auth is not initialized.", "error");
+    if (password !== confirmPassword) return addToast("Signup Failed", "Passwords do not match.", "error");
+    if (!termsAccepted) return addToast("Signup Failed", "Please accept the Privacy Policy to continue.", "error");
+    
     try {
       setLoading(true);
       const cred = await createUserWithEmailAndPassword(auth, email, password);
       await sendEmailVerification(cred.user);
-      setSuccessMsg("Account created successfully. Verification email sent.");
-      if (handleLogin) handleLogin();
-      navigate("/recommend");
+      addToast("Account Created", "Your CareerOS account is ready. Verify your email to unlock all features.", "success", 4000);
+      runInitialization();
     } catch (err) {
-      setErrorMsg(err.message.replace('Firebase: ', ''));
-    } finally {
+      handleAuthError(err);
       setLoading(false);
     }
   };
 
   const loginWithGoogle = async () => {
-    resetMessages();
-    if (!auth) return setErrorMsg("Firebase auth is not initialized. Please check configuration.");
+    if (!auth) return;
     try {
       setLoading(true);
       await signInWithPopup(auth, googleProvider);
-      if (handleLogin) handleLogin();
-      navigate("/predict");
+      addToast("Welcome back", "You have successfully signed in to CareerOS.", "success", 3000);
+      runInitialization();
     } catch (err) {
-      recordFailedAttempt();
-    } finally {
+      handleAuthError(err);
       setLoading(false);
     }
   };
 
-  const resetPassword = async () => {
-    if (!auth) return setErrorMsg("Firebase auth is not initialized. Please check configuration.");
-    if (!isValidEmail(email)) return setErrorMsg("Please enter a valid email address");
+  const loginWithGithub = async () => {
+    if (!auth) return;
+
+    try {
+      setLoading(true);
+
+      const result = await signInWithPopup(
+        auth,
+        githubProvider
+      );
+
+      console.log("GitHub Success:", result);
+
+      addToast(
+        "Welcome back",
+        "You have successfully signed in to CareerOS.",
+        "success",
+        3000
+      );
+
+      runInitialization();
+
+    } catch (err) {
+      handleAuthError(err);
+      setLoading(false);
+    }
+  };
+
+  const resetPassword = async (e) => {
+    e?.preventDefault();
+    if (!auth) return;
+    if (!email) return addToast("Email Required", "Please enter your email address first.", "error");
     try {
       setLoading(true);
       await sendPasswordResetEmail(auth, email);
-      setSuccessMsg("Password reset email sent successfully.");
+      addToast("Reset Email Sent", "Check your inbox for password reset instructions.", "mail", 4000);
     } catch {
-      setErrorMsg("Failed to send reset email. Please try again.");
+      addToast("Reset Failed", "Failed to send reset email. Please try again.", "error");
     } finally {
       setLoading(false);
     }
   };
 
-  const fillDemoAccount = () => {
-    setEmail("demo.pathora@gmail.com");
-    setPassword("Demo@1234");
-    setMode("login");
-    setSuccessMsg("Demo credentials loaded");
-  };
+  const initStepsText = [
+    "Verifying Identity",
+    "Loading Professional Memory",
+    "Initializing Intelligence Engine",
+    "Preparing Workspace"
+  ];
 
-  const strengthLabels = ['', 'Weak', 'Fair', 'Good', 'Strong', 'Excellent'];
-  const strengthColors = ['#e2e8f0', '#ef4444', '#f97316', '#eab308', '#22c55e', '#10b981'];
-
-  /* ================= RENDER ================= */
-  return (
-    <div className="login-container home-wrap">
-
-      <div className="grid-bg" />
-
-      {/* LEFT PANEL - BRAND SHOWCASE */}
-      <div className="login-left-panel">
-        <FadeSection delay={0.1}>
-          <div className="login-brand">
-            <div className="login-brand-dot" /> Pathora
-          </div>
-          
-          <h1 className="login-hero-title">Engineer Your Future<br/>With Intelligence.</h1>
-          <p className="login-hero-subtitle">
-            Secure, AI-driven career insights aligned with elite industry standards. Access predictive metrics and capability mapping.
-          </p>
-        </FadeSection>
-
-        <FadeSection delay={0.2}>
+  if (initializing) {
+    return (
+      <div className="auth-initializing-overlay">
+        <div className="auth-init-orb" />
+        <AnimatePresence mode="wait">
           <motion.div 
-            className="login-feature-card"
-            key={currentFeature}
+            key={initStep}
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.3 }}
+            className="auth-init-text"
           >
-            <div className="login-feature-label">Active Capability</div>
-            <div className="login-feature-title">{features[currentFeature].title}</div>
-            <div className="login-feature-desc">{features[currentFeature].description}</div>
+            {initStepsText[initStep]}
           </motion.div>
+        </AnimatePresence>
+      </div>
+    );
+  }
 
-          <div className="login-metrics-grid">
-            <div className="login-metric-item">
-              <div className="login-metric-icon">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
-                </svg>
-              </div>
-              <div className="login-metric-text">ATS Optimization</div>
-            </div>
-            <div className="login-metric-item">
-              <div className="login-metric-icon">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
-                </svg>
-              </div>
-              <div className="login-metric-text">Career Intelligence</div>
-            </div>
-            <div className="login-metric-item">
-              <div className="login-metric-icon">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
-                </svg>
-              </div>
-              <div className="login-metric-text">Global Alignment</div>
-            </div>
-            <div className="login-metric-item">
-              <div className="login-metric-icon">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
-                </svg>
-              </div>
-              <div className="login-metric-text">Predictive Readiness</div>
-            </div>
-          </div>
-        </FadeSection>
+  return (
+    <div className="auth-container">
+      {/* Left Brand Column */}
+      <div className="auth-left-column">
+        <div className="auth-ambient-glow" />
+        <div className="auth-orb" />
+        <motion.div 
+          initial={{ opacity: 0, x: -20 }} 
+          animate={{ opacity: 1, x: 0 }} 
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          className="auth-brand-content"
+        >
+          <h1 className="auth-brand-title">CareerOS</h1>
+          <h2 className="auth-brand-subtitle">Professional Intelligence Operating System</h2>
+          <p className="auth-brand-statement">
+            <span>Build skills.</span>
+            <span>Master interviews.</span>
+            <span>Optimize resumes.</span>
+            <span>Accelerate careers.</span>
+          </p>
+        </motion.div>
       </div>
 
-      {/* RIGHT PANEL - AUTH CARD */}
-      <div className="login-right-panel">
-        <FadeSection delay={0.1}>
-          <div className="login-auth-card">
-            
-            <div className="login-auth-header">
-              <h2 className="login-auth-title">Welcome to Pathora</h2>
-              <p className="login-auth-subtitle">Initialize your secure session to continue.</p>
+      {/* Right Auth Column */}
+      <div className="auth-right-column">
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }} 
+          animate={{ opacity: 1, y: 0 }} 
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
+          className="auth-card"
+        >
+          <div className="auth-mobile-wordmark">CareerOS</div>
+
+          {/* Segmented Control */}
+          <div className="segmented-control">
+            <motion.div 
+              className="segmented-indicator"
+              animate={{ left: mode === "login" ? "4px" : "50%", right: mode === "login" ? "50%" : "4px" }}
+              transition={{ type: "spring", stiffness: 400, damping: 30 }}
+            />
+            <button className={mode === "login" ? "active" : ""} onClick={() => setMode("login")}>Sign In</button>
+            <button className={mode === "signup" ? "active" : ""} onClick={() => setMode("signup")}>Create Account</button>
+          </div>
+
+          {/* Primary Providers */}
+          <div className="auth-providers">
+            <button type="button" className="auth-provider-btn" onClick={loginWithGoogle} disabled={loading}>
+              <Chrome size={20} color="#EA4335" /> Continue with Google
+            </button>
+            <button type="button" className="auth-provider-btn" onClick={loginWithGithub} disabled={loading}>
+              <Github size={20} /> Continue with GitHub
+            </button>
+          </div>
+
+          <div className="auth-divider">or continue with email</div>
+
+          {/* Email Auth Form */}
+          <form className="auth-form" onSubmit={mode === "login" ? loginWithEmail : signupWithEmail}>
+            <div className="auth-input-wrapper">
+              <input 
+                type="email" 
+                className="auth-input" 
+                placeholder="Email address" 
+                value={email} 
+                onChange={e => setEmail(e.target.value)} 
+                required 
+              />
+            </div>
+            <div className="auth-input-wrapper">
+              <input 
+                type={showPassword ? "text" : "password"} 
+                className="auth-input" 
+                placeholder="Password" 
+                value={password} 
+                onChange={e => setPassword(e.target.value)} 
+                required 
+              />
+              <button 
+                type="button" 
+                className="auth-input-action" 
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? "Hide" : "Show"}
+              </button>
             </div>
 
-            {/* Mode Toggle */}
-            <div className="login-mode-toggle">
-              <button 
-                className={`login-mode-btn ${mode === 'login' ? 'active' : ''}`}
-                onClick={() => { setMode("login"); resetMessages(); }}
-              >
-                Sign In
-              </button>
-              <button 
-                className={`login-mode-btn ${mode === 'signup' ? 'active' : ''}`}
-                onClick={() => { setMode("signup"); resetMessages(); }}
-              >
-                Create Account
-              </button>
-            </div>
-
-                {/* Messages */}
-                {errorMsg && (
-                  <div className="login-alert error">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-                    {errorMsg}
+            <AnimatePresence>
+              {mode === "signup" && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0, marginTop: 0 }}
+                  animate={{ opacity: 1, height: "auto", marginTop: 16 }}
+                  exit={{ opacity: 0, height: 0, marginTop: 0 }}
+                  style={{ overflow: "hidden" }}
+                >
+                  <div className="auth-input-wrapper">
+                    <input 
+                      type="password" 
+                      className="auth-input" 
+                      placeholder="Confirm Password" 
+                      value={confirmPassword} 
+                      onChange={e => setConfirmPassword(e.target.value)} 
+                      required={mode === "signup"} 
+                    />
                   </div>
-                )}
-                {successMsg && (
-                  <div className="login-alert success">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-                    {successMsg}
-                  </div>
-                )}
-
-                {/* Email Input */}
-                <div className="login-input-group">
-                  <input
-                    type="email"
-                    id="email"
-                    className="login-input"
-                    placeholder=" "
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    disabled={loading}
-                  />
-                  <label htmlFor="email" className="login-label">Work Email Address</label>
-                  {errorMsg && !isValidEmail(email) && email.length > 0 && (
-                    <div className="login-error-text">Valid email required</div>
-                  )}
-                </div>
-
-                {/* Password Input */}
-                <div className="login-input-group">
-                  <input
-                    type={showPassword ? "text" : "password"}
-                    id="password"
-                    className="login-input"
-                    placeholder=" "
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    disabled={loading}
-                  />
-                  <label htmlFor="password" className="login-label">Password</label>
-                  <button 
-                    type="button" 
-                    className="login-password-toggle"
-                    onClick={() => setShowPassword(!showPassword)}
-                  >
-                    {showPassword ? (
-                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24" /><line x1="1" y1="1" x2="23" y2="23" /></svg>
-                    ) : (
-                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" /><circle cx="12" cy="12" r="3" /></svg>
-                    )}
-                  </button>
-                </div>
-
-                {/* Password Strength Meter (Signup Only) */}
-                {mode === "signup" && password.length > 0 && (
-                  <div style={{ marginBottom: "1rem" }}>
-                    <div className="login-strength-meter">
-                      {[1, 2, 3, 4, 5].map((index) => (
-                        <div 
-                          key={index} 
-                          className="login-strength-bar"
-                          style={{ 
-                            background: index <= passwordScore ? strengthColors[passwordScore] : 'rgba(0,0,0,0.1)' 
-                          }}
-                        />
-                      ))}
-                    </div>
-                    <div style={{ display: "flex", justifyContent: "space-between", fontSize: "0.75rem", marginTop: "4px", color: "var(--login-muted)" }}>
-                      <span style={{ color: passwordScore > 0 ? strengthColors[passwordScore] : 'inherit', fontWeight: 600 }}>
-                        {strengthLabels[passwordScore]}
-                      </span>
-                      {passwordScore < 4 && <span>Add uppercase, number & symbol</span>}
-                    </div>
-                  </div>
-                )}
-
-                {/* Terms Checkbox (Signup Only) */}
-                {mode === "signup" && (
-                  <label className="login-checkbox-group">
+                  <label className="auth-checkbox-wrapper">
                     <input 
                       type="checkbox" 
-                      className="login-checkbox"
+                      className="auth-checkbox"
                       checked={termsAccepted}
-                      onChange={(e) => setTermsAccepted(e.target.checked)}
+                      onChange={e => setTermsAccepted(e.target.checked)}
                     />
-                    <span>I accept the <a className="login-link">Privacy Policy</a> & Terms.</span>
+                    <span className="auth-checkbox-label">I accept the Terms & Privacy Policy</span>
                   </label>
-                )}
+                </motion.div>
+              )}
+            </AnimatePresence>
 
-                {/* Forgot Password (Login Only) */}
-                {mode === "login" && (
-                  <a onClick={resetPassword} className="login-link login-forgot">
-                    Forgot password?
-                  </a>
-                )}
-
-                {/* Submit Button */}
-                <button 
-                  className="login-submit-btn"
-                  onClick={mode === "login" ? loginWithEmail : signupWithEmail}
-                  disabled={loading}
-                >
-                  {loading ? (
-                    <>
-                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{animation: 'spin 1s linear infinite'}}>
-                        <circle cx="12" cy="12" r="10" opacity="0.25"/>
-                        <path d="M12 2a10 10 0 0 1 10 10" opacity="0.75"/>
-                      </svg>
-                      Processing...
-                    </>
-                  ) : mode === "login" ? "Initialize Session" : "Create Account"}
-                </button>
-
-                {/* Divider */}
-                <div className="login-divider">OR CONTINUE WITH</div>
-
-                {/* Google OAuth */}
-                <button 
-                  className="login-google-btn"
-                  onClick={loginWithGoogle}
-                  disabled={loading}
-                >
-                  <svg width="20" height="20" viewBox="0 0 24 24">
-                    <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-                    <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-                    <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
-                    <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
-                  </svg>
-                  Google Workspace
-                </button>
-
-                {/* Demo Mode Link */}
-                <div style={{ textAlign: "center", marginTop: "1.5rem" }}>
-                  <a onClick={fillDemoAccount} className="login-link" style={{ fontSize: "0.85rem", fontWeight: 500, color: "var(--login-muted)" }}>
-                    Load Demo Credentials
-                  </a>
-                </div>
-
-            {/* Trust Badges */}
-            <div className="login-trust-badges">
-              <div className="login-trust-badge">
-                <svg className="login-trust-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>
-                Firebase Secure Authentication
-              </div>
-              <div className="login-trust-badge">
-                <svg className="login-trust-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
-                End-to-End Encrypted Protocols
-              </div>
+            <button type="submit" className="auth-submit-btn" disabled={loading}>
+              {loading ? (
+                <>
+                  <div className="auth-spinner" /> Authenticating...
+                </>
+              ) : mode === "login" ? "Continue" : "Create Account"}
+            </button>
+          </form>
+          
+          {mode === "login" && (
+            <div style={{ textAlign: "center", marginTop: 24 }}>
+              <button type="button" onClick={resetPassword} style={{ background: "none", border: "none", color: "#0071e3", fontSize: 14, fontWeight: 500, cursor: "pointer" }}>
+                Forgot password?
+              </button>
             </div>
+          )}
 
-          </div>
-        </FadeSection>
+        </motion.div>
       </div>
-
     </div>
   );
 }

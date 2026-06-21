@@ -14,13 +14,13 @@ export default function AnalysisTimeline() {
 
   return (
     <div className="glass-panel" style={{
-      background: "#fff",
-      border: "1px solid #e5e7eb",
+      background: "rgba(0, 0, 0, 0.03)", backdropFilter: "blur(24px) saturate(180%)",
+      border: "1px solid rgba(255,255,255,0.15)",
       borderRadius: 12,
       padding: 20,
       fontFamily: "'DM Mono', monospace",
       fontSize: 12,
-      color: "#374151",
+      color: "#1d1d1f",
       boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.05)",
       height: 280,
       display: "flex",
@@ -34,7 +34,7 @@ export default function AnalysisTimeline() {
         borderBottom: "1px solid #f3f4f6",
         paddingBottom: 12,
         marginBottom: 12,
-        color: "#6b7280",
+        color: "#86868b",
         fontSize: 11,
         textTransform: "uppercase",
         letterSpacing: "0.05em"
@@ -73,7 +73,7 @@ export default function AnalysisTimeline() {
           );
         })}
         {terminalLogs.length === 0 && (
-            <div style={{ display: "flex", alignItems: "center", gap: 4, color: "#9ca3af", fontStyle: "italic" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 4, color: "#86868b", fontStyle: "italic" }}>
                 <span>Awaiting telemetry payload...</span>
             </div>
         )}

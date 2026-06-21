@@ -29,3 +29,11 @@ dist-ssr
 .env.production
 .env.*
 !.env.example
+backend/.env
+
+# Security & Secrets
+*.pem
+*.key
+credentials.json
+service-account.json
+firebase-admin*.json

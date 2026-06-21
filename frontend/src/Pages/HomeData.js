@@ -123,33 +123,33 @@ export const DOMAINS = {
 };
 
 export const ROADMAP_STEPS = [
-  { step: "Resume Upload", desc: "Submit technical profile. The ingestion engine parses architecture, extracting skills, deployment history, and project density." },
-  { step: "Parsing Engine", desc: "Deterministic parsing validates keyword density, formatting structures, and infrastructure exposure against production requirements." },
-  { step: "Heuristic Analysis", desc: "System cross-references extracted metrics against domain baselines to surface critical skill gaps and tooling deficiencies." },
-  { step: "Vector Mapping", desc: "Engineering capabilities are plotted across 5 dimensions, generating a precise readiness radar and maturity score." },
-  { step: "Evaluation Output", desc: "A finalized deterministic recruiter dashboard is generated, exposing production readiness and alignment metrics." },
+  { step: "Single-Shot Ingestion", desc: "Upload candidate resume and the Job Description. The orchestrator cross-references unstructured text against deterministic requirements." },
+  { step: "Profile Intelligence", desc: "Extracts technical signals, maps architecture exposure, and generates a candidate truth score to benchmark real-world capabilities." },
+  { step: "Interview Blueprinting", desc: "Dynamically constructs a tailored interview timeline, specifying rounds, durations, and targeted focus areas based on JD coverage gaps." },
+  { step: "Intelligent Simulation", desc: "Generates high-signal probing questions with expected strong/weak themes and embedded red-flag detection criteria." },
+  { step: "Executive Hiring Decision", desc: "Post-interview, input your rubric scores. The system calculates ramp-up predictions and generates a finalized boardroom hiring report." },
 ];
 
 export const CAREER_FEATURES = [
   {
-    icon: "📊", title: "Engineering Evaluation Board",
-    desc: "A live deterministic dashboard tracking technical profile readiness across 5 engineering dimensions. Updates continuously as infrastructure signals are detected.",
-    color: "#818cf8"
+    icon: "🎯", title: "Interview Readiness Engine",
+    desc: "Calculates a deterministic Readiness Score out of 100 by weighing Truth Scores, Risk Vectors, and Github Evidence. Immediately classify difficulty.",
+    color: "#10b981"
   },
   {
-    icon: "⚙️", title: "Skill Gap Trajectory Engine",
-    desc: "Extracts technical signals from your architecture and cross-references them with domain baselines to surface critical gaps in deployment and scaling tools.",
-    color: "#a78bfa"
+    icon: "🗺️", title: "Dynamic Interview Blueprint",
+    desc: "Automatically constructs a complete timeline of interview rounds, specifying durations, suggested interviewers, and targeted technical focus areas.",
+    color: "#8b5cf6"
   },
   {
-    icon: "🛡️", title: "Recruiter Trust Analysis",
-    desc: "Evaluates deployment evidence, structured outcomes, and quantifiable metrics to generate a deterministic recruiter trust index for automated screening.",
-    color: "#67e8f9"
+    icon: "🧠", title: "Intelligent Simulation",
+    desc: "Provides the interviewer with expected strong answer themes, weak signals, and explicit red-flag triggers to watch out for during technical screening.",
+    color: "#3b82f6"
   },
   {
-    icon: "🏗️", title: "Production Readiness Evaluation",
-    desc: "Analyzes CI/CD exposure, testing methodologies, and scalable systems experience to benchmark your operational engineering maturity.",
-    color: "#34d399"
+    icon: "⚖️", title: "Hiring Decision Engine",
+    desc: "Phase 2 evaluates post-interview rubric scores to autonomously generate executive boardroom justifications, offer readiness, and ramp-up predictions.",
+    color: "#f59e0b"
   }
 ];
 
@@ -165,32 +165,33 @@ export const INDUSTRIES = [
 ];
 
 export const COMPARISON = [
-  { feature: "Scoring Engine", traditional: "Opaque scoring systems", pathora: "Explainable heuristics" },
-  { feature: "Output Consistency", traditional: "Inconsistent outputs", pathora: "Repeatable outputs" },
-  { feature: "Career Strategy", traditional: "Hallucinated recommendations", pathora: "Infrastructure-aware benchmarking" },
-  { feature: "Target Focus", traditional: "Generic career advice", pathora: "Recruiter-oriented evaluation" },
-  { feature: "Profile Analysis", traditional: "Basic keyword matching", pathora: "Engineering maturity analysis" },
+  { feature: "Core Architecture", traditional: "Siloed resume parsing", careeros: "Single-Shot JD vs Resume Orchestration" },
+  { feature: "Interview Prep", traditional: "Generic question banks", careeros: "Targeted Risk & Skill Validation Probing" },
+  { feature: "Evaluation Guidance", traditional: "Static scoring rubrics", careeros: "Dynamic Answer Theme & Red Flag Detection" },
+  { feature: "JD Coverage", traditional: "Blind spot vulnerability", careeros: "Deterministic Coverage & Heatmap Engine" },
+  { feature: "Final Decision", traditional: "Gut-feeling boardroom votes", careeros: "Executive Report & Ramp-Up Prediction" },
 ];
 
 export const FOOTER_COLS = {
-  "Platform": [
-    { name: "Platform Overview", path: "/platform" },
-    { name: "Evaluation Plans", path: "/plans" },
-    { name: "Assessments", path: "/assessments" },
-    { name: "Intelligence Copilot", path: "/assistant" }
+  "Platform Engines": [
+    { name: "Resume Intelligence Pipeline", path: "/about" },
+    { name: "GitHub Verification Core", path: "/about" },
+    { name: "Dynamic Interview Blueprints", path: "/about" },
+    { name: "Boardroom Decision Engine", path: "/about" }
   ],
-  "Resources": [
-    { name: "Documentation", path: "/docs" },
-    { name: "Knowledge Base", path: "/resources" },
-    { name: "Research", path: "/research" }
+  "Solutions": [
+    { name: "For Engineering Leaders", path: "/about" },
+    { name: "For Technical Recruiters", path: "/about" },
+    { name: "Enterprise Hiring OS", path: "/about" }
+  ],
+  "Intelligence Core": [
+    { name: "Deterministic Methodologies", path: "/about" },
+    { name: "Maturity Radar Vectors", path: "/about" },
+    { name: "Architecture Overview", path: "/about" }
   ],
   "Company": [
-    { name: "About Pathora", path: "/about" },
-    { name: "Careers", path: "/careers" },
-    { name: "Contact Node", path: "/contact" }
-  ],
-  "Legal": [
-    { name: "Privacy Policy", path: "/privacy" },
-    { name: "Terms of Service", path: "/terms" }
+    { name: "About CareerOS", path: "/about" },
+    { name: "The Manifesto", path: "/about" },
+    { name: "Contact Node", path: "/about" }
   ]
 };

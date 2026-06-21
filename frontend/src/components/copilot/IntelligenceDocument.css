@@ -1,0 +1,264 @@
+/* ═══════════════════════════════════════════════════════════════════ */
+/*  CareerGPT Markdown — ChatGPT-Quality Rendering                   */
+/* ═══════════════════════════════════════════════════════════════════ */
+
+.intelligence-markdown-body {
+  font-family: var(--cgpt-font, "Inter", -apple-system, sans-serif);
+  color: #0F172A;
+  line-height: 1.75;
+  font-size: 15px;
+  max-width: 100%;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+/* ── Headings ── */
+.intelligence-markdown-body h1 {
+  font-size: 26px;
+  font-weight: 700;
+  color: #0F172A;
+  margin: 28px 0 12px;
+  line-height: 1.3;
+  letter-spacing: -0.02em;
+}
+
+.intelligence-markdown-body h2 {
+  font-size: 22px;
+  font-weight: 600;
+  color: #0F172A;
+  margin: 24px 0 10px;
+  line-height: 1.3;
+  letter-spacing: -0.015em;
+  padding-bottom: 6px;
+  border-bottom: 1px solid #E2E8F0;
+}
+
+.intelligence-markdown-body h3 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #0F172A;
+  margin: 20px 0 8px;
+  line-height: 1.35;
+}
+
+.intelligence-markdown-body h4 {
+  font-size: 16px;
+  font-weight: 600;
+  color: #334155;
+  margin: 16px 0 6px;
+}
+
+/* First heading should have no top margin */
+.intelligence-markdown-body > h1:first-child,
+.intelligence-markdown-body > h2:first-child,
+.intelligence-markdown-body > h3:first-child {
+  margin-top: 0;
+}
+
+/* ── Paragraphs ── */
+.intelligence-markdown-body p {
+  margin: 0 0 14px;
+  line-height: 1.75;
+}
+
+.intelligence-markdown-body p:last-child {
+  margin-bottom: 0;
+}
+
+/* ── Lists ── */
+.intelligence-markdown-body ul,
+.intelligence-markdown-body ol {
+  margin: 0 0 14px;
+  padding-left: 24px;
+}
+
+.intelligence-markdown-body li {
+  margin-bottom: 6px;
+  line-height: 1.65;
+}
+
+.intelligence-markdown-body li > p {
+  margin: 0;
+}
+
+.intelligence-markdown-body li > ul,
+.intelligence-markdown-body li > ol {
+  margin-top: 4px;
+  margin-bottom: 4px;
+}
+
+/* Checklist style */
+.intelligence-markdown-body input[type="checkbox"] {
+  margin-right: 8px;
+  accent-color: #007AFF;
+}
+
+/* ── Blockquotes ── */
+.intelligence-markdown-body blockquote {
+  margin: 12px 0 14px;
+  padding: 10px 16px;
+  border-left: 3px solid #007AFF;
+  background: #F8FAFC;
+  color: #334155;
+  border-radius: 0 8px 8px 0;
+}
+
+.intelligence-markdown-body blockquote p {
+  margin: 0;
+}
+
+/* ── Links ── */
+.intelligence-markdown-body a {
+  color: #007AFF;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.intelligence-markdown-body a:hover {
+  text-decoration: underline;
+}
+
+/* ── Horizontal Rule ── */
+.intelligence-markdown-body hr {
+  height: 1px;
+  background-color: #E2E8F0;
+  border: none;
+  margin: 20px 0;
+}
+
+/* ── Strong / Bold ── */
+.intelligence-markdown-body strong {
+  font-weight: 600;
+  color: #0F172A;
+}
+
+/* ── Emphasis ── */
+.intelligence-markdown-body em {
+  font-style: italic;
+}
+
+/* ═══════════════════════════════════════════════════════════════════ */
+/*  INLINE CODE                                                       */
+/* ═══════════════════════════════════════════════════════════════════ */
+.inline-code {
+  background: #F1F5F9;
+  color: #0F172A;
+  padding: 2px 6px;
+  border-radius: 5px;
+  font-size: 13px;
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+  border: 1px solid #E2E8F0;
+}
+
+/* ── Streaming Cursor ── */
+.intelligence-markdown-body.streaming > *:last-child::after {
+  content: '▋';
+  display: inline-block;
+  margin-left: 4px;
+  animation: cgpt-blink 1s step-start infinite;
+  vertical-align: text-bottom;
+}
+
+@keyframes cgpt-blink {
+  50% { opacity: 0; }
+}
+
+/* ═══════════════════════════════════════════════════════════════════ */
+/*  CODE BLOCKS — ChatGPT Quality                                    */
+/* ═══════════════════════════════════════════════════════════════════ */
+.code-block-container {
+  margin: 14px 0;
+  background: #1E1E1E;
+  border-radius: 10px;
+  overflow: hidden;
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+  border: 1px solid #333;
+}
+
+.code-block-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 14px;
+  background: #2D2D2D;
+  color: #A1A1AA;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.code-block-language {
+  text-transform: lowercase;
+  letter-spacing: 0.02em;
+}
+
+.code-block-copy-btn {
+  background: none;
+  border: none;
+  color: #A1A1AA;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+  font-size: 12px;
+  padding: 3px 8px;
+  border-radius: 5px;
+  transition: all 0.15s;
+  font-family: inherit;
+  opacity: 0;
+}
+
+.code-block-container:hover .code-block-copy-btn {
+  opacity: 1;
+}
+
+.code-block-copy-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #FFFFFF;
+}
+
+/* Override syntax highlighter sizing */
+.code-block-container pre,
+.code-block-container code {
+  font-size: 13px !important;
+  line-height: 1.6 !important;
+}
+
+/* ═══════════════════════════════════════════════════════════════════ */
+/*  TABLES — Clean Professional                                      */
+/* ═══════════════════════════════════════════════════════════════════ */
+.table-wrapper {
+  overflow-x: auto;
+  margin: 14px 0;
+  border-radius: 8px;
+  border: 1px solid #E2E8F0;
+}
+
+.intelligence-markdown-body table {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 14px;
+}
+
+.intelligence-markdown-body th {
+  background: #F8FAFC;
+  font-weight: 600;
+  text-align: left;
+  padding: 10px 14px;
+  border-bottom: 2px solid #E2E8F0;
+  color: #0F172A;
+  white-space: nowrap;
+}
+
+.intelligence-markdown-body td {
+  padding: 8px 14px;
+  border-bottom: 1px solid #F1F5F9;
+  color: #334155;
+}
+
+.intelligence-markdown-body tr:last-child td {
+  border-bottom: none;
+}
+
+.intelligence-markdown-body tr:hover td {
+  background: #FAFBFC;
+}

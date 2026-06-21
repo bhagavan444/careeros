@@ -23,8 +23,7 @@ export default function Console() {
   const [apiRequests, setApiRequests] = useState(14023);
 
   useEffect(() => {
-    window.scrollTo(0, 0);
-    const storedTier = localStorage.getItem("pathora_tier");
+    const storedTier = localStorage.getItem("careeros_tier");
     if (storedTier) setTier(storedTier);
 
     let currentIndex = 0;

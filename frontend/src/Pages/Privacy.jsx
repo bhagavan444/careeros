@@ -1,7 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar.jsx";
-import Footer from "../components/Footer.jsx"; // assuming Footer component exists
 
 const Privacy = () => {
   const navigate = useNavigate();
@@ -25,7 +24,7 @@ const Privacy = () => {
             Privacy Policy
           </h1>
           <p>
-            Pathora processes resumes and engineering profiles using deterministic evaluation engines. All data is encrypted in‑flight and at rest. We retain only the minimal signals required for infrastructure‑grade analysis and compliance with GDPR/CCPA.
+            CareerOS processes resumes and engineering profiles using deterministic evaluation engines. All data is encrypted in‑flight and at rest. We retain only the minimal signals required for infrastructure‑grade analysis and compliance with GDPR/CCPA.
           </p>
           <h2 style={{ fontSize: 22, marginTop: 32, marginBottom: 12, fontWeight: 400 }}>
             Data Governance
@@ -44,7 +43,6 @@ const Privacy = () => {
           </p>
         </div>
       </section>
-      <Footer />
     </>
   );
 };

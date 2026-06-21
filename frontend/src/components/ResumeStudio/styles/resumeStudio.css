@@ -1,0 +1,429 @@
+/* resumeStudio.css - Apple 2026 Aesthetic (Pages + Intelligence) */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+* { box-sizing: border-box; }
+
+.resume-studio-container {
+  min-height: 100vh;
+  background: #fbfbfd; /* Apple Pearl/Silver */
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Inter", Helvetica, Arial, sans-serif;
+  display: flex;
+  flex-direction: column;
+  color: #1d1d1f;
+  overflow: hidden;
+}
+
+/* ─── TOP TOOLBAR ──────────────────────────────── */
+.rs-header {
+  position: sticky;
+  top: 55px; /* clears main navbar */
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 56px;
+  padding: 0 32px;
+  background: rgba(251, 251, 253, 0.85);
+  backdrop-filter: blur(30px);
+  -webkit-backdrop-filter: blur(30px);
+  border-bottom: 1px solid rgba(0,0,0,0.04);
+}
+
+.rs-header-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1d1d1f;
+  letter-spacing: -0.01em;
+}
+
+.rs-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.rs-btn {
+  font-family: inherit;
+  font-weight: 500;
+  font-size: 13px;
+  padding: 8px 16px;
+  border-radius: 20px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.25s cubic-bezier(0.25, 1, 0.5, 1);
+  border: none;
+  white-space: nowrap;
+}
+
+.rs-btn-outline {
+  background: rgba(0,0,0,0.03);
+  color: #1d1d1f;
+  border: 1px solid rgba(0,0,0,0.05);
+}
+
+.rs-btn-outline:hover {
+  background: rgba(0,0,0,0.06);
+}
+
+.rs-btn-primary {
+  background: #1d1d1f;
+  color: #ffffff;
+  font-weight: 500;
+}
+
+.rs-btn-primary:hover {
+  background: #333336;
+  transform: scale(1.02);
+}
+
+/* ─── PROFESSIONAL INTELLIGENCE HERO LAYER ─────── */
+.rs-hero-layer {
+  padding: 16px 32px;
+  background: linear-gradient(180deg, rgba(251,251,253,1) 0%, rgba(245,245,247,0) 100%);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  z-index: 10;
+  position: relative;
+  border-bottom: 1px solid rgba(0,0,0,0.03);
+}
+
+.rs-hero-narrative {
+  font-size: 22px;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  color: #1d1d1f;
+  max-width: 800px;
+  line-height: 1.4;
+}
+
+.rs-hero-indicators {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #86868b;
+  letter-spacing: 0.02em;
+}
+
+.rs-indicator-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(0,0,0,0.03);
+  padding: 4px 10px;
+  border-radius: 12px;
+  border: 1px solid rgba(0,0,0,0.04);
+}
+
+/* ─── WORKSPACE (32 / 48 / 20) ──────────────────── */
+.rs-workspace {
+  display: grid;
+  grid-template-columns: 32% 48% 20%;
+  height: calc(100vh - 120px - 160px); /* Adjusting for navs + hero + timeline */
+  overflow: hidden;
+  position: relative;
+  flex-grow: 1;
+}
+
+/* ─── PANELS ─────────────────────────────────────── */
+.rs-panel {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: transparent;
+}
+
+.rs-panel-header {
+  padding: 20px 32px 10px;
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: #1d1d1f;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.rs-panel-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px 32px 32px;
+}
+
+.rs-panel-content::-webkit-scrollbar { width: 6px; }
+.rs-panel-content::-webkit-scrollbar-track { background: transparent; }
+.rs-panel-content::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.1); border-radius: 10px; }
+
+/* ─── LEFT PANEL (APPLE NOTES STYLE) ─────────────── */
+.rs-left-panel {
+  border-right: 1px solid rgba(0,0,0,0.04);
+}
+
+.rs-note-card {
+  background: #ffffff;
+  border: 1px solid rgba(0,0,0,0.04);
+  border-radius: 28px;
+  padding: 24px;
+  margin-bottom: 16px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.02);
+  transition: box-shadow 0.3s ease;
+}
+
+.rs-note-card:focus-within {
+  box-shadow: 0 8px 30px rgba(0,0,0,0.06);
+  border-color: rgba(0,113,227,0.1);
+}
+
+/* ─── FORM FIELDS ───────────────────────────────── */
+.rs-form-group { margin-bottom: 16px; }
+
+.rs-label {
+  display: block;
+  font-size: 12px;
+  font-weight: 500;
+  color: #86868b;
+  margin-bottom: 6px;
+  letter-spacing: 0.01em;
+}
+
+.rs-input, .rs-textarea {
+  width: 100%;
+  background: #fbfbfd;
+  border: 1px solid transparent;
+  border-radius: 12px;
+  padding: 12px 14px;
+  color: #1d1d1f;
+  font-family: inherit;
+  font-size: 14px;
+  line-height: 1.5;
+  transition: all 0.2s ease;
+  box-sizing: border-box;
+}
+
+.rs-input:focus, .rs-textarea:focus {
+  outline: none;
+  background: #ffffff;
+  border-color: rgba(0,113,227,0.3);
+  box-shadow: 0 0 0 4px rgba(0,113,227,0.1);
+}
+
+.rs-textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+/* ─── CENTRE PREVIEW CANVAS (PAGES AESTHETIC) ────── */
+.rs-preview-panel {
+  background: #f2f2f7;
+  position: relative;
+  z-index: 5;
+  box-shadow: inset 0 0 30px rgba(0,0,0,0.02);
+}
+
+.rs-preview-container {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 40px 24px 80px;
+  overflow-y: auto;
+  height: 100%;
+  position: sticky;
+  top: 0;
+}
+
+.rs-paper {
+  background: #ffffff;
+  color: #000;
+  width: 210mm;
+  min-height: 297mm;
+  height: max-content;
+  padding: 15mm 20mm;
+  /* Premium Apple Pages document rendering */
+  box-shadow: 0 20px 60px rgba(0,0,0,0.08), 0 4px 16px rgba(0,0,0,0.04), 0 0 1px rgba(0,0,0,0.1);
+  border-radius: 4px; /* subtle soft edge for paper */
+  font-family: 'Inter', sans-serif;
+  transform-origin: top center;
+  box-sizing: border-box;
+  overflow-wrap: break-word;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ─── RESUME TEMPLATES ──────────────────────────── */
+.template-professional h1 { font-size: 24pt; text-align: center; margin: 0 0 8px 0; font-family: 'Georgia', serif; }
+.template-professional .contact-info { text-align: center; font-size: 10pt; margin-bottom: 24px; color: #444; }
+.template-professional h2 { font-size: 14pt; border-bottom: 1px solid #000; margin-top: 16px; margin-bottom: 8px; padding-bottom: 4px; text-transform: uppercase; }
+.template-professional p, .template-professional li { font-size: 11pt; line-height: 1.4; }
+.template-professional .item-header { display: flex; justify-content: space-between; font-weight: bold; }
+.template-professional .item-subheader { display: flex; justify-content: space-between; font-style: italic; margin-bottom: 4px; }
+
+.template-engineering { font-family: 'Consolas', 'Monaco', monospace; }
+.template-engineering h1 { font-size: 22pt; color: #1d1d1f; border-bottom: 2px solid #1d1d1f; padding-bottom: 8px; margin-bottom: 8px; }
+.template-engineering .contact-info { font-size: 10pt; margin-bottom: 24px; }
+.template-engineering h2 { font-size: 14pt; color: #1d1d1f; margin-top: 20px; margin-bottom: 10px; }
+.template-engineering p, .template-engineering li { font-size: 10pt; line-height: 1.5; }
+
+.template-modern { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; color: #333; }
+.template-modern h1 { font-size: 28pt; font-weight: 300; letter-spacing: 1px; color: #1d1d1f; }
+.template-modern .contact-info { color: #86868b; margin-bottom: 30px; }
+.template-modern h2 { font-size: 14pt; color: #1d1d1f; border-bottom: 1px solid #e5e5ea; padding-bottom: 8px; margin-top: 24px; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 1px; }
+.template-modern p, .template-modern li { font-size: 11pt; line-height: 1.6; }
+.template-modern .item-title { color: #0071e3; font-weight: 500; }
+
+.template-executive { font-family: 'Garamond', 'Times New Roman', serif; color: #111; }
+.template-executive h1 { font-size: 26pt; text-align: center; text-transform: uppercase; letter-spacing: 2px; border-bottom: 1px solid #111; padding-bottom: 12px; margin-bottom: 16px; }
+.template-executive .contact-info { text-align: center; font-size: 11pt; margin-bottom: 32px; font-variant: small-caps; }
+.template-executive h2 { font-size: 16pt; border-bottom: 1px solid #999; padding-bottom: 4px; margin-top: 24px; margin-bottom: 12px; text-transform: uppercase; }
+.template-executive p, .template-executive li { font-size: 12pt; line-height: 1.5; }
+.template-executive .item-header { font-size: 13pt; font-weight: 600; }
+
+/* ─── RIGHT PANEL INTELLIGENCE (APPLE INTELLIGENCE) */
+.rs-right-panel {
+  border-left: 1px solid rgba(0,0,0,0.04);
+  background: linear-gradient(180deg, #fbfbfd 0%, #ffffff 100%);
+}
+
+.rs-intelligence-narrative {
+  font-size: 14px;
+  line-height: 1.6;
+  color: #1d1d1f;
+  margin-bottom: 24px;
+}
+
+.rs-insight-block {
+  margin-bottom: 24px;
+}
+
+.rs-insight-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #1d1d1f;
+  margin-bottom: 8px;
+}
+
+.rs-insight-text {
+  font-size: 14px;
+  line-height: 1.5;
+  color: #86868b;
+  background: #ffffff;
+  padding: 16px;
+  border-radius: 16px;
+  border: 1px solid rgba(0,0,0,0.03);
+  box-shadow: 0 2px 10px rgba(0,0,0,0.01);
+}
+
+/* ─── MODALS & DRAWERS ──────────────────────────── */
+.rs-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.2);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.rs-export-sheet {
+  background: #ffffff;
+  border-radius: 24px;
+  width: 400px;
+  max-width: 90vw;
+  box-shadow: 0 24px 64px rgba(0,0,0,0.2);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ─── HORIZONTAL TIMELINE ───────────────────────── */
+.rs-timeline {
+  height: 160px;
+  background: #ffffff;
+  border-top: 1px solid rgba(0,0,0,0.06);
+  display: flex;
+  align-items: center;
+  padding: 0 32px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  flex-shrink: 0;
+  gap: 16px;
+}
+
+/* ─── CREATION METHOD SCREEN ─────────────────────── */
+.rs-creation-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 24px;
+  background: transparent;
+}
+
+.rs-creation-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+  max-width: 900px;
+  width: 100%;
+  margin-top: 40px;
+}
+
+.rs-creation-card {
+  background: #ffffff;
+  border: 1px solid rgba(0,0,0,0.04);
+  border-radius: 24px;
+  padding: 32px 28px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.16,1,0.3,1);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  color: #1d1d1f;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.02);
+}
+
+.rs-creation-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 40px rgba(0,0,0,0.06);
+  border-color: rgba(0,113,227,0.15);
+}
+
+.rs-creation-icon {
+  width: 52px; height: 52px;
+  border-radius: 16px;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(0,113,227,0.06);
+  color: #0071e3;
+}
+
+/* ─── ANIMATIONS ─────────────────────────────────── */
+@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+.spin-animation { animation: spin 1s linear infinite; }
+
+/* ─── PRINT ──────────────────────────────────────── */
+@media print {
+  body * { visibility: hidden; }
+  .rs-preview-container, .rs-preview-container * { visibility: visible; }
+  .rs-preview-container { position: absolute; left: 0; top: 0; width: 100%; padding: 0; margin: 0; }
+  .rs-paper { box-shadow: none; border: none; margin: 0; width: 100%; max-width: 100%; }
+  @page { margin: 1cm; size: A4 portrait; }
+}
+
+/* ─── RESPONSIVE ─────────────────────────────────── */
+@media (max-width: 1200px) {
+  .rs-workspace { grid-template-columns: 35% 65%; }
+  .rs-right-panel { display: none; }
+}
+@media (max-width: 768px) {
+  .rs-workspace { grid-template-columns: 1fr; grid-template-rows: auto 1fr; }
+}
+

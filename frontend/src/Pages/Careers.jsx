@@ -42,7 +42,7 @@ const ROLES = [
     team: "Platform",
     location: "Remote · Global",
     type: "Contract",
-    desc: "Design and maintain the public API surface, SDK tooling, and developer documentation. You will define how external systems integrate with Pathora's evaluation engine.",
+    desc: "Design and maintain the public API surface, SDK tooling, and developer documentation. You will define how external systems integrate with CareerOS's evaluation engine.",
     tags: ["Node.js", "OpenAPI", "SDK Design", "Technical Writing"]
   }
 ];
@@ -50,9 +50,7 @@ const ROLES = [
 export default function Careers() {
   const navigate = useNavigate();
 
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
+  
 
   return (
     <div className="home-wrap">

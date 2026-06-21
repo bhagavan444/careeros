@@ -119,8 +119,7 @@ export default function Plans() {
   const [enterpriseSubmitted, setEnterpriseSubmitted] = useState(false);
 
   useEffect(() => {
-    window.scrollTo(0, 0);
-    const stored = localStorage.getItem("pathora_tier");
+    const stored = localStorage.getItem("careeros_tier");
     if (stored) setActiveTier(stored);
   }, []);
 
@@ -138,9 +137,9 @@ export default function Plans() {
   };
 
   const handleLaunchExplorer = () => {
-    localStorage.setItem("pathora_tier", "Explorer");
-    localStorage.setItem("pathora_subscription", JSON.stringify({ tier: "Explorer", status: "active", billing: "free", activatedAt: new Date().toISOString() }));
-    localStorage.setItem("pathora_api_token", `pnx_eval_${Math.random().toString(36).substring(2,15)}`);
+    localStorage.setItem("careeros_tier", "Explorer");
+    localStorage.setItem("careeros_subscription", JSON.stringify({ tier: "Explorer", status: "active", billing: "free", activatedAt: new Date().toISOString() }));
+    localStorage.setItem("careeros_api_token", `pnx_eval_${Math.random().toString(36).substring(2,15)}`);
     navigate("/subscription");
   };
 
@@ -390,7 +389,7 @@ export default function Plans() {
             <div className="sec-tag" style={{ color: "var(--accent2)" }}>Developer Infrastructure</div>
             <h2 className="sec-title" style={{ fontSize: 32, marginBottom: 20 }}>Orchestrate pipelines via REST.</h2>
             <p className="sec-desc" style={{ fontSize: 15, marginBottom: 32 }}>
-              Integrate the Pathora genome engine directly into your existing infrastructure. Access raw telemetry, trigger deterministic evaluations, and extract vector mappings with our enterprise SDK.
+              Integrate the CareerOS genome engine directly into your existing infrastructure. Access raw telemetry, trigger deterministic evaluations, and extract vector mappings with our enterprise SDK.
             </p>
             <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
               <div style={{ display: "flex", gap: 12, alignItems: "center" }}><Terminal size={14} color="var(--accent)"/><span style={{ fontSize: 14, color: "var(--ts)", fontWeight: 500 }}>POST /v1/evaluate</span></div>

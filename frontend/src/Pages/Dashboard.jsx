@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Terminal, Shield, Activity, Database, GitMerge, Cpu, Search, CheckCircle } from 'lucide-react';
-import Footer from '../components/Footer';
 import './Dashboard.css';
 
 export default function Dashboard() {
@@ -171,10 +170,6 @@ export default function Dashboard() {
           </div>
         </motion.div>
       </motion.div>
-      
-      <div style={{ marginTop: '60px' }}>
-        <Footer />
-      </div>
     </div>
   );
 }

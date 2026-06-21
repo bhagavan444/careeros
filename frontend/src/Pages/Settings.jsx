@@ -4,7 +4,6 @@ import {
   User, Database, Shield, Settings2, Code, 
   Terminal, Activity, Zap, CheckCircle2, Copy 
 } from 'lucide-react';
-import Footer from '../components/Footer';
 import { auth } from '../firebase';
 import './Settings.css';
 
@@ -372,10 +371,6 @@ export default function Settings() {
           
         </motion.div>
       </motion.div>
-      
-      <div style={{ marginTop: '60px' }}>
-        <Footer />
-      </div>
     </div>
   );
 }

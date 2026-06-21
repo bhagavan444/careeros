@@ -23,7 +23,7 @@ export default function ResumeUpload({
       <div className="glass-panel reveal-up" style={{ padding: "30px 24px", animationDelay: "0.3s" }}>
         <div style={{ textAlign: "center", marginBottom: 36 }}>
           <h2 style={{ fontSize: 24, fontWeight: 700, color: "#111", marginBottom: 8 }}>Configuration & Analysis</h2>
-          <p style={{ fontSize: 14, color: "#6b7280" }}>Set target benchmarks and feed the parser models.</p>
+          <p style={{ fontSize: 14, color: "#86868b" }}>Set target benchmarks and feed the parser models.</p>
         </div>
 
         <div style={{ marginBottom: 24 }}>
@@ -50,8 +50,8 @@ export default function ResumeUpload({
                   fontSize:20, color:"#7c3aed",
                 }}>↑</div>
                 <div>
-                  <p style={{ fontSize:15, fontWeight:600, color:"#374151", marginBottom:4 }}>Drop PDF resume here or click to browse</p>
-                  <p style={{ fontSize:12, color: "#9ca3af" }}>Max upload size: 10MB</p>
+                  <p style={{ fontSize:15, fontWeight:600, color:"#1d1d1f", marginBottom:4 }}>Drop PDF resume here or click to browse</p>
+                  <p style={{ fontSize:12, color: "#86868b" }}>Max upload size: 10MB</p>
                 </div>
               </div>
             )}
@@ -60,14 +60,14 @@ export default function ResumeUpload({
 
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20, marginBottom: 24 }}>
           <div>
-            <label style={{ display:"block", fontSize:11, fontWeight:600, color:"#4b5563", marginBottom:8, fontFamily:"'DM Mono',monospace", letterSpacing:"0.08em", textTransform:"uppercase" }}>
-              Target Engineering Domain <span style={{ color:"#9ca3af", fontWeight: 400 }}>— optional</span>
+            <label style={{ display:"block", fontSize:11, fontWeight:600, color: "#86868b", marginBottom:8, fontFamily:"'DM Mono',monospace", letterSpacing:"0.08em", textTransform:"uppercase" }}>
+              Target Engineering Domain <span style={{ color:"#86868b", fontWeight: 400 }}>— optional</span>
             </label>
             <input className="pnx-input" placeholder="e.g. AI Engineering, Backend, Devops" value={domain} onChange={e => setDomain(e.target.value)} />
           </div>
           <div>
-            <label style={{ display:"block", fontSize:11, fontWeight:600, color:"#4b5563", marginBottom:8, fontFamily:"'DM Mono',monospace", letterSpacing:"0.08em", textTransform:"uppercase" }}>
-              Specialization Focus <span style={{ color:"#9ca3af", fontWeight: 400 }}>— optional</span>
+            <label style={{ display:"block", fontSize:11, fontWeight:600, color: "#86868b", marginBottom:8, fontFamily:"'DM Mono',monospace", letterSpacing:"0.08em", textTransform:"uppercase" }}>
+              Specialization Focus <span style={{ color:"#86868b", fontWeight: 400 }}>— optional</span>
             </label>
             <input className="pnx-input" placeholder="e.g. Distributed Architectures" value={interest} onChange={e => setInterest(e.target.value)} />
           </div>
@@ -77,7 +77,7 @@ export default function ResumeUpload({
           <input type="checkbox" checked={useAI} onChange={() => setUseAI(p => !p)} style={{ width:18, height:18, accentColor:"#7c3aed", cursor:"pointer", flexShrink:0 }} />
           <div style={{ flex:1 }}>
             <div style={{ fontSize:14, fontWeight:600, color:"#111" }}>Enable Micro-Benchmark Engine</div>
-            <div style={{ fontSize:13, color:"#6b7280", marginTop:2 }}>Synthesizes custom recruiter vectors based on your specific keywords</div>
+            <div style={{ fontSize:13, color: "#86868b", marginTop:2 }}>Synthesizes custom recruiter vectors based on your specific keywords</div>
           </div>
         </label>
 

@@ -4,9 +4,7 @@ import { RevealSection, LiquidGlassFooter } from "./HomeComponents";
 import "./Home.css";
 
 export default function Platform() {
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
+  
 
   return (
     <div className="home-wrap">
@@ -26,7 +24,7 @@ export default function Platform() {
             Engineering Intelligence <em>Operating System.</em>
           </h1>
           <p className="hero-sub" style={{ margin: "0 auto 40px", maxWidth: 650 }}>
-            Pathora is not a resume parser. It is a distributed deterministic scoring engine designed to orchestrate telemetry from raw profile data, mapping it directly into recruiter trust heuristics.
+            CareerOS is not a resume parser. It is a distributed deterministic scoring engine designed to orchestrate telemetry from raw profile data, mapping it directly into recruiter trust heuristics.
           </p>
         </motion.div>
       </section>

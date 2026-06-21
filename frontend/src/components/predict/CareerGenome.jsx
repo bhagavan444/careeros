@@ -101,12 +101,12 @@ export default function CareerGenome({ aspectScores }) {
                 />
                 <PolarRadiusAxis angle={90} domain={[0, 100]} tick={false} axisLine={false} />
                 <Tooltip 
-                  contentStyle={{ background: "rgba(255, 255, 255, 0.95)", border: "1px solid rgba(0,0,0,0.08)", borderRadius: 8, boxShadow: "0 10px 25px rgba(0,0,0,0.05)", fontSize: 12 }}
+                  contentStyle={{ background: "rgba(0, 0, 0, 0.03)", backdropFilter: "blur(24px) saturate(180%)", border: "1px solid rgba(255,255,255,0.15)", borderRadius: 8, boxShadow: "0 10px 25px rgba(0,0,0,0.05)", fontSize: 12 }}
                   itemStyle={{ fontSize: 12, fontWeight: 600 }}
                   formatter={(value, name) => [value, name === "value" ? "Candidate Score" : "Market Benchmark"]}
                 />
                 <Radar name="Candidate Score" dataKey="value" stroke="#7c3aed" fill="#7c3aed" fillOpacity={0.4} strokeWidth={2.5} />
-                <Radar name="Market Benchmark" dataKey="benchmark" stroke="#9ca3af" fill="transparent" strokeWidth={1.5} strokeDasharray="4 4" />
+                <Radar name="Market Benchmark" dataKey="benchmark" stroke="#86868b" fill="transparent" strokeWidth={1.5} strokeDasharray="4 4" />
               </RadarChart>
             </ResponsiveContainer>
           </div>
@@ -115,25 +115,25 @@ export default function CareerGenome({ aspectScores }) {
         <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
           {activeTrait ? (
             <motion.div key={activeTrait} initial={{ opacity: 0, x: 10 }} animate={{ opacity: 1, x: 0 }}
-              style={{ background: "rgba(255, 255, 255, 0.6)", border: "1px solid rgba(124, 58, 237, 0.2)", borderRadius: 16, padding: 20, boxShadow: "0 10px 30px rgba(124, 58, 237, 0.05)" }}>
+              style={{ background: "rgba(0, 0, 0, 0.02)", backdropFilter: "blur(24px) saturate(180%)", border: "1px solid rgba(124, 58, 237, 0.2)", borderRadius: 16, padding: 20, boxShadow: "0 10px 30px rgba(124, 58, 237, 0.05)" }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
                 <span style={{ fontSize: 16, fontWeight: 700, color: "#111" }}>{activeTrait}</span>
                 <span style={{ fontSize: 11, fontFamily: "'DM Mono', monospace", background: "#7c3aed", color: "#fff", padding: "2px 8px", borderRadius: 4, fontWeight: "bold" }}>
                   {genomeMetadata[activeTrait]?.metric}
                 </span>
               </div>
-              <p style={{ fontSize: 13, color: "#4b5563", lineHeight: 1.5, marginBottom: 12 }}>{genomeMetadata[activeTrait]?.desc}</p>
+              <p style={{ fontSize: 13, color: "#86868b", lineHeight: 1.5, marginBottom: 12 }}>{genomeMetadata[activeTrait]?.desc}</p>
               <div style={{ borderTop: "1px solid rgba(0,0,0,0.06)", paddingTop: 12 }}>
                 <div style={{ fontSize: 11, fontWeight: 600, color: "#7c3aed", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 4 }}>Why it matters</div>
-                <div style={{ fontSize: 12, color: "#4b5563", lineHeight: 1.4 }}>{genomeMetadata[activeTrait]?.why}</div>
+                <div style={{ fontSize: 12, color: "#86868b", lineHeight: 1.4 }}>{genomeMetadata[activeTrait]?.why}</div>
               </div>
             </motion.div>
           ) : (
-            <div style={{ background: "rgba(255, 255, 255, 0.3)", border: "1px dashed rgba(0,0,0,0.08)", borderRadius: 16, padding: 30, textAlign: "center", color: "#6b7280", display: "flex", flexDirection: "column", alignItems: "center", gap: 12 }}>
+            <div style={{ background: "rgba(0, 0, 0, 0.02)", backdropFilter: "blur(24px) saturate(180%)", border: "1px dashed rgba(255,255,255,0.15)", borderRadius: 16, padding: 30, textAlign: "center", color: "#86868b", display: "flex", flexDirection: "column", alignItems: "center", gap: 12 }}>
               <Brain size={28} style={{ color: "#c084fc", opacity: 0.8 }} />
               <div>
-                <p style={{ fontSize: 14, fontWeight: 600, color: "#374151", marginBottom: 4 }}>Engineering Vector Mapping Active</p>
-                <p style={{ fontSize: 12, color: "#6b7280" }}>Click on any axis label of the Vector Map to trace specific engineering metrics.</p>
+                <p style={{ fontSize: 14, fontWeight: 600, color: "#1d1d1f", marginBottom: 4 }}>Engineering Vector Mapping Active</p>
+                <p style={{ fontSize: 12, color: "#86868b" }}>Click on any axis label of the Vector Map to trace specific engineering metrics.</p>
               </div>
             </div>
           )}

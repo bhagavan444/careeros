@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
+import { Linkedin, Github, Twitter } from 'lucide-react';
 import './Footer.css';
 
 const Footer = () => {
   const [showScroll, setShowScroll] = useState(false);
+  const location = useLocation();
 
   useEffect(() => {
     const checkScrollTop = () => {
@@ -23,60 +25,68 @@ const Footer = () => {
 
   return (
     <>
-      <footer className="footer-wrapper">
-        <div className="footer-grid">
-          <div className="footer-brand-col">
-            <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 24 }}>
-                <div style={{ width: 10, height: 10, borderRadius: "50%", background: "#000000", boxShadow: "0 0 15px rgba(0,0,0,0.4)" }} />
-                <span style={{ fontSize: 20, fontWeight: 800, color: "#000000", letterSpacing: "0.08em", fontFamily: "'Outfit', sans-serif" }}>PATHORA</span>
+      <footer className="apple-footer">
+        <div className="apple-footer-content">
+          <div className="footer-grid-flagship">
+            
+            {/* Brand Section */}
+            <div className="footer-brand-section">
+              <div className="footer-brand-title">CareerOS</div>
+              <div className="footer-brand-subtitle">Professional Intelligence Operating System</div>
+              <p className="footer-brand-desc">
+                Helping professionals understand their strengths, discover opportunities, and make career decisions with confidence.
+              </p>
             </div>
-            <p style={{ fontSize: 15, lineHeight: 1.6, maxWidth: 320, marginBottom: 30, color: "#000000", fontWeight: 500 }}>
-              Deterministic engineering intelligence platform focused on recruiter-oriented technical evaluation and career benchmarking.
-            </p>
-            <div style={{ display: "flex", gap: 16 }}>
-                <div style={{ width: 36, height: 36, borderRadius: "50%", border: "1px solid rgba(0,0,0,0.2)", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", transition: "all 0.3s", color: "#000000", fontWeight: 700 }}>𝕏</div>
-                <div style={{ width: 36, height: 36, borderRadius: "50%", border: "1px solid rgba(0,0,0,0.2)", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", transition: "all 0.3s", color: "#000000", fontWeight: 700 }}>in</div>
-                <div style={{ width: 36, height: 36, borderRadius: "50%", border: "1px solid rgba(0,0,0,0.2)", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", transition: "all 0.3s", color: "#000000", fontWeight: 700 }}>gh</div>
+
+            {/* Links Sections */}
+            <div className="footer-links-container">
+              <div className="footer-link-group">
+                <Link to="/intelligence" className="footer-link">Intelligence</Link>
+                <Link to="/journey" className="footer-link">Journey</Link>
+                <Link to="/tools" className="footer-link">Tools</Link>
+                <Link to="/vision" className="footer-link">Vision</Link>
+                <Link to="/conversations" className="footer-link">Conversations</Link>
+              </div>
+              <div className="footer-link-group">
+                <Link to="/about" className="footer-link">About</Link>
+                <Link to="/contact" className="footer-link">Contact</Link>
+                <Link to="/privacy" className="footer-link">Privacy</Link>
+                <Link to="/terms" className="footer-link">Terms</Link>
+                <Link to="/careers" className="footer-link">Careers</Link>
+              </div>
+              
+              {/* Social */}
+              <div className="footer-social-group">
+                <a href="#" className="footer-social-link" aria-label="LinkedIn"><Linkedin size={20} strokeWidth={1.5} /></a>
+                <a href="#" className="footer-social-link" aria-label="GitHub"><Github size={20} strokeWidth={1.5} /></a>
+                <a href="#" className="footer-social-link" aria-label="Twitter"><Twitter size={20} strokeWidth={1.5} /></a>
+              </div>
             </div>
+
           </div>
-          <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-            <span style={{ color: "#000000", fontWeight: 700, marginBottom: 10, letterSpacing: "0.02em" }}>Core Platform</span>
-            <Link to="/" style={{ color: "#000000", textDecoration: "none", fontSize: 14, fontWeight: 500, transition: "opacity 0.2s" }}>Home</Link>
-            <Link to="/dashboard" style={{ color: "#000000", textDecoration: "none", fontSize: 14, fontWeight: 500, transition: "opacity 0.2s" }}>Dashboard</Link>
-            <Link to="/predict" style={{ color: "#000000", textDecoration: "none", fontSize: 14, fontWeight: 500, transition: "opacity 0.2s" }}>Predict</Link>
-            <Link to="/assistant" style={{ color: "#000000", textDecoration: "none", fontSize: 14, fontWeight: 500, transition: "opacity 0.2s" }}>Assistant</Link>
-            <Link to="/quiz" style={{ color: "#000000", textDecoration: "none", fontSize: 14, fontWeight: 500, transition: "opacity 0.2s" }}>Assessments</Link>
-          </div>
-          <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-            <span style={{ color: "#000000", fontWeight: 700, marginBottom: 10, letterSpacing: "0.02em" }}>Features & Utilities</span>
-            <Link to="/plans" style={{ color: "#000000", textDecoration: "none", fontSize: 14, fontWeight: 500, transition: "opacity 0.2s" }}>Pricing Plans</Link>
-            <Link to="/settings" style={{ color: "#000000", textDecoration: "none", fontSize: 14, fontWeight: 500, transition: "opacity 0.2s" }}>Settings</Link>
-            <Link to="/admin" style={{ color: "#000000", textDecoration: "none", fontSize: 14, fontWeight: 500, transition: "opacity 0.2s" }}>Admin Panel</Link>
-          </div>
-          <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-            <span style={{ color: "#000000", fontWeight: 700, marginBottom: 10, letterSpacing: "0.02em" }}>Organization</span>
-            <Link to="/about" style={{ color: "#000000", textDecoration: "none", fontSize: 14, fontWeight: 500, transition: "opacity 0.2s" }}>About Us</Link>
-            <Link to="/contact" style={{ color: "#000000", textDecoration: "none", fontSize: 14, fontWeight: 500, transition: "opacity 0.2s" }}>Contact</Link>
-            <Link to="/login" style={{ color: "#000000", textDecoration: "none", fontSize: 14, fontWeight: 500, transition: "opacity 0.2s" }}>Client Portal</Link>
-          </div>
-        </div>
-        <div className="footer-bottom">
-          <span style={{ fontSize: 14, color: "#000000", fontWeight: 600 }}>© 2026 Pathora Inc. Building the future of enterprise career intelligence.</span>
-          <div style={{ display: "flex", alignItems: "center", gap: 8, background: "rgba(0,0,0,0.05)", padding: "6px 14px", borderRadius: 20, border: "1px solid rgba(0,0,0,0.1)" }}>
-              <div style={{ width: 6, height: 6, borderRadius: "50%", background: "#059669", boxShadow: "0 0 10px rgba(5,150,105,0.4)", animation: "dotPulseGreen 2s infinite" }} />
-              <span style={{ fontSize: 13, color: "#000000", fontFamily: "'DM Mono', monospace", fontWeight: 700 }}>Telemetry Stream Active</span>
+
+          {/* Bottom Bar */}
+          <div className="footer-bottom-bar">
+            <div className="footer-copyright">
+              © 2026 CareerOS
+            </div>
+            <div className="footer-locale">
+              Built in India. Designed for global talent.
+            </div>
           </div>
         </div>
       </footer>
 
       {/* Scroll to Top Button */}
-      <div 
-        className={`footer-scroll-top ${showScroll ? 'visible' : ''}`}
+      <button 
+        className={`apple-scroll-top ${showScroll ? 'visible' : ''}`}
         onClick={scrollToTop}
-        title="Scroll to Top"
+        aria-label="Scroll to top"
       >
-        ↑
-      </div>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="20" height="20">
+          <path d="M12 19V5M5 12l7-7 7 7"/>
+        </svg>
+      </button>
     </>
   );
 };

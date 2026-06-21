@@ -15,7 +15,6 @@ class AIOrchestrator:
         if settings.GEMINI_API_KEY:
             try:
                 self.client = genai.Client(api_key=settings.GEMINI_API_KEY)
-                print(f"Using Gemini model: {MODEL_NAME}")
                 logger.info(f"Gemini client initialized successfully. Model: {MODEL_NAME}")
             except Exception as e:
                 logger.error(f"Failed to initialize Gemini client: {e}")

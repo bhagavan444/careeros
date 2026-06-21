@@ -26,9 +26,7 @@ export default function Checkout() {
   const [logs, setLogs] = useState([]);
   const [progress, setProgress] = useState(0);
 
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
+  
 
   const handleDeploy = (e) => {
     e.preventDefault();
@@ -56,15 +54,15 @@ export default function Checkout() {
     setTimeout(() => {
       clearInterval(interval);
       // Persist to fake backend (localStorage)
-      localStorage.setItem("pathora_tier", tier);
-      localStorage.setItem("pathora_subscription", JSON.stringify({
+      localStorage.setItem("careeros_tier", tier);
+      localStorage.setItem("careeros_subscription", JSON.stringify({
         tier,
         status: "active",
         billing: isAnnual ? "annual" : "monthly",
         activatedAt: new Date().toISOString()
       }));
       // Generate fake API token
-      localStorage.setItem("pathora_api_token", `pnx_live_${Math.random().toString(36).substring(2,15)}`);
+      localStorage.setItem("careeros_api_token", `pnx_live_${Math.random().toString(36).substring(2,15)}`);
       
       navigate("/subscription");
     }, 4000);

@@ -64,9 +64,8 @@ export default function Billing() {
   const [subscription, setSubscription] = useState(null);
 
   useEffect(() => {
-    window.scrollTo(0, 0);
-    const storedTier = localStorage.getItem("pathora_tier");
-    const subData = localStorage.getItem("pathora_subscription");
+    const storedTier = localStorage.getItem("careeros_tier");
+    const subData = localStorage.getItem("careeros_subscription");
     if (storedTier) setTier(storedTier);
     if (subData) {
       try {

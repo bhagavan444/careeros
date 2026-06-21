@@ -43,11 +43,45 @@ def _extract_pdf_text(content: bytes) -> str:
                     logger.info(f"[PDF_PARSE] Processed page {i}/{total_pages}. Memory: {get_memory_usage()}")
     except Exception as e:
         logger.error(f"[PDF_PARSE_FAILURE] pdfplumber failed: {e}\n{traceback.format_exc()}")
-        raise ValueError(f"Failed to parse PDF: {str(e)}")
+        raise ValueError(f"The uploaded PDF appears to be invalid or corrupted ({str(e)}). Please try saving it again or use a different file.")
     
     final_text = "\n".join(text_parts)
+    if not final_text.strip():
+        raise ValueError("We couldn't extract any text from this PDF. It might be an image-based scanned document.")
+        
     logger.info(f"[PDF_PARSE_END] Completed. Extracted {len(final_text)} chars. Memory: {get_memory_usage()}")
     return final_text
+
+def _extract_docx_text(content: bytes) -> str:
+    """Extract text from DOCX bytes synchronously."""
+    from docx import Document
+    try:
+        doc = Document(io.BytesIO(content))
+        return "\n".join([para.text for para in doc.paragraphs if para.text])
+    except Exception as e:
+        logger.error(f"[DOCX_PARSE_FAILURE] python-docx failed: {e}\n{traceback.format_exc()}")
+        raise ValueError(f"The uploaded DOCX file appears to be invalid or corrupted. Please try saving it again.")
+
+def extract_document_text_sync(filename: str, content: bytes, content_type: str) -> str:
+    """Synchronous unified extraction. Run this in a threadpool."""
+    filename_lower = filename.lower() if filename else ""
+    content_type_lower = content_type.lower() if content_type else ""
+    
+    if "pdf" in filename_lower or "pdf" in content_type_lower:
+        return _extract_pdf_text(content)
+    elif "docx" in filename_lower or "wordprocessingml" in content_type_lower:
+        return _extract_docx_text(content)
+    elif "plain" in content_type_lower or filename_lower.endswith(".txt"):
+        return content.decode("utf-8", errors="ignore")
+    else:
+        # Fallback attempt
+        try:
+            return _extract_pdf_text(content)
+        except Exception:
+            try:
+                return _extract_docx_text(content)
+            except Exception:
+                return content.decode("utf-8", errors="ignore")
 
 SUPPORTED_TYPES = [
     "application/pdf",
@@ -84,21 +118,16 @@ async def upload_document(files: List[UploadFile] = File(...)):
                 logger.warning(f"[UPLOAD_FAILURE] File '{file.filename}' rejected (size {file_size} > 5MB)")
                 raise HTTPException(status_code=413, detail="File too large. Max 5MB allowed.")
 
-            extracted_text = ""
-            
-            if "pdf" in file.filename.lower() or "pdf" in content_type:
-                extracted_text = await run_in_threadpool(_extract_pdf_text, content)
-            elif "plain" in content_type or file.filename.endswith(".txt"):
-                try:
-                    extracted_text = content.decode("utf-8", errors="ignore")
-                except Exception:
-                    extracted_text = ""
-            else:
-                logger.info(f"[FALLBACK] Attempting fallback PDF extraction for '{file.filename}'...")
-                try:
-                    extracted_text = await run_in_threadpool(_extract_pdf_text, content)
-                except ValueError:
-                    extracted_text = content.decode("utf-8", errors="ignore")
+            try:
+                extracted_text = await run_in_threadpool(
+                    extract_document_text_sync, 
+                    file.filename, 
+                    content, 
+                    content_type
+                )
+            except Exception as e:
+                logger.warning(f"[UPLOAD_FAILURE] Extraction failed for '{file.filename}': {e}")
+                extracted_text = ""
 
             if not extracted_text or not extracted_text.strip():
                 logger.warning(f"[UPLOAD_FAILURE] No text extracted from '{file.filename}'.")

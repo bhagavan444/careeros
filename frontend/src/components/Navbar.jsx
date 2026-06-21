@@ -2,870 +2,956 @@ import React, { useState, useEffect, useRef } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
-  Menu, X, User, Cpu, 
-  Settings, LogOut, LayoutDashboard,
-  Brain, CreditCard, Terminal, ChevronDown
+  Menu, X, Search, User, ChevronRight, ChevronDown,
+  BrainCircuit, GitBranch, Activity, CheckCircle, 
+  LayoutDashboard, LineChart, Target, Map, 
+  FileText, Download, Clock, Settings, CreditCard, LogOut, Shield
 } from "lucide-react";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../firebase";
+import Logo from "./Logo";
+import { useAuth } from "../context/AuthContext";
+import { useToast } from "../context/ToastContext";
 
-export default function Navbar({ handleLogout }) {
-  const [menuOpen, setMenuOpen] = useState(false);
-  const [user, setUser] = useState(null);
-  const [showProfileMenu, setShowProfileMenu] = useState(false);
-  const [showTelemetryPopup, setShowTelemetryPopup] = useState(false);
-  const [showLoginPopup, setShowLoginPopup] = useState(false);
-  const [showMoreMenu, setShowMoreMenu] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
-  const [hoveredIndex, setHoveredIndex] = useState(null);
+const NAV_LINKS = [
+  { id: "intelligence", label: "Intelligence" },
+  { id: "journey", label: "Journey" },
+  { id: "tools", label: "Tools" },
+  { id: "chat", label: "Chat", to: "/chat" },
+  { id: "vision", label: "Vision", to: "/about" },
+  { id: "connect", label: "Conversations", to: "/contact" }
+];
+
+const MEGA_MENUS = {
+  intelligence: [
+    { 
+      title: "Core Engines", type: "large", 
+      links: [
+        { label: "Profile Intelligence", to: "/profile-intelligence", icon: <BrainCircuit size={20} /> },
+        { label: "Resume Intelligence", to: "/resume-intelligence", icon: <FileText size={20} /> },
+        { label: "Interview Intelligence", to: "/interview-intelligence", icon: <Activity size={20} /> },
+        { label: "Recruiter Intelligence", to: "/recruiter-intelligence", icon: <Shield size={20} /> }
+      ]
+    },
+    { 
+      title: "Specialized Analysis", type: "small", 
+      links: [
+        { label: "GitHub Intelligence", to: "/github-intelligence", icon: <GitBranch size={16} /> },
+        { label: "Engineering Maturity", to: "/profile-intelligence", icon: <Target size={16} /> },
+        { label: "Career Readiness", to: "/profile-intelligence", icon: <CheckCircle size={16} /> },
+        { label: "Recruiter Trust", to: "/resume-intelligence", icon: <Activity size={16} /> }
+      ]
+    }
+  ],
+  journey: [
+    {
+      title: "Tracking", type: "large",
+      links: [
+        { label: "Dashboard", to: "/dashboard", icon: <LayoutDashboard size={20} /> },
+        { label: "Career Path", to: "/profile-intelligence", icon: <Map size={20} /> },
+        { label: "History", to: "/dashboard", icon: <Clock size={20} /> }
+      ]
+    },
+    {
+      title: "Evaluation", type: "small",
+      links: [
+        { label: "Assessments", to: "/assessments", icon: <LineChart size={16} /> },
+        { label: "Analytics Reports", to: "/dashboard", icon: <Target size={16} /> }
+      ]
+    }
+  ],
+  tools: [
+    {
+      title: "Creation", type: "large",
+      links: [
+        { label: "Resume Studio", to: "/resume-studio", icon: <FileText size={20} /> }
+      ]
+    },
+    {
+      title: "Utilities", type: "small",
+      links: [
+        { label: "PDF Export", to: "/resume-studio", icon: <Download size={16} /> }
+      ]
+    }
+  ]
+};
+
+export default function Navbar() {
+  const { currentUser: user } = useAuth();
+  const { addToast } = useToast();
   
-  const profileRef = useRef(null);
-  const telemetryRef = useRef(null);
-  const moreMenuRef = useRef(null);
+  const [activeMenu, setActiveMenu] = useState(null);
+  const [profileMenuOpen, setProfileMenuOpen] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  
+  const navRef = useRef(null);
+  const searchInputRef = useRef(null);
   const location = useLocation();
   const navigate = useNavigate();
 
-  // Scroll listener
+  useEffect(() => {
+    setActiveMenu(null);
+    setMobileMenuOpen(false);
+    setSearchOpen(false);
+    setProfileMenuOpen(false);
+  }, [location.pathname]);
+
   useEffect(() => {
     const handleScroll = () => {
-      setScrolled(window.scrollY > 20);
+      setScrolled(window.scrollY > 10);
     };
-    window.addEventListener("scroll", handleScroll, { passive: true });
+    window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Firebase auth state listener
   useEffect(() => {
-    if (!auth) return;
-    const unsubscribe = onAuthStateChanged(auth, setUser);
-    return unsubscribe;
-  }, []);
+    if (searchOpen && searchInputRef.current) {
+      setTimeout(() => searchInputRef.current.focus(), 50);
+    }
+  }, [searchOpen]);
 
-  // Handle outside clicks
+  // Global CMD+K Shortcut
   useEffect(() => {
-    const handleClickOutside = (e) => {
-      if (profileRef.current && !profileRef.current.contains(e.target)) setShowProfileMenu(false);
-      if (telemetryRef.current && !telemetryRef.current.contains(e.target)) setShowTelemetryPopup(false);
-      if (moreMenuRef.current && !moreMenuRef.current.contains(e.target)) setShowMoreMenu(false);
+    const handleKeyDown = (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        setSearchOpen(prev => !prev);
+      }
+      if (e.key === 'Escape') {
+        setSearchOpen(false);
+        setProfileMenuOpen(false);
+      }
     };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
 
-  // Reset menus on route navigation
-  useEffect(() => {
-    setMenuOpen(false);
-    setShowMoreMenu(false);
-    setShowProfileMenu(false);
-  }, [location.pathname]);
-
-  const handlePredictClick = (e) => {
-    if (!user) {
-      e.preventDefault();
-      setShowLoginPopup(true);
-      setTimeout(() => setShowLoginPopup(false), 3000);
+  const executeLogout = async () => {
+    setProfileMenuOpen(false);
+    setMobileMenuOpen(false);
+    try {
+      await auth.signOut();
+      localStorage.removeItem("user");
+      navigate('/');
+      addToast("Signed Out", "You have successfully signed out of CareerOS.", "success", 4000);
+    } catch (error) {
+      console.error("Logout failed:", error);
     }
   };
-
-  const executeLogout = () => {
-    if (handleLogout) handleLogout();
-    setShowProfileMenu(false);
-    navigate("/");
-  };
-
-  const TOP_NAV = [
-    { label: "Home", to: "/" },
-    { label: "Predict", to: "/predict", isPredict: true },
-    { label: "Quiz", to: "/quiz" },
-    { label: "Pathora Bot", to: "/chat" }
-  ];
-
-  const DROPDOWN_SECTIONS = [
-    {
-      title: "Features & Utilities",
-      items: [
-        { label: "Platform", to: "/platform" },
-        { label: "Dashboard", to: "/dashboard" },
-        { label: "Pricing Plans", to: "/plans" },
-        { label: "Settings", to: "/settings" },
-        { label: "Admin Panel", to: "/admin" }
-      ]
-    },
-    {
-      title: "Resources",
-      items: [
-        { label: "Docs", to: "/docs" },
-        { label: "Research", to: "/research" },
-        { label: "Resources", to: "/resources" }
-      ]
-    },
-    {
-      title: "Organization",
-      items: [
-        { label: "About Us", to: "/about" },
-        { label: "Careers", to: "/careers" },
-        { label: "Contact", to: "/contact" },
-        { label: "Client Portal", to: "/login" }
-      ]
-    },
-    {
-      title: "Legal",
-      items: [
-        { label: "Privacy", to: "/privacy" },
-        { label: "Terms", to: "/terms" }
-      ]
-    }
-  ];
 
   return (
     <>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=DM+Mono:wght@300;400;500;600&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
-        /* ═══ PREMIUM AI INFRASTRUCTURE NAVBAR ═══ */
-        .pnx-nav-wrapper {
+        /* Core Apple Nav */
+        .apple-nav-wrapper {
           position: fixed;
-          top: 0; left: 0; right: 0;
-          z-index: 99999;
-          display: flex;
-          justify-content: center;
-          padding: 10px 24px;
-          transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-          pointer-events: none;
-          will-change: transform;
-          background: transparent;
-          border-bottom: 1px solid transparent;
-        }
-        .pnx-nav-wrapper.scrolled {
-          padding: 4px 24px;
-          background: rgba(255, 255, 255, 0.1);
-          backdrop-filter: blur(24px) saturate(120%);
-          -webkit-backdrop-filter: blur(24px) saturate(120%);
-          border-bottom: 1px solid rgba(0, 0, 0, 0.03);
-          box-shadow: 0 4px 24px rgba(0,0,0,0.02);
-        }
-        @media (max-width: 480px) {
-          .pnx-nav-wrapper { padding: 8px 16px; }
-          .pnx-nav-wrapper.scrolled { padding: 4px 16px; }
-        }
-
-        .pnx-nav-container {
-          pointer-events: auto;
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          width: 100%;
-          max-width: 1100px;
-          height: 40px;
-          position: relative;
-        }
-
-        .pnx-nav-wrapper.scrolled .pnx-nav-container {
-          height: 32px;
-        }
-
-        /* ─── BRAND LOGO / ORB ─── */
-        .pnx-logo-link {
-          display: flex;
-          align-items: center;
-          gap: 10px;
-          text-decoration: none;
-          user-select: none;
-        }
-
-        .pnx-orb-container {
-          position: relative;
-          width: 20px;
-          height: 20px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-        }
-
-        .pnx-orb-core {
-          width: 8px;
-          height: 8px;
-          background: linear-gradient(135deg, #7c3aed, #4f46e5);
-          border-radius: 50%;
-          box-shadow: 0 0 10px rgba(124, 58, 237, 0.6);
-          position: relative;
-          z-index: 2;
-        }
-
-        .pnx-orb-ring {
-          position: absolute;
-          width: 100%;
-          height: 100%;
-          border: 1px solid rgba(124, 58, 237, 0.3);
-          border-radius: 50%;
-          animation: pnxOrbPulse 2.5s infinite cubic-bezier(0.21, 0.6, 0.35, 1);
-          pointer-events: none;
-        }
-        .pnx-orb-ring:nth-child(2) {
-          animation-delay: 0.8s;
-        }
-
-        @keyframes pnxOrbPulse {
-          0% { transform: scale(0.65); opacity: 0.8; }
-          100% { transform: scale(2); opacity: 0; filter: blur(1px); }
-        }
-
-        .pnx-brand-typography {
-          display: flex;
-          flex-direction: column;
-          line-height: 1;
-        }
-        .pnx-brand-main {
-          display: flex;
-          align-items: baseline;
-        }
-        .pnx-brand-serif {
-          font-family: 'Instrument Serif', serif;
-          font-style: italic;
-          font-size: 1.35rem;
-          font-weight: 300;
-          color: #0f0f0f;
-          letter-spacing: -0.02em;
-        }
-        .pnx-brand-sans {
-          font-family: 'Outfit', sans-serif;
-          font-size: 1.05rem;
-          font-weight: 300;
-          color: #0f0f0f;
-          letter-spacing: 0.02em;
-          margin-left: 2px;
-        }
-        .pnx-brand-sub {
-          font-family: 'DM Mono', monospace;
-          font-size: 6.5px;
-          font-weight: 400;
-          letter-spacing: 0.35em;
-          text-transform: uppercase;
-          color: rgba(124, 58, 237, 0.6);
-          margin-top: 5px;
-        }
-
-        /* ─── CENTER NAVIGATION PILLS ─── */
-        .pnx-nav-links {
-          display: flex;
-          align-items: center;
-          gap: 28px;
-          position: relative;
-        }
-        
-        @media (max-width: 1100px) {
-          .pnx-nav-links { display: none; }
-        }
-
-        .pnx-nav-item {
-          padding: 4px 0;
-          color: rgba(15, 15, 15, 0.45);
-          text-decoration: none;
-          font-size: 0.78rem;
-          font-weight: 300;
-          font-family: 'Outfit', sans-serif;
-          letter-spacing: 0.06em;
-          position: relative;
-          transition: color 0.3s ease;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          cursor: pointer;
-        }
-
-        .pnx-nav-item:hover {
-          color: rgba(15, 15, 15, 0.95);
-          transform: translateY(-0.5px);
-        }
-
-        .pnx-nav-item.active {
-          color: #0f0f0f !important;
-          font-weight: 500;
-        }
-
-        .pnx-hover-bg {
-          position: absolute;
-          bottom: -4px;
+          top: 0;
           left: 0;
           right: 0;
-          height: 1px;
-          background: rgba(0, 0, 0, 0.08);
-          border-radius: 2px;
-          z-index: -1;
-        }
-
-        .pnx-active-bg {
-          position: absolute;
-          bottom: -4px;
-          left: 50%;
-          transform: translateX(-50%);
-          width: 60%;
-          height: 1.5px;
-          background: linear-gradient(90deg, transparent, rgba(15, 15, 15, 0.8), transparent);
-          border-radius: 2px;
-          box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
-          z-index: -1;
-        }
-
-        /* ─── MORE DROPDOWN ─── */
-        .pnx-more-dropdown {
-          position: absolute;
-          top: calc(100% + 12px);
-          right: -20px;
-          left: auto;
-          transform: none;
-          background: rgba(255, 255, 255, 0.65);
-          backdrop-filter: blur(48px) saturate(200%);
-          -webkit-backdrop-filter: blur(48px) saturate(200%);
-          border: 1px solid rgba(255, 255, 255, 0.8);
-          border-radius: 14px;
-          padding: 16px 20px;
-          width: max-content;
-          display: flex;
-          gap: 24px;
-          box-shadow: 0 12px 32px rgba(0,0,0,0.04), inset 0 1px 0 rgba(255,255,255,0.5);
-          z-index: 1000;
-        }
-        
-        .pnx-more-col {
-          display: flex;
-          flex-direction: column;
-          gap: 8px;
-        }
-
-        .pnx-more-header {
-          font-size: 9px;
-          font-family: 'DM Mono', monospace;
-          color: rgba(15,15,15,0.4);
-          text-transform: uppercase;
-          letter-spacing: .08em;
-          margin-bottom: 6px;
-          font-weight: 600;
-        }
-
-        .pnx-more-link {
-          font-size: 12.5px;
-          color: rgba(15,15,15,0.65);
-          text-decoration: none;
-          font-family: 'Outfit', sans-serif;
-          transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-          display: flex;
-          align-items: center;
-          gap: 6px;
-          padding: 5px 8px;
-          border-radius: 6px;
-          margin-left: -8px;
-        }
-        .pnx-more-link:hover {
-          color: rgba(15,15,15,0.95);
-          background: rgba(0,0,0,0.03);
-          transform: translateX(1px);
-        }
-        .pnx-more-link.active {
-          color: #0f0f0f;
-          font-weight: 500;
-          background: rgba(0,0,0,0.02);
-        }
-
-        /* ─── RIGHT SECTION ─── */
-        .pnx-right-section {
-          display: flex;
-          align-items: center;
-          gap: 10px;
-        }
-
-        .pnx-telemetry-badge {
-          display: flex;
-          align-items: center;
-          gap: 6px;
-          padding: 5px 10px;
-          background: rgba(0, 0, 0, 0.03);
-          border: 1px solid rgba(0, 0, 0, 0.06);
-          border-radius: 100px;
-          cursor: pointer;
-          user-select: none;
-          transition: all 0.3s;
-        }
-        .pnx-telemetry-badge:hover {
-          background: rgba(0, 0, 0, 0.05);
-          border-color: rgba(0, 0, 0, 0.12);
-        }
-        @media (max-width: 500px) {
-          .pnx-telemetry-badge { display: none; }
-        }
-
-        .pnx-telemetry-dot {
-          width: 5px;
-          height: 5px;
-          border-radius: 50%;
-          background: #8b5cf6;
-          position: relative;
-        }
-        .pnx-telemetry-pulse {
-          position: absolute;
-          inset: -2px;
-          border: 1px solid rgba(139, 92, 246, 0.4);
-          border-radius: 50%;
-          animation: pnxPurplePulse 2.5s infinite ease-out;
-        }
-
-        .pnx-telemetry-text {
-          font-family: 'DM Mono', monospace;
-          font-size: 8.5px;
-          color: rgba(15, 15, 15, 0.6);
-          font-weight: 500;
-          letter-spacing: 0.04em;
-          text-transform: uppercase;
-        }
-
-        .pnx-telemetry-popup {
-          position: absolute;
-          top: calc(100% + 12px);
-          right: 80px;
-          background: rgba(255, 255, 255, 0.95);
-          backdrop-filter: blur(28px) saturate(180%);
-          border: 1px solid rgba(0, 0, 0, 0.06);
-          border-radius: 16px;
-          padding: 16px;
-          width: 240px;
-          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
-          z-index: 1000;
-        }
-
-        .pnx-telemetry-item {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          font-family: 'DM Mono', monospace;
-          font-size: 10px;
-          color: #4b5563;
-          margin-bottom: 8px;
-          border-bottom: 1px dashed rgba(0,0,0,0.05);
-          padding-bottom: 6px;
-        }
-        .pnx-telemetry-item:last-child {
-          margin-bottom: 0;
-          border-bottom: none;
-          padding-bottom: 0;
-        }
-
-        .pnx-profile-capsule {
-          position: relative;
-        }
-
-        .pnx-profile-avatar {
-          width: 32px;
-          height: 32px;
-          border-radius: 12px;
-          background: rgba(255, 255, 255, 0.45);
-          border: 1px solid rgba(255, 255, 255, 0.6);
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          color: #374151;
-          cursor: pointer;
-          transition: all 0.3s;
-          box-shadow: inset 0 1px 1px rgba(255,255,255,0.5), 0 2px 8px rgba(0,0,0,0.02);
-        }
-        .pnx-profile-avatar:hover {
-          background: rgba(255, 255, 255, 0.8);
-          border-color: rgba(124, 58, 237, 0.25);
-          color: #7c3aed;
-          transform: translateY(-1px);
-          box-shadow: 0 4px 12px rgba(124, 58, 237, 0.08);
-        }
-
-        .pnx-profile-dropdown {
-          position: absolute;
-          top: calc(100% + 12px);
-          right: 0;
-          background: rgba(255, 255, 255, 0.85);
-          backdrop-filter: blur(32px);
-          border: 1px solid rgba(255, 255, 255, 0.5);
-          border-radius: 16px;
-          padding: 6px;
-          min-width: 200px;
-          display: flex;
-          flex-direction: column;
-          gap: 2px;
-          box-shadow: 0 24px 64px -12px rgba(0, 0, 0, 0.08);
-          z-index: 1000;
-          transform-origin: top right;
-        }
-
-        .pnx-dropdown-item {
-          padding: 10px 14px;
-          color: #4b5563;
-          font-size: 0.78rem;
-          font-weight: 500;
-          font-family: 'Outfit', sans-serif;
-          cursor: pointer;
-          border-radius: 10px;
-          transition: all 0.2s;
-          display: flex;
-          align-items: center;
-          gap: 10px;
-          text-decoration: none;
-        }
-        
-        .pnx-dropdown-item:hover {
-          background: rgba(124, 58, 237, 0.06);
-          color: #7c3aed;
-        }
-
-        .pnx-dropdown-item.logout {
-          color: #ef4444;
-          border-top: 1px solid rgba(0,0,0,0.03);
-          border-radius: 10px;
-        }
-        .pnx-dropdown-item.logout:hover {
-          background: rgba(239, 68, 68, 0.05);
-          color: #ef4444;
-        }
-
-        /* ─── MOBILE SYSTEM ─── */
-        .pnx-mobile-toggle {
-          display: none;
-          width: 32px;
-          height: 32px;
-          border-radius: 12px;
-          background: rgba(255, 255, 255, 0.45);
-          border: 1px solid rgba(255, 255, 255, 0.6);
-          align-items: center;
-          justify-content: center;
-          cursor: pointer;
-          color: #374151;
-          transition: all 0.3s;
-        }
-        @media (max-width: 1100px) {
-          .pnx-mobile-toggle { display: flex; }
-        }
-
-        .pnx-mobile-sheet {
-          position: fixed;
-          top: 0; right: 0; bottom: 0;
-          width: 300px;
-          max-width: 85vw; /* Crucial for foldable screens */
-          background: rgba(255, 255, 255, 0.95);
-          backdrop-filter: blur(24px) saturate(180%);
-          border-left: 1px solid rgba(0, 0, 0, 0.06);
-          box-shadow: -10px 0 40px rgba(0, 0, 0, 0.05);
+          width: 100%;
           z-index: 10000;
-          padding: 80px 24px 24px;
+          font-family: "SF Pro Display", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+          transition: background-color 0.3s ease, border-color 0.3s ease;
+          background: rgba(255, 255, 255, 0.72);
+          backdrop-filter: blur(24px);
+          -webkit-backdrop-filter: blur(24px);
+          border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+        }
+
+        .apple-nav-wrapper.scrolled {
+          background: rgba(255, 255, 255, 0.85);
+          border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+        }
+
+        .apple-nav-container {
+          width: 100%;
+          margin: 0 auto;
+          height: 72px;
           display: flex;
-          flex-direction: column;
-          gap: 32px;
-          overflow-y: auto;
-          -webkit-overflow-scrolling: touch;
-          will-change: transform;
+          align-items: center;
+          justify-content: space-between;
+          padding: 0 40px;
+        }
+
+        /* Brand Logo */
+        .apple-brand {
+          font-size: 17px;
+          font-weight: 600;
+          letter-spacing: -0.02em;
+          color: #111827;
+          text-decoration: none;
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          transition: transform 250ms cubic-bezier(0.16, 1, 0.3, 1), opacity 250ms ease;
+          transform-origin: left center;
+        }
+        .apple-brand:hover {
+          transform: scale(1.03);
+          opacity: 1;
         }
         
-        .pnx-mobile-close {
-          position: absolute;
-          top: 24px;
-          right: 24px;
+        @media (max-width: 768px) {
+          .apple-brand {
+            --logo-size: 28px;
+          }
+        }
+
+        /* Nav Links */
+        .apple-nav-links {
+          display: flex;
+          align-items: center;
+          gap: 32px;
+          height: 100%;
+        }
+
+        .apple-nav-link {
+          font-size: 12px;
+          font-weight: 400;
+          letter-spacing: -0.01em;
+          color: rgba(0, 0, 0, 0.8);
+          text-decoration: none;
+          height: 100%;
+          display: flex;
+          align-items: center;
+          cursor: pointer;
+          transition: color 0.2s ease;
+        }
+
+        .apple-nav-link:hover, .apple-nav-link.active {
+          color: #000;
+        }
+
+        /* Right Actions */
+        .apple-right-actions {
+          display: flex;
+          align-items: center;
+          gap: 16px;
+        }
+        
+        .apple-action-btn {
           background: none;
           border: none;
+          color: rgba(0,0,0,0.8);
           cursor: pointer;
-          color: var(--ts);
+          display: flex;
+          align-items: center;
+          transition: color 0.2s ease;
+          padding: 0;
+        }
+        
+        .apple-action-btn:hover {
+          color: #000;
         }
 
-        .pnx-mobile-nav-col {
+        /* Search Spotlight Modal */
+        .apple-spotlight-overlay {
+          position: fixed;
+          top: 0; left: 0; right: 0; bottom: 0;
+          background: rgba(0, 0, 0, 0.4);
+          backdrop-filter: blur(8px);
+          -webkit-backdrop-filter: blur(8px);
+          z-index: 20000;
+          display: flex;
+          justify-content: center;
+          align-items: flex-start;
+          padding-top: 12vh;
+        }
+
+        .apple-spotlight-modal {
+          width: 100%;
+          max-width: 640px;
+          background: rgba(255, 255, 255, 0.95);
+          backdrop-filter: saturate(200%) blur(30px);
+          -webkit-backdrop-filter: saturate(200%) blur(30px);
+          border-radius: 18px;
+          box-shadow: 0 16px 64px rgba(0,0,0,0.24), 0 0 1px rgba(0,0,0,0.1);
+          overflow: hidden;
+          margin: 0 16px;
+        }
+
+        .apple-spotlight-header {
+          display: flex;
+          align-items: center;
+          padding: 16px 24px;
+          border-bottom: 1px solid rgba(0,0,0,0.1);
+        }
+
+        .apple-spotlight-input {
+          flex: 1;
+          font-size: 22px;
+          font-weight: 500;
+          letter-spacing: -0.02em;
+          border: none;
+          background: transparent;
+          outline: none;
+          padding: 0 16px;
+          color: #1d1d1f;
+        }
+        .apple-spotlight-input::placeholder {
+          color: #86868b;
+        }
+
+        .apple-spotlight-body {
+          padding: 16px 0;
+        }
+
+        .spotlight-section-title {
+          font-size: 11px;
+          font-weight: 600;
+          color: #86868b;
+          text-transform: uppercase;
+          letter-spacing: 0.04em;
+          padding: 8px 24px;
+        }
+
+        .spotlight-item {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          padding: 12px 24px;
+          text-decoration: none;
+          color: #1d1d1f;
+          font-size: 14px;
+          font-weight: 500;
+          transition: background 0.1s ease;
+        }
+        .spotlight-item:hover {
+          background: rgba(0, 113, 227, 0.1);
+          color: #0071e3;
+        }
+
+        /* Career Snapshot Panel */
+        .apple-profile-popover {
+          position: absolute;
+          top: calc(100% + 8px);
+          right: 0;
+          width: 320px;
+          background: rgba(255, 255, 255, 0.75);
+          backdrop-filter: saturate(200%) blur(50px);
+          -webkit-backdrop-filter: saturate(200%) blur(50px);
+          border-radius: 20px;
+          box-shadow: 0 16px 48px rgba(0,0,0,0.12), 0 0 0 1px rgba(0,0,0,0.04);
+          overflow: hidden;
+          padding: 8px;
+          z-index: 10000;
+        }
+
+        .snapshot-header {
+          padding: 12px 10px 16px;
+        }
+        
+        .snapshot-welcome {
+          font-size: 11px;
+          color: #86868b;
+          text-transform: uppercase;
+          letter-spacing: 0.05em;
+          font-weight: 600;
+          margin-bottom: 4px;
+        }
+
+        .snapshot-name {
+          font-size: 20px;
+          font-weight: 700;
+          color: #1d1d1f;
+          letter-spacing: -0.02em;
+          margin-bottom: 2px;
+        }
+
+        .snapshot-subtitle {
+          font-size: 12px;
+          color: #86868b;
+          font-weight: 500;
+        }
+
+        .snapshot-metrics-grid {
+          display: grid;
+          grid-template-columns: 1fr 1fr 1fr;
+          gap: 6px;
+          margin-bottom: 12px;
+        }
+
+        .snapshot-metric-card {
+          background: rgba(0,0,0,0.03);
+          border-radius: 12px;
+          padding: 12px 8px;
+          text-align: center;
+        }
+
+        .snapshot-metric-value {
+          font-size: 22px;
+          font-weight: 700;
+          color: #1d1d1f;
+          letter-spacing: -0.02em;
+          margin-bottom: 4px;
+        }
+
+        .snapshot-metric-label {
+          font-size: 10px;
+          color: #86868b;
+          font-weight: 600;
+          line-height: 1.2;
+        }
+
+        .profile-popover-item {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          padding: 10px 12px;
+          font-size: 13px;
+          font-weight: 500;
+          color: #1d1d1f;
+          text-decoration: none;
+          border-radius: 10px;
+          transition: background 0.2s ease;
+          cursor: pointer;
+          border: none;
+          background: transparent;
+          width: 100%;
+          text-align: left;
+          letter-spacing: -0.01em;
+        }
+        .profile-popover-item:hover {
+          background: rgba(0,0,0,0.05);
+        }
+
+        /* Mega Menu Panel */
+        .apple-mega-menu {
+          position: absolute;
+          top: 44px; /* Exactly below navbar */
+          left: 0;
+          width: 100%;
+          background: rgba(255, 255, 255, 0.98);
+          backdrop-filter: saturate(180%) blur(30px);
+          -webkit-backdrop-filter: saturate(180%) blur(30px);
+          border-bottom: 1px solid rgba(0,0,0,0.08);
+          overflow: hidden;
+          z-index: 9999;
+          box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        }
+
+        .mega-menu-content {
+          max-width: 1024px;
+          margin: 0 auto;
+          padding: 40px 16px;
+          display: flex;
+          gap: 64px;
+        }
+
+        .mega-col {
           display: flex;
           flex-direction: column;
           gap: 16px;
+          flex: 1;
         }
 
-        .pnx-mobile-link {
-          font-size: 18px;
-          font-weight: 500;
-          color: var(--tp);
-          text-decoration: none;
-          font-family: 'Outfit', sans-serif;
-        }
-
-        .pnx-mobile-acc-header {
+        .mega-col-title {
           font-size: 11px;
-          font-family: 'DM Mono', monospace;
-          color: var(--tm, rgba(0,0,0,0.4));
-          text-transform: uppercase;
-          letter-spacing: .1em;
-          margin-bottom: 12px;
-          margin-top: 24px;
           font-weight: 600;
+          color: #86868b;
+          text-transform: uppercase;
+          letter-spacing: 0.05em;
         }
 
-        .pnx-mobile-acc-item {
-          font-size: 15px;
-          color: var(--ts, rgba(0,0,0,0.6));
-          text-decoration: none;
-          font-family: 'Outfit', sans-serif;
-          margin-bottom: 16px;
-          display: block;
-        }
-
-        .pnx-login-popup {
-          position: fixed;
-          top: 80px;
-          left: 50%;
-          transform: translateX(-50%);
-          background: rgba(15, 15, 15, 0.9);
-          backdrop-filter: blur(12px);
-          color: white;
-          padding: 8px 18px;
-          border-radius: 100px;
-          font-size: 0.76rem;
-          font-family: 'Outfit', sans-serif;
-          font-weight: 500;
-          box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
-          z-index: 10001;
+        .mega-link {
           display: flex;
           align-items: center;
+          gap: 12px;
+          text-decoration: none;
+          color: #1d1d1f;
+          transition: color 0.2s;
+        }
+        .mega-link:hover {
+          color: #0071e3;
+        }
+
+        .mega-col.large .mega-link {
+          font-size: 20px;
+          font-weight: 600;
+          letter-spacing: -0.015em;
+        }
+        
+        .mega-col.small .mega-link {
+          font-size: 13px;
+          font-weight: 500;
+        }
+
+        /* Mobile Adjustments */
+        .apple-mobile-menu-btn {
+          display: none;
+          background: none;
+          border: none;
+          cursor: pointer;
+          color: rgba(0,0,0,0.8);
+          padding: 0;
+        }
+
+        @media (max-width: 768px) {
+          .apple-nav-links, .apple-right-actions {
+            display: none;
+          }
+          .apple-mobile-menu-btn {
+            display: flex;
+          }
+        }
+
+        /* Mobile Fullscreen Menu */
+        .mobile-hub-overlay {
+          position: fixed;
+          top: 0; left: 0; right: 0; bottom: 0;
+          background: rgba(255, 255, 255, 0.75);
+          backdrop-filter: saturate(200%) blur(50px);
+          -webkit-backdrop-filter: saturate(200%) blur(50px);
+          z-index: 100000;
+          display: flex;
+          flex-direction: column;
+          overflow-y: auto;
+          overflow-x: hidden;
+        }
+
+        .mobile-hub-header-bar {
+          display: flex;
+          justify-content: flex-end;
+          padding: 20px 24px 10px;
+        }
+
+        .mobile-hub-content {
+          padding: 0 24px 40px;
+          display: flex;
+          flex-direction: column;
+          gap: 32px;
+        }
+
+        .mobile-hub-profile {
+          display: flex;
+          flex-direction: column;
+          gap: 20px;
+        }
+
+        .mobile-hub-headline {
+          font-size: 36px;
+          font-weight: 700;
+          color: #1d1d1f;
+          letter-spacing: -0.02em;
+          line-height: 1.1;
+        }
+        
+        .mobile-hub-user-pill {
+          display: inline-flex;
+          align-items: center;
           gap: 8px;
+          background: rgba(0,0,0,0.04);
+          padding: 6px 16px 6px 6px;
+          border-radius: 100px;
+          align-self: flex-start;
+        }
+
+        .mobile-hub-user-pill .avatar {
+          width: 28px;
+          height: 28px;
+          border-radius: 50%;
+          background: rgba(0,0,0,0.05);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: #86868b;
+        }
+
+        .mobile-hub-user-pill span {
+          font-size: 14px;
+          font-weight: 600;
+          color: #1d1d1f;
+        }
+
+        .mobile-hub-metrics {
+          display: grid;
+          grid-template-columns: 1fr 1fr 1fr;
+          gap: 12px;
+        }
+
+        .mobile-hub-metric-card {
+          background: rgba(0,0,0,0.03);
+          border-radius: 16px;
+          padding: 16px 10px;
+          text-align: center;
+        }
+        
+        .mobile-hub-primary-grid {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 16px;
+        }
+
+        .mobile-hub-primary-card {
+          background: rgba(255, 255, 255, 0.9);
+          border-radius: 24px;
+          padding: 24px;
+          display: flex;
+          flex-direction: column;
+          gap: 16px;
+          text-decoration: none;
+          box-shadow: 0 10px 30px rgba(0,0,0,0.06), 0 0 0 1px rgba(0,0,0,0.03);
+        }
+
+        .mobile-hub-primary-card .icon-wrapper {
+          width: 48px;
+          height: 48px;
+          border-radius: 50%;
+          background: rgba(0, 113, 227, 0.1);
+          color: #0071e3;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        .mobile-hub-primary-card span {
+          font-size: 17px;
+          font-weight: 600;
+          color: #1d1d1f;
+          letter-spacing: -0.01em;
+          line-height: 1.2;
+        }
+
+        .mobile-hub-secondary {
+          background: rgba(255, 255, 255, 0.9);
+          border-radius: 24px;
+          padding: 8px 20px;
+          box-shadow: 0 10px 30px rgba(0,0,0,0.06), 0 0 0 1px rgba(0,0,0,0.03);
+        }
+
+        .mobile-hub-list-item {
+          display: flex;
+          align-items: center;
+          gap: 16px;
+          padding: 18px 0;
+          text-decoration: none;
+          border-bottom: 1px solid rgba(0,0,0,0.05);
+          color: #1d1d1f;
+          font-size: 16px;
+          font-weight: 500;
+          border: none;
+          background: none;
+          width: 100%;
+          text-align: left;
+        }
+        
+        .mobile-hub-list-item:last-child {
+          border-bottom: none;
         }
       `}</style>
 
-      {/* Floating System-Wide Entrance */}
-      <motion.div 
-        className={`pnx-nav-wrapper ${scrolled ? "scrolled" : ""}`}
-        initial={{ y: -80, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+      <div 
+        className={`apple-nav-wrapper ${scrolled ? 'scrolled' : ''}`} 
+        ref={navRef}
+        onMouseLeave={() => setActiveMenu(null)}
       >
-        <div className="pnx-nav-container">
-          {/* LEFT: Branding */}
-          <Link to="/" className="pnx-logo-link">
-            <div className="pnx-orb-container">
-              <div className="pnx-orb-ring" />
-              <div className="pnx-orb-ring" />
-              <div className="pnx-orb-core" />
-            </div>
-            <div className="pnx-brand-typography">
-              <div className="pnx-brand-main">
-                <span className="pnx-brand-serif">P</span>
-                <span className="pnx-brand-sans">athora</span>
-              </div>
-              <span className="pnx-brand-sub">Career Intelligence</span>
-            </div>
+        <div className="apple-nav-container">
+          {/* LOGO */}
+          <Link to="/" className="apple-brand" aria-label="CareerOS Home" onClick={() => setActiveMenu(null)}>
+            <Logo />
+            <span>CareerOS</span>
           </Link>
 
-          {/* CENTER: Navigation tabs */}
-          <nav className="pnx-nav-links">
-            {TOP_NAV.map((item, idx) => {
-              const isActive = location.pathname === item.to || (item.to !== "/" && location.pathname.startsWith(item.to));
-              return (
-                <Link
-                  key={item.label}
-                  to={item.to}
-                  onClick={item.isPredict ? handlePredictClick : undefined}
-                  className={`pnx-nav-item ${isActive ? "active" : ""}`}
-                  onMouseEnter={() => setHoveredIndex(idx)}
-                  onMouseLeave={() => setHoveredIndex(null)}
+          {/* DESKTOP NAV LINKS */}
+          <nav className="apple-nav-links">
+            {NAV_LINKS.map(link => (
+              link.to ? (
+                <Link 
+                  to={link.to}
+                  key={link.id}
+                  className={`apple-nav-link ${activeMenu === link.id ? 'active' : ''}`}
+                  onMouseEnter={() => setActiveMenu(link.id)}
                 >
-                  {hoveredIndex === idx && <motion.div layoutId="hoverTabBackground" className="pnx-hover-bg" transition={{ type: "spring", stiffness: 450, damping: 30 }} />}
-                  {isActive && <motion.div layoutId="activeTabBackground" className="pnx-active-bg" transition={{ type: "spring", stiffness: 400, damping: 30 }} />}
-                  <span style={{ position: "relative", zIndex: 2 }}>{item.label}</span>
+                  {link.label}
                 </Link>
-              );
-            })}
-            
-            {/* MORE DROPDOWN TRIGGER */}
-            <div 
-              className={`pnx-nav-item`}
-              ref={moreMenuRef}
-              onClick={() => setShowMoreMenu(!showMoreMenu)}
-              style={{ display: "flex", gap: 4 }}
-            >
-              <span style={{ position: "relative", zIndex: 2 }}>More</span>
-              <ChevronDown size={14} style={{ opacity: 0.5 }} />
-              
-              <AnimatePresence>
-                {showMoreMenu && (
-                  <motion.div
-                    className="pnx-more-dropdown"
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: 10 }}
-                    transition={{ duration: 0.2 }}
-                  >
-                    {DROPDOWN_SECTIONS.map((section) => (
-                      <div key={section.title} className="pnx-more-col">
-                        <div className="pnx-more-header">{section.title}</div>
-                        {section.items.map(link => {
-                          const isLinkActive = location.pathname === link.to;
-                          return (
-                            <Link 
-                              key={link.label} 
-                              to={link.to} 
-                              className={`pnx-more-link ${isLinkActive ? "active" : ""}`}
-                              onClick={(e) => {
-                                if(link.isPredict) handlePredictClick(e);
-                                setShowMoreMenu(false);
-                              }}
-                            >
-                              {link.label}
-                            </Link>
-                          );
-                        })}
-                      </div>
-                    ))}
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
+              ) : (
+                <div 
+                  key={link.id}
+                  className={`apple-nav-link ${activeMenu === link.id ? 'active' : ''}`}
+                  onMouseEnter={() => setActiveMenu(link.id)}
+                >
+                  {link.label}
+                </div>
+              )
+            ))}
           </nav>
 
-          {/* RIGHT: Diagnostics & Profile */}
-          <div className="pnx-right-section">
-            <div className="pnx-telemetry-badge" onClick={() => setShowTelemetryPopup(!showTelemetryPopup)} ref={telemetryRef}>
-              <div className="pnx-telemetry-dot">
-                <div className="pnx-telemetry-pulse" />
-              </div>
-              <span className="pnx-telemetry-text">SYSTEM OPERATIONAL</span>
-            </div>
-
-            <AnimatePresence>
-              {showTelemetryPopup && (
-                <motion.div
-                  className="pnx-telemetry-popup"
-                  initial={{ opacity: 0, y: 10, scale: 0.95 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                  transition={{ duration: 0.2 }}
-                >
-                  <div style={{ display: 'flex', gap: 6, alignItems: 'center', marginBottom: 12 }}>
-                    <Cpu size={12} style={{ color: "#8b5cf6" }} />
-                    <span style={{ fontSize: 9, fontWeight: 700, fontFamily: "'Outfit', sans-serif", letterSpacing: "0.05em", color: "#0f0f0f" }}>SYSTEM METRICS</span>
-                  </div>
-                  <div className="pnx-telemetry-item">
-                    <span>API GATEWAY</span>
-                    <span style={{ color: '#10b981', fontWeight: 600 }}>ONLINE</span>
-                  </div>
-                  <div className="pnx-telemetry-item">
-                    <span>LATENCY</span>
-                    <span style={{ color: '#0f0f0f', fontWeight: 600 }}>14ms</span>
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
-
-            <div className="pnx-profile-capsule" ref={profileRef}>
-              <motion.div 
-                className="pnx-profile-avatar"
-                onClick={() => setShowProfileMenu(!showProfileMenu)}
-                whileHover={{ scale: 1.04, y: -0.5 }}
-                whileTap={{ scale: 0.96 }}
-              >
-                {user ? <User size={15} strokeWidth={2} /> : <User size={15} strokeWidth={2} />}
-              </motion.div>
-              
-              <AnimatePresence>
-                {showProfileMenu && (
-                  <motion.div
-                    className="pnx-profile-dropdown"
-                    initial={{ opacity: 0, y: 10, scale: 0.95 }}
-                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                    exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                    transition={{ duration: 0.2 }}
-                  >
-                    {user ? (
-                      <>
-                        <div className="pnx-dropdown-item" style={{ borderBottom: '1px solid rgba(0,0,0,0.05)', paddingBottom: 8, cursor: 'default', pointerEvents: 'none' }}>
-                          <span style={{ fontSize: '0.62rem', letterSpacing: '0.04em', textTransform: 'uppercase', color: 'rgba(0,0,0,0.38)', fontWeight: 600 }}>
-                            {user.email}
-                          </span>
-                        </div>
-                        <Link to="/dashboard" className="pnx-dropdown-item"><LayoutDashboard size={14} /> Dashboard</Link>
-                        <Link to="/settings" className="pnx-dropdown-item"><Settings size={14} /> Preferences</Link>
-                        <div className="pnx-dropdown-item logout" onClick={executeLogout} style={{ borderTop: '1px solid rgba(0,0,0,0.05)' }}>
-                          <LogOut size={14} /> Log out
-                        </div>
-                      </>
-                    ) : (
-                      <>
-                        <Link to="/login" className="pnx-dropdown-item" style={{ background: 'rgba(139, 92, 246, 0.08)', color: '#8b5cf6', fontWeight: 600 }}>
-                          <User size={14} /> Sign In
-                        </Link>
-                      </>
-                    )}
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
-
-            <button className="pnx-mobile-toggle" onClick={() => setMenuOpen(!menuOpen)}>
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <line x1="3" y1="12" x2="21" y2="12"></line>
-                <line x1="3" y1="6" x2="21" y2="6"></line>
-                <line x1="3" y1="18" x2="21" y2="18"></line>
-              </svg>
+          {/* RIGHT ACTIONS */}
+          <div className="apple-right-actions">
+            <button className="apple-action-btn" onClick={() => setSearchOpen(true)}>
+              <Search size={16} />
             </button>
-          </div>
-        </div>
-      </motion.div>
+            
+            {user ? (
+              <div style={{ position: 'relative' }}>
+                <button 
+                  style={{
+                    background: 'rgba(255, 255, 255, 0.7)',
+                    border: '1px solid rgba(0, 0, 0, 0.06)',
+                    backdropFilter: 'blur(20px)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '8px',
+                    padding: '4px 12px 4px 4px',
+                    borderRadius: '14px',
+                    cursor: 'pointer',
+                    color: '#1d1d1f',
+                    fontSize: '14px',
+                    fontWeight: 500,
+                    transition: 'box-shadow 0.2s ease, background 0.2s ease'
+                  }}
+                  onMouseOver={(e) => { e.currentTarget.style.boxShadow = '0 0 12px rgba(255, 255, 255, 0.6)'; e.currentTarget.style.background = 'rgba(255, 255, 255, 0.9)'; }}
+                  onMouseOut={(e) => { e.currentTarget.style.boxShadow = 'none'; e.currentTarget.style.background = 'rgba(255, 255, 255, 0.7)'; }}
+                  onClick={() => setProfileMenuOpen(!profileMenuOpen)}
+                >
+                  {user.photoURL ? (
+                    <img src={user.photoURL} alt="Avatar" style={{ width: 24, height: 24, borderRadius: '50%', objectFit: 'cover' }} />
+                  ) : (
+                    <div style={{ width: 24, height: 24, borderRadius: '50%', background: '#0071e3', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '12px', fontWeight: 600 }}>
+                      {user.displayName ? user.displayName.charAt(0).toUpperCase() : user.email?.charAt(0).toUpperCase()}
+                    </div>
+                  )}
+                  <span>{user.displayName ? user.displayName.split(' ')[0] : 'Profile'}</span>
+                  <ChevronDown size={14} color="#86868b" style={{ marginLeft: '-2px' }} />
+                </button>
 
+                  <AnimatePresence>
+                    {profileMenuOpen && (
+                      <motion.div 
+                        className="apple-profile-popover"
+                        initial={{ opacity: 0, scale: 0.96, originX: 1, originY: 0 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.96, transition: { duration: 0.15 } }}
+                        transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
+                        style={{ padding: '8px', width: '220px' }}
+                      >
+                        <div style={{ padding: '8px 12px', marginBottom: '4px' }}>
+                          <div style={{ fontSize: '14px', fontWeight: 600, color: '#1d1d1f', marginBottom: '2px' }}>
+                            {user.displayName || "Engineer"}
+                          </div>
+                          <div style={{ fontSize: '12px', color: '#86868b', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                            {user.email || "No email"}
+                          </div>
+                        </div>
+                        
+                        <div style={{ height: '1px', background: 'rgba(0,0,0,0.06)', margin: '4px 0' }} />
+                        
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+                          <Link to="/profile-intelligence" className="profile-popover-item" onClick={() => setProfileMenuOpen(false)}>
+                            <User size={14} color="#86868b" strokeWidth={2} /> Profile
+                          </Link>
+                          <Link to="/settings" className="profile-popover-item" onClick={() => setProfileMenuOpen(false)}>
+                            <Settings size={14} color="#86868b" strokeWidth={2} /> Settings
+                          </Link>
+                          <Link to="/resume-studio" className="profile-popover-item" onClick={() => setProfileMenuOpen(false)}>
+                            <FileText size={14} color="#86868b" strokeWidth={2} /> Resume Studio
+                          </Link>
+                        </div>
+
+                        <div style={{ height: '1px', background: 'rgba(0,0,0,0.06)', margin: '4px 0' }} />
+
+                        <div style={{ display: 'flex', flexDirection: 'column' }}>
+                          <button onClick={executeLogout} className="profile-popover-item" style={{ color: "#1d1d1f" }}>
+                            <LogOut size={14} color="#86868b" strokeWidth={2} /> Sign Out
+                          </button>
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+              </div>
+            ) : (
+              <Link to="/login" className="apple-action-btn" style={{ padding: '0 16px', borderRadius: '24px', background: 'rgba(255,255,255,0.5)', fontSize: '14px', fontWeight: 500, textDecoration: 'none' }}>
+                Sign In
+              </Link>
+            )}
+          </div>
+
+          {/* MOBILE TOGGLE */}
+          <button className="apple-mobile-menu-btn" onClick={() => setMobileMenuOpen(true)}>
+            <Menu size={20} />
+          </button>
+        </div>
+      </div>
+
+      {/* MEGA MENUS */}
       <AnimatePresence>
-        {showLoginPopup && (
+        {activeMenu && MEGA_MENUS[activeMenu] && (
           <motion.div
-            className="pnx-login-popup"
-            initial={{ opacity: 0, y: -20, scale: 0.95 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: -20, scale: 0.95 }}
+            className="apple-mega-menu"
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ type: "spring", stiffness: 300, damping: 30 }}
+            onMouseEnter={() => setActiveMenu(activeMenu)}
+            onMouseLeave={() => setActiveMenu(null)}
           >
-            Authentication required to unlock predictions.
+            <div className="mega-menu-content">
+              {MEGA_MENUS[activeMenu].map((col, i) => (
+                <div key={i} className={`mega-col ${col.type}`}>
+                  <div className="mega-col-title">{col.title}</div>
+                  {col.links.map((link, j) => (
+                    <Link key={j} to={link.to} className="mega-link" onClick={() => setActiveMenu(null)}>
+                      {link.icon && <span style={{ opacity: 0.6 }}>{link.icon}</span>}
+                      {link.label}
+                    </Link>
+                  ))}
+                </div>
+              ))}
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
 
-      {/* MOBILE SLIDE DRAWER */}
+      {/* SPOTLIGHT SEARCH MODAL */}
       <AnimatePresence>
-        {menuOpen && (
-          <>
+        {searchOpen && (
+          <motion.div 
+            className="apple-spotlight-overlay"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setSearchOpen(false)}
+          >
             <motion.div 
-              style={{
-                position: "fixed", inset: 0, background: "rgba(10, 10, 14, 0.4)",
-                backdropFilter: "blur(4px)", zIndex: 9998, pointerEvents: "auto"
-              }}
-              initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-              onClick={() => setMenuOpen(false)}
-            />
-            <motion.div
-              className="pnx-mobile-sheet"
-              initial={{ x: "100%" }} animate={{ x: 0 }} exit={{ x: "100%" }}
-              transition={{ type: "spring", stiffness: 400, damping: 40 }}
+              className="apple-spotlight-modal"
+              initial={{ scale: 0.95, opacity: 0, y: -20 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.95, opacity: 0, y: -20 }}
+              transition={{ type: "spring", stiffness: 400, damping: 30 }}
+              onClick={e => e.stopPropagation()}
             >
-              <button className="pnx-mobile-close" onClick={() => setMenuOpen(false)}>
-                <X size={24} />
-              </button>
-
-              <div className="pnx-mobile-nav-col">
-                {TOP_NAV.map(item => (
-                  <Link key={item.label} to={item.to} className="pnx-mobile-link" onClick={(e) => {
-                    if(item.isPredict) handlePredictClick(e);
-                    setMenuOpen(false);
-                  }}>
-                    {item.label}
-                  </Link>
-                ))}
+              <div className="apple-spotlight-header">
+                <Search size={22} color="#86868b" style={{ marginRight: 12 }} />
+                <input 
+                  ref={searchInputRef}
+                  type="text" 
+                  className="apple-spotlight-input"
+                  placeholder="Search CareerOS..."
+                />
+                <span style={{ fontSize: 11, color: '#86868b', border: '1px solid #d2d2d7', borderRadius: 4, padding: '2px 6px' }}>ESC</span>
               </div>
+              
+              <div className="apple-spotlight-body">
+                <div className="spotlight-section-title">Engines</div>
+                <Link to="/github-intelligence" className="spotlight-item" onClick={() => setSearchOpen(false)}>
+                  <GitBranch size={16} /> GitHub Intelligence
+                </Link>
+                <Link to="/resume-intelligence" className="spotlight-item" onClick={() => setSearchOpen(false)}>
+                  <FileText size={16} /> Resume Intelligence
+                </Link>
+                <Link to="/interview-intelligence" className="spotlight-item" onClick={() => setSearchOpen(false)}>
+                  <Activity size={16} /> Interview Intelligence
+                </Link>
 
-              <div className="pnx-mobile-acc-group">
-                {DROPDOWN_SECTIONS.map(section => (
-                  <div key={section.title}>
-                    <div className="pnx-mobile-acc-header">{section.title}</div>
-                    {section.items.map(link => (
-                      <Link key={link.label} to={link.to} className="pnx-mobile-acc-item" onClick={(e) => {
-                        if(link.isPredict) handlePredictClick(e);
-                        setMenuOpen(false);
-                      }}>
-                        {link.label}
-                      </Link>
-                    ))}
-                  </div>
-                ))}
+                <div className="spotlight-section-title" style={{ marginTop: 12 }}>Tools</div>
+                <Link to="/resume-studio" className="spotlight-item" onClick={() => setSearchOpen(false)}>
+                  <FileText size={16} /> Resume Studio
+                </Link>
+                <Link to="/assessments" className="spotlight-item" onClick={() => setSearchOpen(false)}>
+                  <LineChart size={16} /> Engineering Assessments
+                </Link>
               </div>
             </motion.div>
-          </>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* MOBILE FULLSCREEN NAVIGATION HUB */}
+      <AnimatePresence>
+        {mobileMenuOpen && (
+          <motion.div 
+            className="mobile-hub-overlay"
+            initial={{ x: "-100%" }}
+            animate={{ x: 0 }}
+            exit={{ x: "-100%" }}
+            transition={{ type: "spring", stiffness: 350, damping: 35 }}
+          >
+            <div className="mobile-hub-header-bar">
+              <button 
+                onClick={() => setMobileMenuOpen(false)}
+                style={{ background: 'rgba(0,0,0,0.05)', border: 'none', padding: 8, borderRadius: '50%', color: '#1d1d1f' }}
+              >
+                <X size={24} strokeWidth={2} />
+              </button>
+            </div>
+            
+            <div className="mobile-hub-content">
+              {/* TOP SECTION: Personal Snapshot */}
+              <div className="mobile-hub-profile">
+                {user && (
+                  <div className="mobile-hub-user-pill">
+                    <div className="avatar"><User size={16} /></div>
+                    <span>{user.displayName || "Engineer"}</span>
+                  </div>
+                )}
+                <div className="mobile-hub-headline">
+                  Know where<br/>you stand.
+                </div>
+                
+                <div className="mobile-hub-metrics">
+                  <div className="mobile-hub-metric-card">
+                    <div className="snapshot-metric-value" style={{fontSize: 24}}>78</div>
+                    <div className="snapshot-metric-label">Readiness</div>
+                  </div>
+                  <div className="mobile-hub-metric-card">
+                    <div className="snapshot-metric-value" style={{fontSize: 24}}>82</div>
+                    <div className="snapshot-metric-label">Maturity</div>
+                  </div>
+                  <div className="mobile-hub-metric-card">
+                    <div className="snapshot-metric-value" style={{fontSize: 24}}>88</div>
+                    <div className="snapshot-metric-label">Trust</div>
+                  </div>
+                </div>
+              </div>
+
+              {/* PRIMARY DESTINATIONS: Cards */}
+              <div className="mobile-hub-primary-grid">
+                <Link to="/profile-intelligence" className="mobile-hub-primary-card" onClick={() => setMobileMenuOpen(false)}>
+                  <div className="icon-wrapper"><BrainCircuit size={24} /></div>
+                  <span>Intelligence</span>
+                </Link>
+                <Link to="/resume-studio" className="mobile-hub-primary-card" onClick={() => setMobileMenuOpen(false)}>
+                  <div className="icon-wrapper"><FileText size={24} /></div>
+                  <span>Resume Studio</span>
+                </Link>
+                <Link to="/github-intelligence" className="mobile-hub-primary-card" onClick={() => setMobileMenuOpen(false)}>
+                  <div className="icon-wrapper"><GitBranch size={24} /></div>
+                  <span>GitHub Tools</span>
+                </Link>
+                <Link to="/career-path" className="mobile-hub-primary-card" onClick={() => setMobileMenuOpen(false)}>
+                  <div className="icon-wrapper"><Map size={24} /></div>
+                  <span>Career Journey</span>
+                </Link>
+              </div>
+
+              {/* SECONDARY & BOTTOM SECTION: Unified List */}
+              <div className="mobile-hub-secondary">
+                <Link to="/about" className="mobile-hub-list-item" onClick={() => setMobileMenuOpen(false)}>
+                  <Target size={20} color="#86868b" strokeWidth={1.5} /> Vision
+                </Link>
+                <Link to="/contact" className="mobile-hub-list-item" onClick={() => setMobileMenuOpen(false)}>
+                  <Activity size={20} color="#86868b" strokeWidth={1.5} /> Conversations
+                </Link>
+                <Link to="/settings" className="mobile-hub-list-item" onClick={() => setMobileMenuOpen(false)}>
+                  <Settings size={20} color="#86868b" strokeWidth={1.5} /> Settings
+                </Link>
+                
+                {user ? (
+                  <button onClick={executeLogout} className="mobile-hub-list-item" style={{color: '#1d1d1f'}}>
+                    <LogOut size={20} color="#86868b" strokeWidth={1.5} /> Sign Out
+                  </button>
+                ) : (
+                  <Link to="/login" className="mobile-hub-list-item" style={{color: '#0071e3'}} onClick={() => setMobileMenuOpen(false)}>
+                    <User size={20} color="#0071e3" strokeWidth={1.5} /> Sign In
+                  </Link>
+                )}
+              </div>
+            </div>
+          </motion.div>
         )}
       </AnimatePresence>
     </>

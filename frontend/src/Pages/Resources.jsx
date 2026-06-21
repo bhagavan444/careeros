@@ -21,9 +21,7 @@ export default function Resources() {
   const [activeTag, setActiveTag] = useState("All");
   const [search, setSearch] = useState("");
 
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
+  
 
   const filtered = ITEMS.filter(item => {
     const matchTag = activeTag === "All" || item.tag === activeTag;
@@ -45,7 +43,7 @@ export default function Resources() {
             Engineering Intelligence <em>Knowledge Base.</em>
           </h1>
           <p className="hero-sub" style={{ margin: "0 auto 40px", maxWidth: 650 }}>
-            Playbooks, frameworks, and research papers engineered for production-grade technical growth. Curated by the Pathora intelligence systems team.
+            Playbooks, frameworks, and research papers engineered for production-grade technical growth. Curated by the CareerOS intelligence systems team.
           </p>
         </motion.div>
       </section>

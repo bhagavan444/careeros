@@ -14,9 +14,11 @@ class Settings(BaseSettings):
         "https://pathora-backend1.onrender.com"
     ]
     
-    # Security (optional — JWT auth is not currently enforced)
+    # Security (JWT Auth)
     SECRET_KEY: str = "pathora-default-dev-key-change-in-production"
+    ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 8
+    REFRESH_TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 30
     
     # Databases (all optional for lightweight deployment)
     POSTGRES_URI: str | None = None
@@ -26,8 +28,12 @@ class Settings(BaseSettings):
     
     # AI API Keys
     GEMINI_API_KEY: str = ""
+    GEMINI_API_KEY_2: str = ""
     OPENAI_API_KEY: Optional[str] = None
     ANTHROPIC_API_KEY: Optional[str] = None
+    
+    # Integrations
+    GITHUB_TOKEN: str = ""
     
     # Worker
     CELERY_BROKER_URL: str | None = None
@@ -45,16 +51,38 @@ try:
     
     # Validate critical keys at startup
     if not settings.GEMINI_API_KEY:
-        # Try falling back to OS env (Render sets env vars directly, not via .env)
         env_key = os.environ.get("GEMINI_API_KEY", "")
         if env_key:
             settings.GEMINI_API_KEY = env_key
             logger.info("GEMINI_API_KEY loaded from OS environment.")
         else:
-            logger.warning("WARNING: GEMINI_API_KEY is not set. AI features will be unavailable.")
+            logger.warning("WARNING: GEMINI_API_KEY is not set. Primary AI features will be unavailable.")
     else:
         logger.info("GEMINI_API_KEY loaded successfully.")
+        
+    if not settings.GEMINI_API_KEY_2:
+        env_key_2 = os.environ.get("GEMINI_API_KEY_2", "")
+        if env_key_2:
+            settings.GEMINI_API_KEY_2 = env_key_2
+            logger.info("GEMINI_API_KEY_2 loaded from OS environment.")
+        else:
+            logger.warning("WARNING: GEMINI_API_KEY_2 is not set. Secondary AI key unavailable.")
+    else:
+        logger.info("GEMINI_API_KEY_2 loaded successfully.")
+        
+    if not settings.GITHUB_TOKEN:
+        env_github = os.environ.get("GITHUB_TOKEN", "")
+        if env_github:
+            settings.GITHUB_TOKEN = env_github
+            logger.info("GITHUB_TOKEN loaded from OS environment.")
+        else:
+            logger.warning("WARNING: GITHUB_TOKEN is not set. GitHub features will be unavailable.")
+    else:
+        logger.info("GITHUB_TOKEN loaded successfully.")
         
 except Exception as e:
     logging.error(f"Startup Configuration Error: {e}")
     sys.exit(1)
+
+print("GitHub token loaded:", bool(settings.GITHUB_TOKEN))
+

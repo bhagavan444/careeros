@@ -243,3 +243,119 @@ class EvaluationHistory(db.Model):
     benchmark_percentile = db.Column(db.Float, nullable=True)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
+# ---------------- PHASE 5: INTELLIGENCE PLATFORM ----------------
+
+class KnowledgeBase(db.Model):
+    __tablename__ = 'knowledge_base'
+    
+    id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    category = db.Column(db.String(128), nullable=False, index=True)
+    title = db.Column(db.String(255), nullable=False)
+    question = db.Column(db.Text, nullable=False)
+    answer = db.Column(db.Text, nullable=False)
+    tags = db.Column(db.JSON, nullable=True)
+    difficulty = db.Column(db.String(50), nullable=True)
+    source = db.Column(db.String(255), nullable=True)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+class ProviderLog(db.Model):
+    __tablename__ = 'provider_logs'
+    
+    id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    provider_name = db.Column(db.String(128), nullable=False, index=True)
+    status = db.Column(db.String(50), nullable=False)
+    latency_ms = db.Column(db.Float, nullable=True)
+    error_message = db.Column(db.Text, nullable=True)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+class ProviderHealth(db.Model):
+    __tablename__ = 'provider_health'
+    
+    id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    provider_name = db.Column(db.String(128), unique=True, nullable=False)
+    is_active = db.Column(db.Boolean, default=True)
+    error_count = db.Column(db.Integer, default=0)
+    last_error_at = db.Column(db.DateTime, nullable=True)
+    last_success_at = db.Column(db.DateTime, nullable=True)
+
+class ChatAnalytics(db.Model):
+    __tablename__ = 'chat_analytics'
+    
+    id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    session_id = db.Column(db.String(255), nullable=False, index=True)
+    user_id = db.Column(UUID(as_uuid=True), db.ForeignKey('users.id'), nullable=True)
+    query_length = db.Column(db.Integer, nullable=False)
+    response_length = db.Column(db.Integer, nullable=False)
+    response_time_ms = db.Column(db.Float, nullable=False)
+    layer_used = db.Column(db.String(128), nullable=False) # e.g. "engine_resume", "knowledge_base", "gemini_key_1", "fallback"
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+class IntentAnalytics(db.Model):
+    __tablename__ = 'intent_analytics'
+    
+    id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    session_id = db.Column(db.String(255), nullable=False, index=True)
+    detected_intent = db.Column(db.String(128), nullable=False)
+    confidence_score = db.Column(db.Float, nullable=False)
+    routed_to = db.Column(db.String(128), nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+# ---------------- PHASE 15: PROFESSIONAL IDENTITY PERSISTENCE ----------------
+
+class IdentityReport(db.Model):
+    __tablename__ = 'identity_reports'
+    
+    id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    user_id = db.Column(UUID(as_uuid=True), db.ForeignKey('users.id'), nullable=True, index=True)
+    target_role = db.Column(db.String(255), nullable=True)
+    score = db.Column(db.Integer, nullable=True)
+    career_maturity = db.Column(db.String(128), nullable=True)
+    strengths = db.Column(db.JSON, nullable=True)
+    skill_gaps = db.Column(db.JSON, nullable=True)
+    recommended_focus = db.Column(db.String(255), nullable=True)
+    source = db.Column(db.String(128), nullable=True) # e.g. "Manual Signals", "GitHub"
+    created_at = db.Column(db.DateTime, default=datetime.utcnow, index=True)
+
+class CareerMemory(db.Model):
+    __tablename__ = 'career_memory'
+    
+    id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    user_id = db.Column(UUID(as_uuid=True), db.ForeignKey('users.id'), nullable=True, unique=True)
+    target_role = db.Column(db.String(255), nullable=True)
+    identity_score = db.Column(db.Integer, nullable=True)
+    strengths = db.Column(db.JSON, nullable=True)
+    skill_gaps = db.Column(db.JSON, nullable=True)
+    career_goals = db.Column(db.String(500), nullable=True)
+    last_synced_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+class StudioResume(db.Model):
+    # Differentiating from Phase 2 ResumeVersion
+    __tablename__ = 'studio_resumes'
+    
+    id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    user_id = db.Column(UUID(as_uuid=True), db.ForeignKey('users.id'), nullable=True, index=True)
+    title = db.Column(db.String(255), default="My Resume")
+    identity_report_id = db.Column(UUID(as_uuid=True), db.ForeignKey('identity_reports.id'), nullable=True)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+class StudioResumeVersion(db.Model):
+    __tablename__ = 'studio_resume_versions'
+    
+    id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    resume_id = db.Column(UUID(as_uuid=True), db.ForeignKey('studio_resumes.id'), nullable=False, index=True)
+    version_number = db.Column(db.Integer, default=1)
+    content_json = db.Column(db.JSON, nullable=False) # Full state of resumeData
+    template = db.Column(db.String(64), default="professional")
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+class GeneratedContent(db.Model):
+    __tablename__ = 'generated_content'
+    
+    id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    user_id = db.Column(UUID(as_uuid=True), db.ForeignKey('users.id'), nullable=True, index=True)
+    content_type = db.Column(db.String(64), nullable=False) # e.g. "summary", "project_bullet"
+    original_input = db.Column(db.Text, nullable=True)
+    generated_text = db.Column(db.Text, nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)

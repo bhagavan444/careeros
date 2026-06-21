@@ -9,7 +9,7 @@ import API_BASE from '../config/api';
 import './Home.css';
 
 /* ================= CONFIG ================= */
-const ADMIN_EMAIL = "admin@pathora.com";
+const ADMIN_EMAIL = "admin@careeros.com";
 const ADMIN_PASSWORD = "admin123";
 const DOMAINS = ["tech", "data", "ai", "cloud", "business"];
 const LEVELS = ["easy", "medium", "hard"];
@@ -71,7 +71,7 @@ function AdminLogin({ onAuth }) {
           </div>
           <div style={{ marginBottom: "20px" }}>
             <label style={{ display: "block", fontSize: "11px", fontWeight: "600", color: "rgba(255,255,255,0.4)", marginBottom: "8px", textTransform: "uppercase", letterSpacing: "0.05em", fontFamily: "'JetBrains Mono', monospace" }}>Email</label>
-            <input type="email" placeholder="admin@pathora.com" value={email} onChange={e => setEmail(e.target.value)}
+            <input type="email" placeholder="admin@careeros.com" value={email} onChange={e => setEmail(e.target.value)}
               style={{ width: "100%", padding: "14px 16px", background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "10px", color: "#fff", fontSize: "14px", outline: "none", transition: "border-color 0.3s", fontFamily: "'Plus Jakarta Sans', sans-serif" }}
               onFocus={e => e.target.style.borderColor = "rgba(124,58,237,0.6)"}
               onBlur={e => e.target.style.borderColor = "rgba(255,255,255,0.1)"} />
@@ -89,7 +89,7 @@ function AdminLogin({ onAuth }) {
             Authenticate
           </motion.button>
           <p style={{ textAlign: "center", marginTop: "20px", fontSize: "11px", color: "rgba(255,255,255,0.3)", fontFamily: "'JetBrains Mono', monospace" }}>
-            Pathora Intelligence Platform • v2.0
+            CareerOS Intelligence Platform • v2.0
           </p>
         </motion.div>
       </div>
@@ -377,7 +377,7 @@ function AdminDashboard({ onLogout }) {
                   PN
                 </div>
                 <div>
-                  <h2 style={{ fontSize: "16px", fontWeight: "700", color: "#fff", margin: 0, fontFamily: "var(--font-body)" }}>Pathora</h2>
+                  <h2 style={{ fontSize: "16px", fontWeight: "700", color: "#fff", margin: 0, fontFamily: "var(--font-body)" }}>CareerOS</h2>
                   <p style={{ fontSize: "11px", color: "var(--tm)", margin: 0, fontFamily: "var(--mono)" }}>Ops Console</p>
                 </div>
               </div>
@@ -514,7 +514,7 @@ function AdminDashboard({ onLogout }) {
 
             {activeTab === "telemetry" && (
               <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} style={{ background: "#0a0a0a", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "12px", padding: "16px", fontFamily: "var(--mono)", height: "600px", overflowY: "auto", boxShadow: "inset 0 0 20px rgba(0,0,0,0.5)" }}>
-                <div style={{ color: "#4ade80", fontSize: "12px", marginBottom: "20px" }}>Pathora Runtime Environment v{health.version} - Streaming Logs</div>
+                <div style={{ color: "#4ade80", fontSize: "12px", marginBottom: "20px" }}>CareerOS Runtime Environment v{health.version} - Streaming Logs</div>
                 {logs.length === 0 ? (
                   <p style={{ color: "var(--tm)" }}>Awaiting system events...</p>
                 ) : (

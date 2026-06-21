@@ -9,7 +9,9 @@ import time
 from app.core.config import settings
 
 # Setup Logging
-logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
+from app.core.logging_config import setup_logging
+setup_logging()
+
 logger = logging.getLogger("main")
 
 app = FastAPI(
@@ -71,6 +73,30 @@ app.add_middleware(
 )
 
 # ─── API Routes ────────────────────────────────────────────────────────────────
+from app.api.v1.endpoints import (
+    profile_intelligence,
+    recruiter_intelligence,
+    talent_ranking,
+    interview_intelligence,
+    # chat,
+    # memory,
+    career_dna,
+    resume_studio,
+    career_memory,
+    export
+)
+
+app.include_router(profile_intelligence.router, prefix="/api/v1/profile-intelligence", tags=["Profile Intelligence"])
+app.include_router(recruiter_intelligence.router, prefix="/api/v1/recruiter-intelligence", tags=["Recruiter Intelligence"])
+app.include_router(talent_ranking.router, prefix="/api/v1/talent-ranking", tags=["Talent Ranking"])
+app.include_router(interview_intelligence.router, prefix="/api/v1/interview-intelligence", tags=["Interview Intelligence"])
+# app.include_router(chat.router, prefix="/api/v1/chat", tags=["Copilot Chat"])
+# app.include_router(memory.router, prefix="/api/v1/memory", tags=["Copilot Memory"])
+app.include_router(career_dna.router, prefix="/api/v1/career-dna", tags=["Career DNA"])
+app.include_router(resume_studio.router, prefix="/api/v1/resume-studio", tags=["Resume Studio"])
+app.include_router(career_memory.router, prefix="/api/v1/career-memory", tags=["MongoDB Career Memory"])
+app.include_router(export.router, prefix="/api/v1/export", tags=["Export Engine"])
+
 from app.api.v1.api import api_router
 app.include_router(api_router, prefix=settings.API_V1_STR)
 
@@ -127,6 +153,9 @@ async def debug_upload_test():
     """Basic connectivity test for the upload path."""
     return {"status": "ok", "message": "Backend is reachable."}
 
+from app.core.database_mongo import connect_to_mongo, close_mongo_connection
+from app.core.cache import connect_to_redis, close_redis_connection
+
 @app.on_event("startup")
 async def startup_event():
     logger.info("=== Starting Pathora AI Backend ===")
@@ -134,8 +163,32 @@ async def startup_event():
     logger.info(f"[STARTUP_DIAGNOSTIC] CORS origins: {CORS_ORIGINS}")
     
     try:
+        from app.db.session import init_db
+        init_db()
+    except Exception as e:
+        logger.error(f"Failed to init sqlite db: {e}")
+
+    try:
         import psutil
         process = psutil.Process(os.getpid())
         logger.info(f"[STARTUP_DIAGNOSTIC] Initial Memory Usage: {process.memory_info().rss / 1024 / 1024:.2f} MB")
     except ImportError:
         pass
+
+    try:
+        await connect_to_mongo()
+        from app.db.indexes import setup_mongodb_indexes
+        await setup_mongodb_indexes()
+    except Exception as e:
+        logger.error(f"[STARTUP_DIAGNOSTIC] MongoDB connection failed: {e}")
+
+    try:
+        await connect_to_redis()
+    except Exception as e:
+        logger.error(f"[STARTUP_DIAGNOSTIC] Redis connection failed: {e}")
+
+@app.on_event("shutdown")
+async def shutdown_event():
+    logger.info("=== Shutting down Pathora AI Backend ===")
+    await close_mongo_connection()
+    await close_redis_connection()

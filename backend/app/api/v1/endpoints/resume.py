@@ -136,7 +136,7 @@ def _run_analysis_pipeline(doc_id: str, target_role: str) -> dict:
         "domain_applied": domain_key
     }
 
-    print("FINAL PAYLOAD:", json.dumps(final_payload, indent=2))
+    logger.debug(f"FINAL PAYLOAD: {json.dumps(final_payload, indent=2)}")
     logger.info(
         f"[PIPELINE] Complete. ATS={final_payload['ats_score']}, "
         f"Trust={final_payload['recruiter_trust']}, "
